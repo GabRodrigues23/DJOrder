@@ -1,0 +1,25 @@
+name: djorder
+description: "A new Flutter project."
+publish_to: 'none' # Remove this line if you wish to publish to pub.dev
+version: 1.0.0+1
+
+environment:
+  sdk: ^3.9.2
+dependencies:
+  flutter:
+    sdk: flutter
+  cupertino_icons: ^1.0.8
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+  flutter_lints: ^5.0.0
+flutter:
+  uses-material-design: true
+  fonts:
+    - family: Montserrat
+      fonts:
+        - asset: assets/fonts/montserrat/Montserrat-VariableFont_wght.ttf
+        - asset: assets/fonts/montserrat/static/Montserrat-Bold.ttf
+        - asset: assets/fonts/montserrat/static/Montserrat-Regular.ttf
+        - asset: assets/fonts/montserrat/Montserrat-Italic-VariableFont_wght.ttf
