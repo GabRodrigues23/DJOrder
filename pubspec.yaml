@@ -11,6 +11,7 @@ dependencies:
   cupertino_icons: ^1.0.8
   flutter_modular: ^6.4.1
   dio: ^5.9.0
+  asp: ^2.0.3
 
 dev_dependencies:
   flutter_test:
