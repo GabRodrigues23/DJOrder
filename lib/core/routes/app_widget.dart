@@ -9,7 +9,11 @@ class AppWidget extends StatelessWidget {
     return MaterialApp.router(
       title: 'DJOrder',
       debugShowCheckedModeBanner: false,
-      theme: ThemeData(fontFamily: 'Montserrat', useMaterial3: true),
+      theme: ThemeData(
+        fontFamily: 'Montserrat',
+        useMaterial3: true,
+        colorSchemeSeed: const Color(0xFF180E6D),
+      ),
       routerConfig: Modular.routerConfig,
     );
   }
