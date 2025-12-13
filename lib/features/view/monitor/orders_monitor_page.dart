@@ -1,19 +1,19 @@
 import 'package:djorder/features/model/order.dart';
 import 'package:djorder/features/repository/order_repository.dart';
 import 'package:djorder/features/service/order_service.dart';
-import 'package:djorder/features/view/manager/widgets/order_item_widget.dart';
+import 'package:djorder/features/view/monitor/widgets/order_item_widget.dart';
 import 'package:djorder/features/viewmodel/order_view_model.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_modular/flutter_modular.dart';
 
-class ManagerOrdersPage extends StatefulWidget {
-  const ManagerOrdersPage({super.key});
+class OrdersMonitorPage extends StatefulWidget {
+  const OrdersMonitorPage({super.key});
 
   @override
-  State<ManagerOrdersPage> createState() => _ManagerOrdersPageState();
+  State<OrdersMonitorPage> createState() => _OrdersMonitorPageState();
 }
 
-class _ManagerOrdersPageState extends State<ManagerOrdersPage> {
+class _OrdersMonitorPageState extends State<OrdersMonitorPage> {
   late final OrderViewModel viewModel;
 
   Order? selectedOrder;
