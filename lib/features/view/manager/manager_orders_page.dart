@@ -24,7 +24,15 @@ class _ManagerOrdersPageState extends State<ManagerOrdersPage> {
     final service = OrderService();
     final repository = OrderRepository(service);
     viewModel = OrderViewModel(repository);
+
     viewModel.loadData();
+    viewModel.startAutoRefresh();
+  }
+
+  @override
+  void dispose() {
+    super.dispose();
+    viewModel.stopAutoRefresh();
   }
 
   @override
@@ -68,9 +76,6 @@ class _ManagerOrdersPageState extends State<ManagerOrdersPage> {
     return ListenableBuilder(
       listenable: viewModel,
       builder: (context, _) {
-        if (viewModel.isLoading) {
-          return const Center(child: CircularProgressIndicator());
-        }
         if (viewModel.errorMessage.isNotEmpty) {
           return Center(
             child: Column(
