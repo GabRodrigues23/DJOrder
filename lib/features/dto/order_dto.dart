@@ -1,20 +1,26 @@
+import 'package:djorder/core/utils/dto_utils.dart';
 import 'package:djorder/features/model/order.dart';
 import 'package:djorder/features/model/order_itens.dart';
 
 class OrderDto {
   static Order fromJson(Map<String, dynamic> json) {
-    var productsList = json['products'] as List;
+    var productsList = DtoUtils.get<List>(json['products'], defaultValue: []);
 
     return Order(
-      id: json['CODPREVENDA'],
-      idOrder: json['ID_COMANDA'],
-      idTable: json['IDMESA'],
-      status: json['STATUS_PEDIDO'] ?? '',
-      clientName: json['NOME_CLIENTE'] ?? 'Vendas A Vista',
-      subtotal: (json['SUBTOTAL'] ?? 0).toDouble(),
-      serviceTax: (json['TAXA_SERVICO'] ?? 0).toDouble(),
-      oppeningDate:
-          DateTime.tryParse(json['DATAHORA_INICIO'] ?? '') ?? DateTime.now(),
+      id: DtoUtils.get<int>((json['CODPREVENDA']), defaultValue: 0),
+      idOrder: DtoUtils.get<int>(json['ID_COMANDA'], defaultValue: 0),
+      idTable: DtoUtils.get<int>(json['IDMESA'], defaultValue: 0),
+      status: json['COO'],
+      clientName: DtoUtils.get<String>(
+        json['NOME_CLIENTE'],
+        defaultValue: 'Vendas A Vista',
+      ),
+      subtotal: DtoUtils.get<double>(json['SUBTOTAL'], defaultValue: 0),
+      serviceTax: DtoUtils.get<double>(json['TAXA_SERVICO'], defaultValue: 0),
+      oppeningDate: DtoUtils.get<DateTime>(
+        json['DATAHORA_INICIO'],
+        defaultValue: DateTime.now(),
+      ),
       products: productsList.map((i) => _itemFromJson(i)).toList(),
     );
   }

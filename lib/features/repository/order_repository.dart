@@ -11,8 +11,8 @@ class OrderRepository implements OrderRepositoryInterface {
   @override
   Future<List<Order>> loadAll() async {
     try {
-      final response = await _service.fetchOrders();
-      return response.map((json) => OrderDto.fromJson(json)).toList();
+      final data = await _service.loadAll();
+      return data.map((json) => OrderDto.fromJson(json)).toList();
     } catch (e) {
       debugPrint('Erro no repository: $e');
       rethrow;
