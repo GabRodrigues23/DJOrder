@@ -4,7 +4,7 @@ class Order {
   final int id;
   final int idOrder;
   final int? idTable;
-  final String status;
+  final int? status;
   final String? clientName;
   final double subtotal;
   final double serviceTax;
@@ -15,7 +15,7 @@ class Order {
     required this.id,
     required this.idOrder,
     this.idTable,
-    required this.status,
+    this.status,
     this.clientName,
     required this.subtotal,
     required this.serviceTax,
@@ -25,13 +25,26 @@ class Order {
 
   double get totalValue => subtotal + serviceTax;
 
+  factory Order.empty(int orderId) {
+    return Order(
+      id: 0,
+      idOrder: orderId,
+      status: null,
+      clientName: null,
+      subtotal: 0.0,
+      serviceTax: 0.0,
+      oppeningDate: DateTime.now(),
+      products: [],
+    );
+  }
+
   factory Order.fromJson(Map<String, dynamic> json) {
     var productsList = json['products'] as List;
     return Order(
       id: json['CODPREVENDA'],
       idOrder: json['ID_COMANDA'],
       idTable: json['IDMESA'],
-      status: json['STATUS_PEDIDO'],
+      status: json['COO'],
       clientName: json['NOME_CLIENTE'],
       subtotal: (json['SUBTOTAL']).toDouble(),
       serviceTax: (json['TAXA_SERVICO']).toDouble(),
