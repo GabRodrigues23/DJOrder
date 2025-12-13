@@ -17,7 +17,18 @@ class OrderViewModel extends ChangeNotifier {
     notifyListeners();
 
     try {
-      orders = await _repository.loadAll();
+      final activeOrders = await _repository.loadAll();
+
+      List<Order> tempList = [];
+
+      for (int i = 1; i <= 100; i++) {
+        final existingOrder = activeOrders.firstWhere(
+          (order) => order.idOrder == i,
+          orElse: () => Order.empty(i),
+        );
+        tempList.add(existingOrder);
+      }
+      orders = tempList;
     } catch (e) {
       errorMessage = 'Erro ao buscar dados';
     } finally {
