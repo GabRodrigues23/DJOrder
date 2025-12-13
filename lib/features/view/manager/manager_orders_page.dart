@@ -1,7 +1,9 @@
-import 'package:flutter/material.dart';
+import 'package:djorder/features/model/order.dart';
 import 'package:djorder/features/repository/order_repository.dart';
 import 'package:djorder/features/service/order_service.dart';
+import 'package:djorder/features/view/manager/widgets/order_item_widget.dart';
 import 'package:djorder/features/viewmodel/order_view_model.dart';
+import 'package:flutter/material.dart';
 import 'package:flutter_modular/flutter_modular.dart';
 
 class ManagerOrdersPage extends StatefulWidget {
@@ -13,6 +15,8 @@ class ManagerOrdersPage extends StatefulWidget {
 
 class _ManagerOrdersPageState extends State<ManagerOrdersPage> {
   late final OrderViewModel viewModel;
+
+  Order? selectedOrder;
 
   @override
   void initState() {
@@ -26,9 +30,10 @@ class _ManagerOrdersPageState extends State<ManagerOrdersPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: Colors.grey[100],
       appBar: AppBar(
         title: const Text(
-          'DJORDER',
+          'DJORDER - Monitor',
           style: TextStyle(
             color: Color(0xFFFFFFFF),
             fontWeight: FontWeight.bold,
@@ -38,6 +43,10 @@ class _ManagerOrdersPageState extends State<ManagerOrdersPage> {
         backgroundColor: const Color(0xFF180E6D),
         actions: [
           IconButton(
+            onPressed: () => viewModel.loadData(),
+            icon: const Icon(Icons.refresh, color: Color(0xFFFFFFFF)),
+          ),
+          IconButton(
             onPressed: () {
               Modular.to.pushReplacementNamed('/');
             },
@@ -45,33 +54,212 @@ class _ManagerOrdersPageState extends State<ManagerOrdersPage> {
           ),
         ],
       ),
-      body: ListenableBuilder(
-        listenable: viewModel,
-        builder: (context, _) {
-          if (viewModel.isLoading) {
-            return const Center(child: CircularProgressIndicator());
-          }
-          if (viewModel.errorMessage.isNotEmpty) {
-            return Center(child: Text(viewModel.errorMessage));
-          }
-          if (viewModel.orders.isEmpty) {
-            return const Center(child: Text('Nenhuma comanda disponível'));
-          }
+      body: Row(
+        children: [
+          Expanded(flex: 3, child: _buildGridSection()),
+          const VerticalDivider(width: 1, thickness: 1, color: Colors.grey),
+          Expanded(flex: 1, child: _buildPreviewSection()),
+        ],
+      ),
+    );
+  }
 
-          return ListView.builder(
-            itemCount: viewModel.orders.length,
-            itemBuilder: (context, index) {
-              final order = viewModel.orders[index];
-              return ListTile(
-                title: Text('#${order.idOrder}'),
-                subtitle: Text('${order.clientName}'),
-                trailing: Text(
-                  'Total: R\$ ${order.totalValue.toStringAsFixed(2)}',
+  Widget _buildGridSection() {
+    return ListenableBuilder(
+      listenable: viewModel,
+      builder: (context, _) {
+        if (viewModel.isLoading) {
+          return const Center(child: CircularProgressIndicator());
+        }
+        if (viewModel.errorMessage.isNotEmpty) {
+          return Center(
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                const Icon(Icons.error_outline, size: 60, color: Colors.red),
+                Text(viewModel.errorMessage),
+                ElevatedButton(
+                  onPressed: viewModel.loadData,
+                  child: const Text('Tentar Novamente'),
                 ),
-              );
-            },
+              ],
+            ),
           );
-        },
+        }
+        if (viewModel.orders.isEmpty) {
+          return const Center(child: Text('Sem dados'));
+        }
+
+        return GridView.builder(
+          padding: const EdgeInsets.all(16),
+          gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+            crossAxisCount: 5,
+            childAspectRatio: 0.85,
+            mainAxisSpacing: 16,
+            crossAxisSpacing: 16,
+          ),
+          itemCount: viewModel.orders.length,
+          itemBuilder: (context, index) {
+            final order = viewModel.orders[index];
+            final isSelected = selectedOrder?.idOrder == order.idOrder;
+            return Container(
+              decoration: isSelected
+                  ? BoxDecoration(
+                      border: Border.all(
+                        color: const Color(0xFF180E6D),
+                        width: 3,
+                      ),
+                      borderRadius: BorderRadius.circular(12),
+                    )
+                  : null,
+              child: OrderItemWidget(
+                order: order,
+                onTap: () {
+                  setState(() {
+                    selectedOrder = order;
+                  });
+                  debugPrint('Clicou na comanda ${order.idOrder}');
+                },
+              ),
+            );
+          },
+        );
+      },
+    );
+  }
+
+  Widget _buildPreviewSection() {
+    return Container(
+      color: Colors.white,
+      padding: const EdgeInsets.all(16),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.stretch,
+        children: [
+          const Text(
+            'Detalhes da Comanda',
+            style: TextStyle(
+              fontSize: 18,
+              fontWeight: FontWeight.bold,
+              color: Colors.grey,
+            ),
+          ),
+          const Divider(),
+
+          if (selectedOrder == null)
+            const Expanded(
+              child: Center(
+                child: Text(
+                  'Selecione uma comanda\npara visualizar os detalhes.',
+                  textAlign: TextAlign.center,
+                  style: TextStyle(color: Colors.grey),
+                ),
+              ),
+            )
+          else
+            Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Center(
+                    child: Text(
+                      "#${selectedOrder!.idOrder}",
+                      style: const TextStyle(
+                        fontSize: 40,
+                        fontWeight: FontWeight.bold,
+                        color: Color(0xFF180E6D),
+                      ),
+                    ),
+                  ),
+                  const SizedBox(height: 10),
+                  _infoRow(
+                    "Cliente:",
+                    selectedOrder!.clientName ?? "Não identificado",
+                  ),
+                  const Divider(height: 30),
+
+                  const Text(
+                    "Itens do Pedido:",
+                    style: TextStyle(fontWeight: FontWeight.bold),
+                  ),
+                  const SizedBox(height: 10),
+
+                  Expanded(
+                    child: ListView.separated(
+                      itemCount: selectedOrder!.products.length,
+                      separatorBuilder: (_, __) => const Divider(),
+                      itemBuilder: (context, index) {
+                        final item = selectedOrder!.products[index];
+                        return Row(
+                          children: [
+                            Text(
+                              "${item.qtd.toInt()}x ",
+                              style: const TextStyle(
+                                fontWeight: FontWeight.bold,
+                              ),
+                            ),
+                            Expanded(child: Text(item.description)),
+                            Text("R\$ ${item.price.toStringAsFixed(2)}"),
+                          ],
+                        );
+                      },
+                    ),
+                  ),
+
+                  const Divider(),
+
+                  _infoRow(
+                    "Subtotal:",
+                    "R\$ ${selectedOrder!.subtotal.toStringAsFixed(2)}",
+                  ),
+                  _infoRow(
+                    "Serviço:",
+                    "R\$ ${selectedOrder!.serviceTax.toStringAsFixed(2)}",
+                  ),
+                  const SizedBox(height: 10),
+                  Container(
+                    padding: const EdgeInsets.all(10),
+                    decoration: BoxDecoration(
+                      color: const Color(0xFF180E6D),
+                      borderRadius: BorderRadius.circular(8),
+                    ),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        const Text(
+                          "TOTAL",
+                          style: TextStyle(
+                            color: Colors.white,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                        Text(
+                          "R\$ ${(selectedOrder!.subtotal + selectedOrder!.serviceTax).toStringAsFixed(2)}",
+                          style: const TextStyle(
+                            color: Colors.white,
+                            fontWeight: FontWeight.bold,
+                            fontSize: 18,
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                ],
+              ),
+            ),
+        ],
+      ),
+    );
+  }
+
+  Widget _infoRow(String label, String value) {
+    return Padding(
+      padding: const EdgeInsets.symmetric(vertical: 4),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: [
+          Text(label, style: const TextStyle(color: Colors.grey)),
+          Text(value, style: const TextStyle(fontWeight: FontWeight.w500)),
+        ],
       ),
     );
   }

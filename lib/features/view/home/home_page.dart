@@ -59,7 +59,9 @@ class HomePage extends StatelessWidget {
         ),
       ),
       bottomNavigationBar: TextButton.icon(
-        onPressed: () {},
+        onPressed: () {
+          Modular.to.pushReplacementNamed('/settings');
+        },
         icon: Icon(Icons.settings, color: Color(0xFFA9A9A9)),
         label: const Text(
           'Configurar Servidor',
