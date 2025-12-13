@@ -12,6 +12,7 @@ dependencies:
   flutter_modular: ^6.4.1
   dio: ^5.9.0
   asp: ^2.0.3
+  shared_preferences: ^2.5.4
 
 dev_dependencies:
   flutter_test:
