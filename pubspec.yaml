@@ -13,6 +13,7 @@ dependencies:
   dio: ^5.9.0
   asp: ^2.0.3
   shared_preferences: ^2.5.4
+  window_manager: ^0.5.1
 
 dev_dependencies:
   flutter_test:
