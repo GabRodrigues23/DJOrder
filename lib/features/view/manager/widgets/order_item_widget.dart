@@ -56,8 +56,37 @@ class OrderItemWidget extends StatelessWidget {
                   ),
                 ),
               ],
+
+              if (showDetails) ...[
+                if (order.idTable != null && order.idTable != 0)
+                  Text(
+                    'Mesa: ${order.idTable}',
+                    textAlign: TextAlign.center,
+                    maxLines: 1,
+                    overflow: TextOverflow.ellipsis,
+                    style: const TextStyle(
+                      color: Colors.white,
+                      fontWeight: FontWeight.w600,
+                      fontSize: 14,
+                    ),
+                  )
+                else
+                  Text(
+                    '',
+                    textAlign: TextAlign.center,
+                    maxLines: 1,
+                    overflow: TextOverflow.ellipsis,
+                    style: const TextStyle(
+                      color: Colors.white,
+                      fontWeight: FontWeight.w600,
+                      fontSize: 14,
+                    ),
+                  ),
+              ],
+
               if (showDetails)
                 Container(
+                  alignment: Alignment.bottomCenter,
                   padding: const EdgeInsets.symmetric(
                     horizontal: 8,
                     vertical: 4,

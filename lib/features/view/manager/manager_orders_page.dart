@@ -17,6 +17,7 @@ class _ManagerOrdersPageState extends State<ManagerOrdersPage> {
   late final OrderViewModel viewModel;
 
   Order? selectedOrder;
+  int? selectedIdOrder;
 
   @override
   void initState() {
@@ -62,78 +63,83 @@ class _ManagerOrdersPageState extends State<ManagerOrdersPage> {
           ),
         ],
       ),
-      body: Row(
-        children: [
-          Expanded(flex: 3, child: _buildGridSection()),
-          const VerticalDivider(width: 1, thickness: 1, color: Colors.grey),
-          Expanded(flex: 1, child: _buildPreviewSection()),
-        ],
+
+      body: ListenableBuilder(
+        listenable: viewModel,
+        builder: (context, _) {
+          Order? activeOrder;
+
+          if (selectedIdOrder != null && viewModel.orders.isNotEmpty) {
+            try {
+              activeOrder = viewModel.orders.firstWhere(
+                (element) => element.idOrder == selectedIdOrder,
+              );
+            } catch (e) {
+              selectedIdOrder = null;
+            }
+          }
+          return Row(
+            children: [
+              Expanded(flex: 3, child: _buildGridSection(activeOrder)),
+              const VerticalDivider(width: 1, thickness: 1, color: Colors.grey),
+              Expanded(flex: 1, child: _buildPreviewSection(activeOrder)),
+            ],
+          );
+        },
       ),
     );
   }
 
-  Widget _buildGridSection() {
-    return ListenableBuilder(
-      listenable: viewModel,
-      builder: (context, _) {
-        if (viewModel.errorMessage.isNotEmpty) {
-          return Center(
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                const Icon(Icons.error_outline, size: 60, color: Colors.red),
-                Text(viewModel.errorMessage),
-                ElevatedButton(
-                  onPressed: viewModel.loadData,
-                  child: const Text('Tentar Novamente'),
-                ),
-              ],
+  Widget _buildGridSection(Order? activeOrder) {
+    if (viewModel.errorMessage.isNotEmpty) {
+      return Center(
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            const Icon(Icons.error_outline, size: 60, color: Colors.red),
+            Text(viewModel.errorMessage),
+            ElevatedButton(
+              onPressed: viewModel.loadData,
+              child: const Text('Tentar Novamente'),
             ),
-          );
-        }
-        if (viewModel.orders.isEmpty) {
-          return const Center(child: Text('Sem dados'));
-        }
-
-        return GridView.builder(
-          padding: const EdgeInsets.all(16),
-          gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-            crossAxisCount: 5,
-            childAspectRatio: 0.85,
-            mainAxisSpacing: 16,
-            crossAxisSpacing: 16,
+          ],
+        ),
+      );
+    }
+    return GridView.builder(
+      padding: const EdgeInsets.all(16),
+      gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+        crossAxisCount: 5,
+        childAspectRatio: 0.85,
+        mainAxisSpacing: 16,
+        crossAxisSpacing: 16,
+      ),
+      itemCount: viewModel.orders.length,
+      itemBuilder: (context, index) {
+        final order = viewModel.orders[index];
+        final isSelected = activeOrder?.idOrder == order.idOrder;
+        return Container(
+          decoration: isSelected
+              ? BoxDecoration(
+                  border: Border.all(color: const Color(0xFF180E6D), width: 3),
+                  borderRadius: BorderRadius.circular(12),
+                )
+              : null,
+          child: OrderItemWidget(
+            order: order,
+            onTap: () {
+              setState(() {
+                selectedIdOrder = order.idOrder;
+              });
+              debugPrint('Clicou na comanda ${order.idOrder}');
+            },
           ),
-          itemCount: viewModel.orders.length,
-          itemBuilder: (context, index) {
-            final order = viewModel.orders[index];
-            final isSelected = selectedOrder?.idOrder == order.idOrder;
-            return Container(
-              decoration: isSelected
-                  ? BoxDecoration(
-                      border: Border.all(
-                        color: const Color(0xFF180E6D),
-                        width: 3,
-                      ),
-                      borderRadius: BorderRadius.circular(12),
-                    )
-                  : null,
-              child: OrderItemWidget(
-                order: order,
-                onTap: () {
-                  setState(() {
-                    selectedOrder = order;
-                  });
-                  debugPrint('Clicou na comanda ${order.idOrder}');
-                },
-              ),
-            );
-          },
         );
       },
     );
   }
 
-  Widget _buildPreviewSection() {
+  Widget _buildPreviewSection(Order? orderToShow) {
     return Container(
       color: Colors.white,
       padding: const EdgeInsets.all(16),
@@ -148,9 +154,9 @@ class _ManagerOrdersPageState extends State<ManagerOrdersPage> {
               color: Colors.grey,
             ),
           ),
-          const Divider(),
+          const Divider(color: Color(0xFF180E6D)),
 
-          if (selectedOrder == null)
+          if (orderToShow == null)
             const Expanded(
               child: Center(
                 child: Text(
@@ -167,7 +173,7 @@ class _ManagerOrdersPageState extends State<ManagerOrdersPage> {
                 children: [
                   Center(
                     child: Text(
-                      "#${selectedOrder!.idOrder}",
+                      "#${orderToShow.idOrder}",
                       style: const TextStyle(
                         fontSize: 40,
                         fontWeight: FontWeight.bold,
@@ -178,9 +184,12 @@ class _ManagerOrdersPageState extends State<ManagerOrdersPage> {
                   const SizedBox(height: 10),
                   _infoRow(
                     "Cliente:",
-                    selectedOrder!.clientName ?? "Não identificado",
+                    orderToShow.clientName ?? "Não identificado",
                   ),
-                  const Divider(height: 30),
+                  if (orderToShow.idTable != null && orderToShow.idTable != 0)
+                    _infoRow("Mesa:", '${orderToShow.idTable}'),
+
+                  const Divider(height: 30, color: Color(0xFF180E6D)),
 
                   const Text(
                     "Itens do Pedido:",
@@ -190,10 +199,10 @@ class _ManagerOrdersPageState extends State<ManagerOrdersPage> {
 
                   Expanded(
                     child: ListView.separated(
-                      itemCount: selectedOrder!.products.length,
+                      itemCount: orderToShow.products.length,
                       separatorBuilder: (_, __) => const Divider(),
                       itemBuilder: (context, index) {
-                        final item = selectedOrder!.products[index];
+                        final item = orderToShow.products[index];
                         return Row(
                           children: [
                             Text(
@@ -210,15 +219,15 @@ class _ManagerOrdersPageState extends State<ManagerOrdersPage> {
                     ),
                   ),
 
-                  const Divider(),
+                  const Divider(color: Color(0xFF180E6D)),
 
                   _infoRow(
                     "Subtotal:",
-                    "R\$ ${selectedOrder!.subtotal.toStringAsFixed(2)}",
+                    "R\$ ${orderToShow.subtotal.toStringAsFixed(2)}",
                   ),
                   _infoRow(
                     "Serviço:",
-                    "R\$ ${selectedOrder!.serviceTax.toStringAsFixed(2)}",
+                    "R\$ ${orderToShow.serviceTax.toStringAsFixed(2)}",
                   ),
                   const SizedBox(height: 10),
                   Container(
@@ -238,7 +247,7 @@ class _ManagerOrdersPageState extends State<ManagerOrdersPage> {
                           ),
                         ),
                         Text(
-                          "R\$ ${(selectedOrder!.subtotal + selectedOrder!.serviceTax).toStringAsFixed(2)}",
+                          "R\$ ${(orderToShow.subtotal + orderToShow.serviceTax).toStringAsFixed(2)}",
                           style: const TextStyle(
                             color: Colors.white,
                             fontWeight: FontWeight.bold,
