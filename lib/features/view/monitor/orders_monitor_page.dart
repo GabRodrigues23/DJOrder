@@ -3,6 +3,7 @@ import 'package:djorder/features/repository/order_repository.dart';
 import 'package:djorder/features/service/order_service.dart';
 import 'package:djorder/features/view/monitor/widgets/order_item_widget.dart';
 import 'package:djorder/features/viewmodel/order_view_model.dart';
+import 'package:djorder/shared/order_status_extension.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_modular/flutter_modular.dart';
 
@@ -78,15 +79,102 @@ class _OrdersMonitorPageState extends State<OrdersMonitorPage> {
               selectedIdOrder = null;
             }
           }
-          return Row(
+          return Column(
             children: [
-              Expanded(flex: 3, child: _buildGridSection(activeOrder)),
-              const VerticalDivider(width: 1, thickness: 1, color: Colors.grey),
-              Expanded(flex: 1, child: _buildPreviewSection(activeOrder)),
+              _buildFilterSection(),
+
+              Expanded(
+                child: Row(
+                  children: [
+                    Expanded(flex: 3, child: _buildGridSection(activeOrder)),
+                    const VerticalDivider(
+                      width: 1,
+                      thickness: 1,
+                      color: Colors.grey,
+                    ),
+                    Expanded(flex: 1, child: _buildPreviewSection(activeOrder)),
+                  ],
+                ),
+              ),
             ],
           );
         },
       ),
+    );
+  }
+
+  Widget _buildFilterSection() {
+    return Container(
+      color: Colors.white,
+      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+      child: Row(
+        children: [
+          const Text(
+            'Filtrar por: ',
+            style: TextStyle(fontWeight: FontWeight.bold, color: Colors.grey),
+          ),
+          const SizedBox(width: 10),
+
+          _buildFilterChip(
+            label: 'Todos',
+            isSelected: viewModel.currentFilter == null,
+            onSelected: () => viewModel.setFilter(null),
+            color: Colors.blueGrey,
+          ),
+          const SizedBox(width: 8),
+
+          _buildFilterChip(
+            label: 'Livres',
+            isSelected: viewModel.currentFilter == OrderStatus.free,
+            onSelected: () => viewModel.setFilter(OrderStatus.free),
+            color: Colors.green,
+          ),
+          const SizedBox(width: 8),
+
+          _buildFilterChip(
+            label: 'Ocupadas',
+            isSelected: viewModel.currentFilter == OrderStatus.busy,
+            onSelected: () => viewModel.setFilter(OrderStatus.busy),
+            color: Colors.redAccent,
+          ),
+
+          const SizedBox(width: 8),
+
+          _buildFilterChip(
+            label: 'Bloqueadas',
+            isSelected: viewModel.currentFilter == OrderStatus.lock,
+            onSelected: () => viewModel.setFilter(OrderStatus.lock),
+            color: Colors.grey,
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildFilterChip({
+    required String label,
+    required bool isSelected,
+    required VoidCallback onSelected,
+    required Color color,
+  }) {
+    return FilterChip(
+      label: Text(label),
+      selected: isSelected,
+      onSelected: (_) => onSelected(),
+
+      selectedColor: color.withOpacity(0.2),
+      checkmarkColor: color,
+      labelStyle: TextStyle(
+        color: isSelected ? color : Colors.black54,
+        fontWeight: isSelected ? FontWeight.bold : FontWeight.normal,
+      ),
+
+      // Borda colorida
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(20),
+        side: BorderSide(color: isSelected ? color : Colors.grey.shade300),
+      ),
+      showCheckmark: true,
     );
   }
 

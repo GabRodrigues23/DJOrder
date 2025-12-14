@@ -2,17 +2,33 @@ import 'dart:async';
 
 import 'package:djorder/features/interfaces/order_repository_interface.dart';
 import 'package:djorder/features/model/order.dart';
+import 'package:djorder/shared/order_status_extension.dart';
 import 'package:flutter/material.dart';
 
 class OrderViewModel extends ChangeNotifier {
   final OrderRepositoryInterface _repository;
-  Timer? _timer;
-
   OrderViewModel(this._repository);
 
-  List<Order> orders = [];
+  List<Order> _allOrders = [];
+  OrderStatus? currentFilter;
+
   bool isLoading = false;
   String errorMessage = '';
+
+  List<Order> get orders {
+    if (currentFilter == null) {
+      return _allOrders;
+    }
+
+    return _allOrders.where((order) {
+      return order.calculatedStatus == currentFilter;
+    }).toList();
+  }
+
+  void setFilter(OrderStatus? status) {
+    currentFilter = status;
+    notifyListeners();
+  }
 
   Future<void> loadData() async {
     isLoading = true;
@@ -31,7 +47,7 @@ class OrderViewModel extends ChangeNotifier {
         );
         tempList.add(existingOrder);
       }
-      orders = tempList;
+      _allOrders = tempList;
     } catch (e) {
       errorMessage = 'Erro ao buscar dados';
     } finally {
@@ -39,6 +55,8 @@ class OrderViewModel extends ChangeNotifier {
       notifyListeners();
     }
   }
+
+  Timer? _timer;
 
   void startAutoRefresh() {
     _timer?.cancel();
