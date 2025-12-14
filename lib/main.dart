@@ -1,3 +1,4 @@
+import 'package:djorder/features/service/settings_service.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_modular/flutter_modular.dart';
 import 'package:djorder/core/routes/app_widget.dart';
@@ -7,6 +8,7 @@ import 'package:window_manager/window_manager.dart';
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await windowManager.ensureInitialized();
+  await SettingsService().init();
 
   WindowOptions windowOptions = const WindowOptions(
     minimumSize: Size(1280, 720),

@@ -1,6 +1,7 @@
+import 'package:djorder/features/service/settings_service.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart'; // Para filtrar números
 import 'package:flutter_modular/flutter_modular.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 
 class SettingsPage extends StatefulWidget {
   const SettingsPage({super.key});
@@ -10,38 +11,50 @@ class SettingsPage extends StatefulWidget {
 }
 
 class _SettingsPageState extends State<SettingsPage> {
-  final _formKey = GlobalKey<FormState>();
+  final _service = SettingsService();
 
-  final _urlController = TextEditingController();
-  bool _isLoading = true;
+  late TextEditingController _urlController;
+  late TextEditingController _warningController;
+  late TextEditingController _criticalController;
+
+  late int _refreshInterval;
+  late bool _soundEnabled;
+  late bool _slaEnabled;
 
   @override
   void initState() {
     super.initState();
-    _loadSettings();
+    _urlController = TextEditingController(text: _service.apiUrl);
+    _warningController = TextEditingController(
+      text: _service.warningMinutes.toString(),
+    );
+    _criticalController = TextEditingController(
+      text: _service.criticalMinutes.toString(),
+    );
+    _refreshInterval = _service.refreshInterval;
+    _soundEnabled = _service.isSoundEnabled;
+    _slaEnabled = _service.isSlaEnables;
   }
 
-  Future<void> _loadSettings() async {
-    final prefs = await SharedPreferences.getInstance();
-    setState(() {
-      _urlController.text = prefs.getString('api_base_url') ?? 'http://';
-      _isLoading = false;
-    });
+  @override
+  void dispose() {
+    _urlController.dispose();
+    _warningController.dispose();
+    _criticalController.dispose();
+    super.dispose();
   }
 
   Future<void> _saveSettings() async {
-    if (!_formKey.currentState!.validate()) return;
-
-    setState(() => _isLoading = true);
-
-    final prefs = await SharedPreferences.getInstance();
-
-    String url = _urlController.text.trim();
-    if (url.endsWith('/')) {
-      url = url.substring(0, url.length - 1);
-    }
-
-    await prefs.setString('api_base_url', url);
+    await _service.setApiUrl(_urlController.text);
+    await _service.setRefreshInterval(_refreshInterval);
+    await _service.setSlaEnabled(_slaEnabled);
+    await _service.setWarningMinutes(
+      int.tryParse(_warningController.text) ?? 30,
+    );
+    await _service.setCriticalMinutes(
+      int.tryParse(_criticalController.text) ?? 60,
+    );
+    await _service.setSoundEnabled(_soundEnabled);
 
     if (mounted) {
       ScaffoldMessenger.of(context).showSnackBar(
@@ -53,89 +66,202 @@ class _SettingsPageState extends State<SettingsPage> {
           backgroundColor: Colors.green,
         ),
       );
-      Navigator.pop(context);
+      Modular.to.navigate('/');
     }
-  }
-
-  @override
-  void dispose() {
-    _urlController.dispose();
-    super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Configuração do Servidor'),
-        actions: [
-          IconButton(
-            onPressed: () {
-              Modular.to.pushReplacementNamed('/');
-            },
-            icon: Icon(Icons.keyboard_return, color: Color(0xFF180E6D)),
-          ),
-        ],
+        title: const Text(
+          'Configurações',
+          style: TextStyle(color: Colors.white),
+        ),
+        backgroundColor: const Color(0xFF180E6D),
+        leading: IconButton(
+          icon: const Icon(Icons.arrow_back, color: Colors.white),
+          onPressed: () => Modular.to.navigate('/'),
+        ),
       ),
-      body: _isLoading
-          ? const Center(child: CircularProgressIndicator())
-          : SingleChildScrollView(
-              padding: const EdgeInsets.all(20),
-              child: Form(
-                key: _formKey,
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.stretch,
-                  children: [
-                    const Icon(
-                      Icons.settings_ethernet,
-                      size: 80,
-                      color: Colors.blue,
-                    ),
-                    const SizedBox(height: 20),
-                    const Text(
-                      'Conexão com DJORDER SERVER',
-                      style: TextStyle(
-                        fontSize: 18,
-                        fontWeight: FontWeight.bold,
+      body: Center(
+        child: ConstrainedBox(
+          constraints: const BoxConstraints(maxWidth: 800),
+          child: ListView(
+            padding: const EdgeInsets.all(24),
+            children: [
+              _buildSectionTitle('Conexão'),
+              Card(
+                child: Padding(
+                  padding: const EdgeInsets.all(16),
+                  child: Column(
+                    children: [
+                      TextFormField(
+                        controller: _urlController,
+                        decoration: const InputDecoration(
+                          labelText: 'URL da API (Servidor Lazarus)',
+                          hintText: 'Ex: http://192.168.0.100:9000',
+                          border: OutlineInputBorder(),
+                          prefixIcon: Icon(Icons.link),
+                        ),
                       ),
-                      textAlign: TextAlign.center,
-                    ),
-                    const SizedBox(height: 30),
+                      const SizedBox(height: 16),
+                      DropdownButtonFormField<int>(
+                        initialValue: _refreshInterval,
+                        decoration: const InputDecoration(
+                          labelText: 'Intervalo de Atualização Automática',
+                          border: OutlineInputBorder(),
+                          prefixIcon: Icon(Icons.timer),
+                        ),
+                        items: const [
+                          DropdownMenuItem(
+                            value: 5,
+                            child: Text('5 Segundos (Rápido)'),
+                          ),
+                          DropdownMenuItem(
+                            value: 10,
+                            child: Text('10 Segundos (Médio)'),
+                          ),
+                          DropdownMenuItem(
+                            value: 30,
+                            child: Text('30 Segundos (Lento)'),
+                          ),
+                          DropdownMenuItem(
+                            value: 60,
+                            child: Text('1 Minuto (Econômico)'),
+                          ),
+                        ],
+                        onChanged: (value) =>
+                            setState(() => _refreshInterval = value!),
+                      ),
+                    ],
+                  ),
+                ),
+              ),
 
-                    TextFormField(
-                      controller: _urlController,
-                      keyboardType: TextInputType.url,
-                      decoration: const InputDecoration(
-                        labelText: 'URL Base do Servidor',
-                        hintText: 'http://127.0.0.1:9000',
-                        border: OutlineInputBorder(),
-                        prefixIcon: Icon(Icons.link),
+              const SizedBox(height: 24),
+              _buildSectionTitle('Alertas de Tempo (SLA)'),
+              Card(
+                child: Column(
+                  children: [
+                    SwitchListTile(
+                      title: const Text('Habilitar cores de Alerta'),
+                      subtitle: const Text(
+                        'Mudar a cor da comanda baseado no tempo de espera.',
                       ),
-                      validator: (value) {
-                        if (value == null || value.isEmpty)
-                          return 'Informe a URL';
-                        if (!value.startsWith('http://'))
-                          return 'A URL deve começar com http://';
-                        return null;
+                      value: _slaEnabled,
+                      activeThumbColor: Colors.orange,
+                      onChanged: (value) {
+                        setState(() {
+                          _slaEnabled = value;
+                        });
                       },
                     ),
 
-                    const SizedBox(height: 40),
-
-                    ElevatedButton.icon(
-                      style: ElevatedButton.styleFrom(
-                        padding: const EdgeInsets.symmetric(vertical: 15),
-                        backgroundColor: Colors.blue[900],
-                        foregroundColor: Colors.white,
+                    if (_slaEnabled) ...[
+                      const Divider(height: 1),
+                      Padding(
+                        padding: const EdgeInsets.all(16),
+                        child: Row(
+                          children: [
+                            Expanded(
+                              child: _buildNumberInput(
+                                controller: _warningController,
+                                label: 'Alerta Amarelo (min)',
+                                icon: Icons.warning_amber,
+                                color: Colors.orange,
+                              ),
+                            ),
+                            const SizedBox(width: 16),
+                            Expanded(
+                              child: _buildNumberInput(
+                                controller: _criticalController,
+                                label: 'Alerta Vermelho (min)',
+                                icon: Icons.error_outline,
+                                color: Colors.red,
+                              ),
+                            ),
+                          ],
+                        ),
                       ),
-                      onPressed: _saveSettings,
-                      icon: const Icon(Icons.save),
-                      label: const Text('SALVAR CONFIGURAÇÃO'),
-                    ),
+                    ],
                   ],
                 ),
               ),
-            ),
+
+              const SizedBox(height: 24),
+              _buildSectionTitle('Notificações'),
+              Card(
+                child: SwitchListTile(
+                  title: const Text('Som de Novo Pedido'),
+                  subtitle: const Text(
+                    'Tocar um alerta sonoro quando chegar uma nova comanda.',
+                  ),
+                  secondary: Icon(
+                    _soundEnabled ? Icons.volume_up : Icons.volume_off,
+                    color: _soundEnabled ? Colors.blue : Colors.grey,
+                  ),
+                  value: _soundEnabled,
+                  onChanged: (bool value) {
+                    setState(() {
+                      _soundEnabled = value;
+                    });
+                  },
+                ),
+              ),
+              const SizedBox(height: 32),
+              SizedBox(
+                height: 50,
+                child: ElevatedButton.icon(
+                  onPressed: _saveSettings,
+                  icon: const Icon(Icons.save),
+                  label: const Text('SALVAR CONFIGURAÇÕES'),
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: const Color(0xFF180E6D),
+                    foregroundColor: Colors.white,
+                  ),
+                ),
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+
+  Widget _buildSectionTitle(String title) {
+    return Padding(
+      padding: const EdgeInsets.only(bottom: 8, left: 4),
+      child: Text(
+        title,
+        style: const TextStyle(
+          fontSize: 18,
+          fontWeight: FontWeight.bold,
+          color: Colors.grey,
+        ),
+      ),
+    );
+  }
+
+  Widget _buildNumberInput({
+    required TextEditingController controller,
+    required String label,
+    required IconData icon,
+    required Color color,
+    bool enabled = true,
+  }) {
+    return TextFormField(
+      controller: controller,
+      enabled: enabled,
+      keyboardType: TextInputType.number,
+      inputFormatters: [FilteringTextInputFormatter.digitsOnly],
+      decoration: InputDecoration(
+        labelText: label,
+        border: const OutlineInputBorder(),
+        prefixIcon: Icon(icon, color: enabled ? color : Colors.grey),
+        filled: !enabled,
+        fillColor: Colors.grey[100],
+      ),
     );
   }
 }
