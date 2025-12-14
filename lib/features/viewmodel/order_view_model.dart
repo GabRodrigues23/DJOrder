@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:djorder/features/interfaces/order_repository_interface.dart';
 import 'package:djorder/features/model/order.dart';
+import 'package:djorder/shared/enums/order_status_type.dart';
 import 'package:djorder/shared/order_status_extension.dart';
 import 'package:flutter/material.dart';
 

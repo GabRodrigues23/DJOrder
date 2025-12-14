@@ -1,4 +1,5 @@
 import 'package:djorder/features/model/order.dart';
+import 'package:djorder/shared/enums/order_status_type.dart';
 import 'package:djorder/shared/order_status_extension.dart';
 import 'package:flutter/material.dart';
 
@@ -11,7 +12,6 @@ class OrderItemWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final status = order.calculatedStatus;
-    final backgroundColor = status.getColor(context);
 
     final bool showDetails = status != OrderStatus.free;
 
@@ -19,7 +19,7 @@ class OrderItemWidget extends StatelessWidget {
       onTap: onTap,
       child: Container(
         decoration: BoxDecoration(
-          color: backgroundColor,
+          color: status.color,
           borderRadius: BorderRadius.circular(8),
           boxShadow: const [
             BoxShadow(
