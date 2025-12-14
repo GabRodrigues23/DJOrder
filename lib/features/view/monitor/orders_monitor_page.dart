@@ -203,16 +203,69 @@ class _OrdersMonitorPageState extends State<OrdersMonitorPage> {
                       separatorBuilder: (_, __) => const Divider(),
                       itemBuilder: (context, index) {
                         final item = orderToShow.products[index];
-                        return Row(
+                        return Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                            Text(
-                              "${item.qtd.toInt()}x ",
-                              style: const TextStyle(
-                                fontWeight: FontWeight.bold,
-                              ),
+                            Row(
+                              children: [
+                                Text(
+                                  "${item.qtd.toInt()}x ",
+                                  style: const TextStyle(
+                                    fontWeight: FontWeight.bold,
+                                  ),
+                                ),
+                                Expanded(child: Text(item.description)),
+                                Text("R\$ ${item.price.toStringAsFixed(2)}"),
+                              ],
                             ),
-                            Expanded(child: Text(item.description)),
-                            Text("R\$ ${item.price.toStringAsFixed(2)}"),
+
+                            if (item.addons.isNotEmpty)
+                              Padding(
+                                padding: const EdgeInsets.only(
+                                  left: 16,
+                                  top: 4,
+                                ),
+                                child: Column(
+                                  children: item.addons.map((addon) {
+                                    return Row(
+                                      children: [
+                                        const Icon(
+                                          Icons.subdirectory_arrow_right,
+                                          size: 14,
+                                          color: Colors.grey,
+                                        ),
+                                        const SizedBox(width: 4),
+
+                                        Text(
+                                          '${addon.qtd.toInt()}x ',
+                                          style: const TextStyle(
+                                            fontSize: 12,
+                                            color: Colors.grey,
+                                          ),
+                                        ),
+
+                                        Expanded(
+                                          child: Text(
+                                            addon.description,
+                                            style: const TextStyle(
+                                              fontSize: 12,
+                                              color: Colors.grey,
+                                            ),
+                                          ),
+                                        ),
+                                        if (addon.price > 0)
+                                          Text(
+                                            '+ R\$ ${addon.price.toStringAsFixed(2)}',
+                                            style: const TextStyle(
+                                              fontSize: 12,
+                                              color: Colors.grey,
+                                            ),
+                                          ),
+                                      ],
+                                    );
+                                  }).toList(),
+                                ),
+                              ),
                           ],
                         );
                       },
