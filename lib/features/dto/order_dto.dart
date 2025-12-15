@@ -1,7 +1,7 @@
-import 'package:djorder/core/utils/dto_utils.dart';
 import 'package:djorder/features/model/order.dart';
 import 'package:djorder/features/model/order_addons.dart';
 import 'package:djorder/features/model/order_itens.dart';
+import 'package:djorder/core/utils/dto_utils.dart';
 
 class OrderDto {
   static Order fromJson(Map<String, dynamic> json) {

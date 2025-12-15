@@ -1,6 +1,6 @@
+import 'package:flutter/material.dart';
 import 'package:dio/dio.dart';
 import 'package:djorder/features/service/settings_service.dart';
-import 'package:flutter/material.dart';
 
 class OrderService {
   final Dio _dio = Dio();

@@ -1,9 +1,9 @@
-import 'package:djorder/features/service/settings_service.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_modular/flutter_modular.dart';
-import 'package:djorder/core/routes/app_widget.dart';
-import 'package:djorder/core/routes/app_module.dart';
 import 'package:window_manager/window_manager.dart';
+import 'package:djorder/features/service/settings_service.dart';
+import 'package:djorder/core/routes/app_module.dart';
+import 'package:djorder/core/routes/app_widget.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();

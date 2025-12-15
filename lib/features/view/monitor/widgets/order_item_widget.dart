@@ -1,10 +1,9 @@
 import 'dart:async';
-
+import 'package:flutter/material.dart';
+import 'package:djorder/shared/enums/order_status_type.dart';
+import 'package:djorder/shared/extensions/order_status_extension.dart';
 import 'package:djorder/features/model/order.dart';
 import 'package:djorder/features/service/settings_service.dart';
-import 'package:djorder/shared/enums/order_status_type.dart';
-import 'package:djorder/shared/order_status_extension.dart';
-import 'package:flutter/material.dart';
 
 class OrderItemWidget extends StatefulWidget {
   final Order order;

@@ -1,5 +1,5 @@
-import 'package:djorder/shared/enums/order_status_type.dart';
 import 'package:flutter/material.dart';
+import 'package:djorder/shared/enums/order_status_type.dart';
 
 class OrderFiltersBar extends StatelessWidget {
   final OrderStatus? currentFilter;
