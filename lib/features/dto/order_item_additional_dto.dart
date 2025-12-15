@@ -5,7 +5,7 @@ extension OrderItemAdditionalDto on OrderAdditional {
   static OrderAdditional fromJson(Map<String, dynamic> json) {
     return OrderAdditional(
       description: DtoUtils.get<String>(json['DESCRICAO'], defaultValue: ''),
-      qtd: DtoUtils.get<double>(json['QTD_'], defaultValue: 0),
+      qtd: DtoUtils.get<double>(json['QTD'], defaultValue: 0),
       price: DtoUtils.get<double>(json['PRECO_UNITARIO'], defaultValue: 0),
     );
   }

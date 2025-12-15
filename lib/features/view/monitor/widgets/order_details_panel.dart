@@ -1,5 +1,5 @@
-import 'package:djorder/core/utils/format_utils.dart';
 import 'package:flutter/material.dart';
+import 'package:djorder/core/utils/format_utils.dart';
 import 'package:djorder/features/model/order.dart';
 
 class OrderDetailsPanel extends StatelessWidget {
@@ -51,7 +51,9 @@ class OrderDetailsPanel extends StatelessWidget {
                     ),
                   ),
                   const SizedBox(height: 10),
-                  _infoRow("Cliente:", order!.clientName ?? "Não identificado"),
+                  _infoRow("Cliente:", order!.clientName ?? ''),
+                  if (order!.idTable != null && order!.idTable != 0)
+                    _infoRow('Mesa:', '${order!.idTable}'),
                   const Divider(height: 30),
                   const Text(
                     "Itens do Pedido:",
@@ -129,7 +131,7 @@ class OrderDetailsPanel extends StatelessWidget {
                   const Divider(),
                   _infoRow(
                     "Subtotal:",
-                    "R\$ ${FormatUtils.formatValue(order!.subtotal.toStringAsFixed(2))}",
+                    "R\$ ${FormatUtils.formatValue(order!.effectiveSubtotal.toStringAsFixed(2))}",
                   ),
                   _infoRow(
                     "Serviço:",
@@ -153,7 +155,7 @@ class OrderDetailsPanel extends StatelessWidget {
                           ),
                         ),
                         Text(
-                          "R\$ ${FormatUtils.formatValue((order!.subtotal + order!.serviceTax).toStringAsFixed(2))}",
+                          "R\$ ${FormatUtils.formatValue(order!.totalValue.toStringAsFixed(2))}",
                           style: const TextStyle(
                             color: Colors.white,
                             fontWeight: FontWeight.bold,

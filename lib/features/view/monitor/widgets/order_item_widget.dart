@@ -192,7 +192,7 @@ class _OrderItemWidgetState extends State<OrderItemWidget> {
                     borderRadius: BorderRadius.circular(4),
                   ),
                   child: Text(
-                    'R\$ ${FormatUtils.formatValue(widget.order.subtotal.toStringAsFixed(2))}',
+                    'R\$ ${FormatUtils.formatValue(widget.order.effectiveSubtotal.toStringAsFixed(2))}',
                     style: const TextStyle(
                       color: Colors.white,
                       fontWeight: FontWeight.bold,

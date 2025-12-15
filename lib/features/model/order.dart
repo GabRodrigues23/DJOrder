@@ -23,8 +23,6 @@ class Order {
     required this.products,
   });
 
-  double get totalValue => subtotal + serviceTax;
-
   factory Order.empty(int orderId) {
     return Order(
       id: 0,
@@ -53,4 +51,17 @@ class Order {
       products: productsList.map((i) => OrderItens.fromJson(i)).toList(),
     );
   }
+
+  double get totalAdditional {
+    double total = 0.0;
+    for (var item in products) {
+      for (var additional in item.additional) {
+        total += (additional.price * additional.qtd);
+      }
+    }
+    return total;
+  }
+
+  double get effectiveSubtotal => subtotal + totalAdditional;
+  double get totalValue => effectiveSubtotal + serviceTax;
 }
