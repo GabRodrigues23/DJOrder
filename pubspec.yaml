@@ -5,17 +5,27 @@ version: 1.0.0+1
 
 environment:
   sdk: ^3.9.2
+  
 dependencies:
   flutter:
     sdk: flutter
   cupertino_icons: ^1.0.8
+  flutter_modular: ^6.4.1
+  dio: ^5.9.0
+  asp: ^2.0.3
+  shared_preferences: ^2.5.4
+  window_manager: ^0.3.8
+  audioplayers: ^6.5.1
 
 dev_dependencies:
   flutter_test:
     sdk: flutter
   flutter_lints: ^5.0.0
+
 flutter:
   uses-material-design: true
+  assets:
+    - assets/sounds/
   fonts:
     - family: Montserrat
       fonts:
