@@ -83,16 +83,16 @@ class OrderDetailsPanel extends StatelessWidget {
                               ],
                             ),
 
-                            if (item.addons.isNotEmpty)
+                            if (item.additional.isNotEmpty)
                               Padding(
                                 padding: const EdgeInsets.only(
                                   left: 16,
                                   top: 4,
                                 ),
                                 child: Column(
-                                  children: item.addons
+                                  children: item.additional
                                       .map(
-                                        (addon) => Row(
+                                        (additional) => Row(
                                           children: [
                                             const Icon(
                                               Icons.subdirectory_arrow_right,
@@ -100,15 +100,15 @@ class OrderDetailsPanel extends StatelessWidget {
                                               color: Colors.grey,
                                             ),
                                             Text(
-                                              "${addon.qtd.toInt()}x ${addon.description}",
+                                              "${additional.qtd.toInt()}x ${additional.description}",
                                               style: const TextStyle(
                                                 fontSize: 12,
                                                 color: Colors.grey,
                                               ),
                                             ),
-                                            if (addon.price > 0)
+                                            if (additional.price > 0)
                                               Text(
-                                                " + R\$ ${FormatUtils.formatValue(addon.price.toStringAsFixed(2))}",
+                                                " + R\$ ${FormatUtils.formatValue(additional.price.toStringAsFixed(2))}",
                                                 style: const TextStyle(
                                                   fontSize: 12,
                                                   color: Colors.grey,

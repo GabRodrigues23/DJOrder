@@ -85,7 +85,7 @@
     │   │   │   └── order_repository_interface.dart
     │   │   ├── model/
     │   │   │   ├── order.dart
-    │   │   │   ├── order_addons.dart
+    │   │   │   ├── order_additional.dart
     │   │   │   └── order_itens.dart
     │   │   ├── repository/
     │   │   │   └── order_repository.dart    

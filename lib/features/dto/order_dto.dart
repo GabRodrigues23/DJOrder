@@ -1,12 +1,9 @@
+import 'package:djorder/features/dto/order_item_dto.dart';
 import 'package:djorder/features/model/order.dart';
-import 'package:djorder/features/model/order_addons.dart';
-import 'package:djorder/features/model/order_itens.dart';
 import 'package:djorder/core/utils/dto_utils.dart';
 
 class OrderDto {
   static Order fromJson(Map<String, dynamic> json) {
-    var productsList = DtoUtils.get<List>(json['products'], defaultValue: []);
-
     return Order(
       id: DtoUtils.get<int>((json['CODPREVENDA']), defaultValue: 0),
       idOrder: DtoUtils.get<int>(json['ID_COMANDA'], defaultValue: 0),
@@ -21,27 +18,9 @@ class OrderDto {
       oppeningDate:
           DateTime.tryParse(json['DATAHORA_INICIO']?.toString() ?? '') ??
           DateTime.now(),
-      products: productsList.map((i) => _itemFromJson(i)).toList(),
-    );
-  }
-
-  static OrderItens _itemFromJson(Map<String, dynamic> json) {
-    var addonsList = DtoUtils.get<List>(json['addons'], defaultValue: []);
-    return OrderItens(
-      id: DtoUtils.get<int>(json['CODPRODUTO'], defaultValue: 0),
-      description: DtoUtils.get<String>(json['DESCRICAO'], defaultValue: ''),
-      qtd: DtoUtils.get<double>(json['QTD'], defaultValue: 0),
-      price: DtoUtils.get<double>(json['PRECO_UNITARIO'], defaultValue: 0),
-      status: DtoUtils.get<String>(json['CANCELADO'], defaultValue: 'N'),
-      addons: addonsList.map((a) => _addonFromJson(a)).toList(),
-    );
-  }
-
-  static OrderAddons _addonFromJson(Map<String, dynamic> json) {
-    return OrderAddons(
-      description: DtoUtils.get<String>(json['DESCRICAO'], defaultValue: ''),
-      qtd: DtoUtils.get<double>(json['QTD_'], defaultValue: 0),
-      price: DtoUtils.get<double>(json['PRECO_UNITARIO'], defaultValue: 0),
+      products: OrderItemDto.fromList(
+        DtoUtils.get<List>(json['products'], defaultValue: []),
+      ),
     );
   }
 }
