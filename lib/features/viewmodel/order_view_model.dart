@@ -1,10 +1,10 @@
 import 'dart:async';
-
+import 'package:flutter/material.dart';
+import 'package:djorder/features/service/settings_service.dart';
 import 'package:djorder/features/interfaces/order_repository_interface.dart';
 import 'package:djorder/features/model/order.dart';
 import 'package:djorder/shared/enums/order_status_type.dart';
 import 'package:djorder/shared/order_status_extension.dart';
-import 'package:flutter/material.dart';
 
 class OrderViewModel extends ChangeNotifier {
   final OrderRepositoryInterface _repository;
@@ -61,7 +61,11 @@ class OrderViewModel extends ChangeNotifier {
 
   void startAutoRefresh() {
     _timer?.cancel();
-    _timer = Timer.periodic(const Duration(seconds: 15), (timer) {
+
+    final interval = SettingsService().refreshInterval;
+    debugPrint('Iniciando AutoRefresh com intervalo de $interval segundos');
+
+    _timer = Timer.periodic(Duration(seconds: interval), (timer) {
       loadData();
       debugPrint('Atualizando dados automaticamente...');
     });

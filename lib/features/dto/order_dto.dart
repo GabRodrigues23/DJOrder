@@ -18,10 +18,9 @@ class OrderDto {
       ),
       subtotal: DtoUtils.get<double>(json['SUBTOTAL'], defaultValue: 0),
       serviceTax: DtoUtils.get<double>(json['TAXA_SERVICO'], defaultValue: 0),
-      oppeningDate: DtoUtils.get<DateTime>(
-        json['DATAHORA_INICIO'],
-        defaultValue: DateTime.now(),
-      ),
+      oppeningDate:
+          DateTime.tryParse(json['DATAHORA_INICIO']?.toString() ?? '') ??
+          DateTime.now(),
       products: productsList.map((i) => _itemFromJson(i)).toList(),
     );
   }
