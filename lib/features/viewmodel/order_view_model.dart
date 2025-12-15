@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'package:audioplayers/audioplayers.dart';
 import 'package:flutter/material.dart';
 import 'package:djorder/features/service/settings_service.dart';
 import 'package:djorder/features/interfaces/order_repository_interface.dart';
@@ -15,6 +16,10 @@ class OrderViewModel extends ChangeNotifier {
   String errorMessage = '';
   Timer? _timer;
   String _searchQuery = '';
+  final AudioPlayer _audioPlayer = AudioPlayer();
+
+  int _lastActiveCount = 0;
+  bool _isFirstLoad = true;
 
   List<Order> get orders {
     return _allOrders.where((order) {
@@ -47,9 +52,9 @@ class OrderViewModel extends ChangeNotifier {
 
     try {
       final activeOrders = await _repository.loadAll();
+      _checkAndPlaySound(activeOrders.length);
 
       List<Order> tempList = [];
-
       for (int i = 1; i <= 100; i++) {
         final existingOrder = activeOrders.firstWhere(
           (order) => order.idOrder == i,
@@ -58,12 +63,31 @@ class OrderViewModel extends ChangeNotifier {
         tempList.add(existingOrder);
       }
       _allOrders = tempList;
+      _isFirstLoad = false;
     } catch (e) {
       errorMessage = 'Erro ao buscar dados';
     } finally {
       isLoading = false;
       notifyListeners();
     }
+  }
+
+  void _checkAndPlaySound(int currentCount) async {
+    if (!SettingsService().isSoundEnabled) return;
+
+    if (_isFirstLoad) {
+      _lastActiveCount = currentCount;
+      return;
+    }
+
+    if (currentCount > _lastActiveCount) {
+      try {
+        await _audioPlayer.play(AssetSource('sounds/alert.mp3'));
+      } catch (e) {
+        debugPrint('Erro ao tocar som: $e');
+      }
+    }
+    _lastActiveCount = currentCount;
   }
 
   void startAutoRefresh() {
