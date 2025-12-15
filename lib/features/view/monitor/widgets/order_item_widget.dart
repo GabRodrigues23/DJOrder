@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'package:djorder/core/utils/format_utils.dart';
 import 'package:flutter/material.dart';
 import 'package:djorder/shared/enums/order_status_type.dart';
 import 'package:djorder/shared/extensions/order_status_extension.dart';
@@ -191,7 +192,7 @@ class _OrderItemWidgetState extends State<OrderItemWidget> {
                     borderRadius: BorderRadius.circular(4),
                   ),
                   child: Text(
-                    'R\$ ${widget.order.subtotal.toStringAsFixed(2)}',
+                    'R\$ ${FormatUtils.formatValue(widget.order.subtotal.toStringAsFixed(2))}',
                     style: const TextStyle(
                       color: Colors.white,
                       fontWeight: FontWeight.bold,

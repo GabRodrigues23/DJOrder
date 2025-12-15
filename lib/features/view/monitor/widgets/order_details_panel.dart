@@ -1,3 +1,4 @@
+import 'package:djorder/core/utils/format_utils.dart';
 import 'package:flutter/material.dart';
 import 'package:djorder/features/model/order.dart';
 
@@ -76,7 +77,9 @@ class OrderDetailsPanel extends StatelessWidget {
                                   ),
                                 ),
                                 Expanded(child: Text(item.description)),
-                                Text("R\$ ${item.price.toStringAsFixed(2)}"),
+                                Text(
+                                  "R\$ ${FormatUtils.formatValue(item.price.toStringAsFixed(2))}",
+                                ),
                               ],
                             ),
 
@@ -105,7 +108,7 @@ class OrderDetailsPanel extends StatelessWidget {
                                             ),
                                             if (addon.price > 0)
                                               Text(
-                                                " + R\$ ${addon.price.toStringAsFixed(2)}",
+                                                " + R\$ ${FormatUtils.formatValue(addon.price.toStringAsFixed(2))}",
                                                 style: const TextStyle(
                                                   fontSize: 12,
                                                   color: Colors.grey,
@@ -126,11 +129,11 @@ class OrderDetailsPanel extends StatelessWidget {
                   const Divider(),
                   _infoRow(
                     "Subtotal:",
-                    "R\$ ${order!.subtotal.toStringAsFixed(2)}",
+                    "R\$ ${FormatUtils.formatValue(order!.subtotal.toStringAsFixed(2))}",
                   ),
                   _infoRow(
                     "Serviço:",
-                    "R\$ ${order!.serviceTax.toStringAsFixed(2)}",
+                    "R\$ ${FormatUtils.formatValue(order!.serviceTax.toStringAsFixed(2))}",
                   ),
                   const SizedBox(height: 10),
                   Container(
@@ -150,7 +153,7 @@ class OrderDetailsPanel extends StatelessWidget {
                           ),
                         ),
                         Text(
-                          "R\$ ${(order!.subtotal + order!.serviceTax).toStringAsFixed(2)}",
+                          "R\$ ${FormatUtils.formatValue((order!.subtotal + order!.serviceTax).toStringAsFixed(2))}",
                           style: const TextStyle(
                             color: Colors.white,
                             fontWeight: FontWeight.bold,
