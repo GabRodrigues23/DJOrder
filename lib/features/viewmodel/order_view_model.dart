@@ -9,21 +9,30 @@ import 'package:djorder/shared/order_status_extension.dart';
 class OrderViewModel extends ChangeNotifier {
   final OrderRepositoryInterface _repository;
   OrderViewModel(this._repository);
-
   List<Order> _allOrders = [];
   OrderStatus? currentFilter;
-
   bool isLoading = false;
   String errorMessage = '';
+  Timer? _timer;
+  String _searchQuery = '';
 
   List<Order> get orders {
-    if (currentFilter == null) {
-      return _allOrders;
-    }
-
     return _allOrders.where((order) {
-      return order.calculatedStatus == currentFilter;
+      final query = _searchQuery.toUpperCase();
+      final bool matchesSearch =
+          _searchQuery.isEmpty ||
+          order.idOrder.toString().contains(query) ||
+          (order.clientName?.toUpperCase().contains(query) ?? false);
+      final bool matchesFilter =
+          currentFilter == null || order.calculatedStatus == currentFilter;
+
+      return matchesSearch && matchesFilter;
     }).toList();
+  }
+
+  void setSearchQuery(String query) {
+    _searchQuery = query;
+    notifyListeners();
   }
 
   void setFilter(OrderStatus? status) {
@@ -56,8 +65,6 @@ class OrderViewModel extends ChangeNotifier {
       notifyListeners();
     }
   }
-
-  Timer? _timer;
 
   void startAutoRefresh() {
     _timer?.cancel();

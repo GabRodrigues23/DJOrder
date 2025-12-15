@@ -88,6 +88,9 @@ class _OrdersMonitorPageState extends State<OrdersMonitorPage> {
                 onFilterChanged: (newStatus) {
                   viewModel.setFilter(newStatus);
                 },
+                onSearchChanged: (query) {
+                  viewModel.setSearchQuery(query);
+                },
               ),
 
               Expanded(
