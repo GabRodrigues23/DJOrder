@@ -91,7 +91,7 @@
     │   │   ├── model/
     │   │   │   ├── order.dart
     │   │   │   ├── order_additional.dart
-    │   │   │   └── order_itens.dart
+    │   │   │   └── order_items.dart
     │   │   ├── repository/
     │   │   │   └── order_repository.dart    
     │   │   ├── service/

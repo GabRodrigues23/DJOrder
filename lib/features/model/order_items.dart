@@ -1,6 +1,6 @@
 import 'package:djorder/features/model/order_additional.dart';
 
-class OrderItens {
+class OrderItems {
   final int id;
   final String description;
   final double qtd;
@@ -8,7 +8,7 @@ class OrderItens {
   final String? status;
   final List<OrderAdditional> additional;
 
-  OrderItens({
+  OrderItems({
     required this.id,
     required this.description,
     required this.qtd,
@@ -17,9 +17,9 @@ class OrderItens {
     this.additional = const [],
   });
 
-  factory OrderItens.fromJson(Map<String, dynamic> json) {
+  factory OrderItems.fromJson(Map<String, dynamic> json) {
     var additionalList = json['additional'] as List? ?? [];
-    return OrderItens(
+    return OrderItems(
       id: json['CODPRODUTO'],
       description: json['DESCRICAO'],
       qtd: (json['QTD']).toDouble(),
