@@ -67,6 +67,8 @@ class OrderDetailsPanel extends StatelessWidget {
                       separatorBuilder: (_, __) => const Divider(),
                       itemBuilder: (context, index) {
                         final item = order!.products[index];
+                        final isCanceled = item.status == 'S';
+
                         return Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
@@ -74,13 +76,39 @@ class OrderDetailsPanel extends StatelessWidget {
                               children: [
                                 Text(
                                   "${item.qtd.toInt()}x ",
-                                  style: const TextStyle(
+                                  style: TextStyle(
                                     fontWeight: FontWeight.bold,
+                                    decoration: isCanceled
+                                        ? TextDecoration.lineThrough
+                                        : null,
+                                    color: isCanceled
+                                        ? Colors.red
+                                        : Colors.black,
                                   ),
                                 ),
-                                Expanded(child: Text(item.description)),
+                                Expanded(
+                                  child: Text(
+                                    item.description,
+                                    style: TextStyle(
+                                      decoration: isCanceled
+                                          ? TextDecoration.lineThrough
+                                          : null,
+                                      color: isCanceled
+                                          ? Colors.red
+                                          : Colors.black,
+                                    ),
+                                  ),
+                                ),
                                 Text(
                                   "R\$ ${FormatUtils.formatValue(item.price.toStringAsFixed(2))}",
+                                  style: TextStyle(
+                                    decoration: isCanceled
+                                        ? TextDecoration.lineThrough
+                                        : null,
+                                    color: isCanceled
+                                        ? Colors.red
+                                        : Colors.black,
+                                  ),
                                 ),
                               ],
                             ),

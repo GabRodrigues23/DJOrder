@@ -9,6 +9,7 @@ class OrderDto {
       idOrder: DtoUtils.get<int>(json['ID_COMANDA'], defaultValue: 0),
       idTable: DtoUtils.get<int>(json['IDMESA'], defaultValue: 0),
       status: json['COO'],
+      canceled: DtoUtils.get<String>(json['STATUS_PEDIDO'], defaultValue: 'N'),
       clientName: DtoUtils.get<String>(
         json['NOME_CLIENTE'],
         defaultValue: 'Vendas A Vista',
