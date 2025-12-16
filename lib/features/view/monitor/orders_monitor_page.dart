@@ -1,3 +1,4 @@
+import 'package:djorder/features/view/monitor/widgets/order_grid_panel.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_modular/flutter_modular.dart';
 import 'package:djorder/features/model/order.dart';
@@ -5,7 +6,6 @@ import 'package:djorder/features/repository/order_repository.dart';
 import 'package:djorder/features/service/order_service.dart';
 import 'package:djorder/features/view/monitor/widgets/order_details_panel.dart';
 import 'package:djorder/features/view/monitor/widgets/order_filters_bar.dart';
-import 'package:djorder/features/view/monitor/widgets/order_item_widget.dart';
 import 'package:djorder/features/viewmodel/order_view_model.dart';
 
 class OrdersMonitorPage extends StatefulWidget {
@@ -36,6 +36,12 @@ class _OrdersMonitorPageState extends State<OrdersMonitorPage> {
   void dispose() {
     super.dispose();
     viewModel.stopAutoRefresh();
+  }
+
+  void _handleOrderSelection(int idOrder) {
+    setState(() {
+      selectedIdOrder = idOrder;
+    });
   }
 
   @override
@@ -92,15 +98,16 @@ class _OrdersMonitorPageState extends State<OrdersMonitorPage> {
                   viewModel.setSearchQuery(query);
                 },
               ),
-
               Expanded(
                 child: Row(
                   children: [
-                    Expanded(flex: 3, child: _buildGridSection(activeOrder)),
-                    const VerticalDivider(
-                      width: 1,
-                      thickness: 1,
-                      color: Colors.grey,
+                    Expanded(
+                      flex: 3,
+                      child: OrderGridPanel(
+                        viewModel: viewModel,
+                        activeOrder: activeOrder,
+                        onOrderSelected: _handleOrderSelection,
+                      ),
                     ),
                     Expanded(
                       flex: 1,
@@ -113,57 +120,6 @@ class _OrdersMonitorPageState extends State<OrdersMonitorPage> {
           );
         },
       ),
-    );
-  }
-
-  Widget _buildGridSection(Order? activeOrder) {
-    if (viewModel.errorMessage.isNotEmpty) {
-      return Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            const Icon(Icons.error_outline, size: 60, color: Colors.red),
-            Text(viewModel.errorMessage),
-            ElevatedButton(
-              onPressed: viewModel.loadData,
-              child: const Text('Tentar Novamente'),
-            ),
-          ],
-        ),
-      );
-    }
-
-    return GridView.builder(
-      padding: const EdgeInsets.all(16),
-      gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-        crossAxisCount: 5,
-        childAspectRatio: 0.85,
-        mainAxisSpacing: 16,
-        crossAxisSpacing: 16,
-      ),
-      itemCount: viewModel.orders.length,
-      itemBuilder: (context, index) {
-        final order = viewModel.orders[index];
-        final isSelected = activeOrder?.idOrder == order.idOrder;
-
-        return Container(
-          decoration: isSelected
-              ? BoxDecoration(
-                  border: Border.all(color: const Color(0xFF180E6D), width: 3),
-                  borderRadius: BorderRadius.circular(12),
-                )
-              : null,
-          child: OrderItemWidget(
-            order: order,
-            onTap: () {
-              setState(() {
-                selectedIdOrder = order.idOrder;
-              });
-              debugPrint('Clicou na comanda ${order.idOrder}');
-            },
-          ),
-        );
-      },
     );
   }
 }

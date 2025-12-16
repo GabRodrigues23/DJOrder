@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'package:djorder/core/utils/format_utils.dart';
 import 'package:flutter/material.dart';
 import 'package:djorder/shared/enums/order_status_type.dart';
 import 'package:djorder/shared/extensions/order_status_extension.dart';
@@ -61,17 +62,19 @@ class _OrderItemWidgetState extends State<OrderItemWidget> {
         .padLeft(2, '0');
     _timeText = '$hours:$minutes';
 
-    if (_settings.isSlaEnables) {
-      if (minutesTotal >= _settings.criticalMinutes) {
-        _clockColor = Colors.redAccent;
-      } else if (minutesTotal >= _settings.warningMinutes) {
-        _clockColor = Colors.orangeAccent;
-      } else {
-        _clockColor = Colors.white;
-      }
-    } else {
+    if (!_settings.isSlaEnables) {
       _clockColor = Colors.white;
+      return;
     }
+    if (minutesTotal >= _settings.criticalMinutes) {
+      _clockColor = Colors.redAccent;
+      return;
+    }
+    if (minutesTotal >= _settings.warningMinutes) {
+      _clockColor = Colors.orangeAccent;
+      return;
+    }
+    _clockColor = Colors.white;
   }
 
   @override
@@ -191,7 +194,7 @@ class _OrderItemWidgetState extends State<OrderItemWidget> {
                     borderRadius: BorderRadius.circular(4),
                   ),
                   child: Text(
-                    'R\$ ${widget.order.subtotal.toStringAsFixed(2)}',
+                    'R\$ ${FormatUtils.formatValue(widget.order.effectiveSubtotal.toStringAsFixed(2))}',
                     style: const TextStyle(
                       color: Colors.white,
                       fontWeight: FontWeight.bold,

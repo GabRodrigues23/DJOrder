@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:djorder/core/utils/format_utils.dart';
 import 'package:djorder/features/model/order.dart';
 
 class OrderDetailsPanel extends StatelessWidget {
@@ -50,7 +51,9 @@ class OrderDetailsPanel extends StatelessWidget {
                     ),
                   ),
                   const SizedBox(height: 10),
-                  _infoRow("Cliente:", order!.clientName ?? "Não identificado"),
+                  _infoRow("Cliente:", order!.clientName ?? ''),
+                  if (order!.idTable != null && order!.idTable != 0)
+                    _infoRow('Mesa:', '${order!.idTable}'),
                   const Divider(height: 30),
                   const Text(
                     "Itens do Pedido:",
@@ -64,6 +67,8 @@ class OrderDetailsPanel extends StatelessWidget {
                       separatorBuilder: (_, __) => const Divider(),
                       itemBuilder: (context, index) {
                         final item = order!.products[index];
+                        final isCanceled = item.status == 'S';
+
                         return Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
@@ -71,25 +76,53 @@ class OrderDetailsPanel extends StatelessWidget {
                               children: [
                                 Text(
                                   "${item.qtd.toInt()}x ",
-                                  style: const TextStyle(
+                                  style: TextStyle(
                                     fontWeight: FontWeight.bold,
+                                    decoration: isCanceled
+                                        ? TextDecoration.lineThrough
+                                        : null,
+                                    color: isCanceled
+                                        ? Colors.red
+                                        : Colors.black,
                                   ),
                                 ),
-                                Expanded(child: Text(item.description)),
-                                Text("R\$ ${item.price.toStringAsFixed(2)}"),
+                                Expanded(
+                                  child: Text(
+                                    item.description,
+                                    style: TextStyle(
+                                      decoration: isCanceled
+                                          ? TextDecoration.lineThrough
+                                          : null,
+                                      color: isCanceled
+                                          ? Colors.red
+                                          : Colors.black,
+                                    ),
+                                  ),
+                                ),
+                                Text(
+                                  "R\$ ${FormatUtils.formatValue(item.price.toStringAsFixed(2))}",
+                                  style: TextStyle(
+                                    decoration: isCanceled
+                                        ? TextDecoration.lineThrough
+                                        : null,
+                                    color: isCanceled
+                                        ? Colors.red
+                                        : Colors.black,
+                                  ),
+                                ),
                               ],
                             ),
 
-                            if (item.addons.isNotEmpty)
+                            if (item.additional.isNotEmpty)
                               Padding(
                                 padding: const EdgeInsets.only(
                                   left: 16,
                                   top: 4,
                                 ),
                                 child: Column(
-                                  children: item.addons
+                                  children: item.additional
                                       .map(
-                                        (addon) => Row(
+                                        (additional) => Row(
                                           children: [
                                             const Icon(
                                               Icons.subdirectory_arrow_right,
@@ -97,15 +130,15 @@ class OrderDetailsPanel extends StatelessWidget {
                                               color: Colors.grey,
                                             ),
                                             Text(
-                                              "${addon.qtd.toInt()}x ${addon.description}",
+                                              "${additional.qtd.toInt()}x ${additional.description}",
                                               style: const TextStyle(
                                                 fontSize: 12,
                                                 color: Colors.grey,
                                               ),
                                             ),
-                                            if (addon.price > 0)
+                                            if (additional.price > 0)
                                               Text(
-                                                " + R\$ ${addon.price.toStringAsFixed(2)}",
+                                                " + R\$ ${FormatUtils.formatValue(additional.price.toStringAsFixed(2))}",
                                                 style: const TextStyle(
                                                   fontSize: 12,
                                                   color: Colors.grey,
@@ -126,11 +159,11 @@ class OrderDetailsPanel extends StatelessWidget {
                   const Divider(),
                   _infoRow(
                     "Subtotal:",
-                    "R\$ ${order!.subtotal.toStringAsFixed(2)}",
+                    "R\$ ${FormatUtils.formatValue(order!.effectiveSubtotal.toStringAsFixed(2))}",
                   ),
                   _infoRow(
                     "Serviço:",
-                    "R\$ ${order!.serviceTax.toStringAsFixed(2)}",
+                    "R\$ ${FormatUtils.formatValue(order!.serviceTax.toStringAsFixed(2))}",
                   ),
                   const SizedBox(height: 10),
                   Container(
@@ -150,7 +183,7 @@ class OrderDetailsPanel extends StatelessWidget {
                           ),
                         ),
                         Text(
-                          "R\$ ${(order!.subtotal + order!.serviceTax).toStringAsFixed(2)}",
+                          "R\$ ${FormatUtils.formatValue(order!.totalValue.toStringAsFixed(2))}",
                           style: const TextStyle(
                             color: Colors.white,
                             fontWeight: FontWeight.bold,
