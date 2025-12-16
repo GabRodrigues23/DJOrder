@@ -16,6 +16,13 @@ dependencies:
   shared_preferences: ^2.5.4
   window_manager: ^0.3.8
   audioplayers: ^6.5.1
+  flutter_launcher_icons: ^0.14.4
+
+flutter_launcher_icons:
+  windows: 
+    generate: true
+    image_path: 'assets/images/logo.png'
+    icon_size: 48
 
 dev_dependencies:
   flutter_test:
@@ -26,6 +33,7 @@ flutter:
   uses-material-design: true
   assets:
     - assets/sounds/
+    - assets/images/
   fonts:
     - family: Montserrat
       fonts:
