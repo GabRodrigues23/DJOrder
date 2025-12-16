@@ -62,17 +62,19 @@ class _OrderItemWidgetState extends State<OrderItemWidget> {
         .padLeft(2, '0');
     _timeText = '$hours:$minutes';
 
-    if (_settings.isSlaEnables) {
-      if (minutesTotal >= _settings.criticalMinutes) {
-        _clockColor = Colors.redAccent;
-      } else if (minutesTotal >= _settings.warningMinutes) {
-        _clockColor = Colors.orangeAccent;
-      } else {
-        _clockColor = Colors.white;
-      }
-    } else {
+    if (!_settings.isSlaEnables) {
       _clockColor = Colors.white;
+      return;
     }
+    if (minutesTotal >= _settings.criticalMinutes) {
+      _clockColor = Colors.redAccent;
+      return;
+    }
+    if (minutesTotal >= _settings.warningMinutes) {
+      _clockColor = Colors.orangeAccent;
+      return;
+    }
+    _clockColor = Colors.white;
   }
 
   @override
