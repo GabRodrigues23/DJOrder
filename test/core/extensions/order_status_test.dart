@@ -2,11 +2,10 @@ import 'package:djorder/features/model/order.dart';
 import 'package:djorder/features/model/order_itens.dart';
 import 'package:djorder/shared/enums/order_status_type.dart';
 import 'package:djorder/shared/extensions/order_status_extension.dart';
-import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 void main() {
-  group('Logica de OrderStatus', () {
+  group('Logica de troca de status das comandas', () {
     Order createOrder({
       String canceled = 'N',
       int? coo,
@@ -33,30 +32,26 @@ void main() {
       additional: [],
     );
 
-    test('Deve ser FREE se canceled = "S"', () {
+    test('Comanda Livre quando status for cancelado' , () {
       final order = createOrder(canceled: 'S', items: [activeItem]);
       expect(order.calculatedStatus, OrderStatus.free);
-      debugPrint('OrderStatus: ${order.calculatedStatus}');
     });
 
-    test('Deve ser FREE se COO > 0 (Venda Finalizada/Cancelada)', () {
+    test('Comanda Livre quando coo > 0 (Comanda Fechada)', () {
       final order = createOrder(coo: 123456, items: [activeItem]);
       expect(order.calculatedStatus, OrderStatus.free);
-      debugPrint('OrderStatus: ${order.calculatedStatus}');
     });
 
-    test('Deve ser LOCKED se COO < 0', () {
+    test('Comanda Bloqueada se coo < 0', () {
       final order = createOrder(coo: -1);
       expect(order.calculatedStatus, OrderStatus.lock);
-      debugPrint('OrderStatus: ${order.calculatedStatus}');
     });
 
     test(
-      'Deve ser BUSY se for uma abertura de comanda normal (COO = 0 ou NULL) com produtos',
+      'Comanda bloqueada se houver produtos e coo 0 ou coo nulo',
       () {
         final order = createOrder(coo: 0, items: [activeItem]);
         expect(order.calculatedStatus, OrderStatus.busy);
-        debugPrint('OrderStatus: ${order.calculatedStatus}');
       },
     );
   });

@@ -1,11 +1,10 @@
 import 'package:djorder/features/model/order.dart';
 import 'package:djorder/features/model/order_additional.dart';
 import 'package:djorder/features/model/order_itens.dart';
-import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 void main() {
-  group('Order Calculos', () {
+  group('Calculos Order', () {
     OrderItens createItem(
       double price, {
       List<OrderAdditional> additional = const [],
@@ -21,7 +20,7 @@ void main() {
     }
 
     test(
-      'totalAdditional deve somar o valor de todos os itens adicionais corretamente',
+      'Soma do preço dos adicionais dos produtos (totalAdditional)',
       () {
         final additional1 = OrderAdditional(
           description: 'Bacon',
@@ -48,12 +47,11 @@ void main() {
         );
 
         expect(order.totalAdditional, 10.00);
-        debugPrint('TotalAdditional: ${order.totalAdditional}');
       },
     );
 
     test(
-      'effectiveSubtotal deve somar o valor de Subtotal + valor do Total de Adicionais',
+      'Soma dos preço total dos adicionais ao preço dos produtos',
       () {
         final additional = OrderAdditional(
           description: 'Extra',
@@ -73,12 +71,11 @@ void main() {
         );
 
         expect(order.effectiveSubtotal, 60.00);
-        debugPrint('EffectiveSubtotal: ${order.effectiveSubtotal}');
       },
     );
 
     test(
-      'totalValue deve somar o valor do Total do Subtotal + o valor da Taxa de Serviço',
+      'Soma do subtotal do produto ao valor de taxa de serviço',
       () {
         final order = Order(
           id: 1,
@@ -92,7 +89,6 @@ void main() {
         );
 
         expect(order.totalValue, 110.00);
-        debugPrint('TotalValue: ${order.totalValue}');
       },
     );
   });
