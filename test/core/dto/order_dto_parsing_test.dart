@@ -4,7 +4,7 @@ import 'package:flutter_test/flutter_test.dart';
 void main() {
   group('Conversão JSON de OrderDTO', () {
     test(
-      'Deve converter uma data válida em formato ISO 8601 do servidor Lazarus',
+      'Conversão de uma data válida em formato ISO 8601 do servidor Lazarus',
       () {
         final json = {
           'CODPREVENDA': 1,
@@ -28,7 +28,7 @@ void main() {
     );
 
     test(
-      'Deve ter um retorno de DateTime.now() se a data for NULL ou inválida',
+      'Retorno de DateTime.now() se a data for NULL ou inválida',
       () {
         final json = {
           'CODPREVENDA': 1,
@@ -50,7 +50,7 @@ void main() {
       },
     );
 
-    test('Deve mapear STATUS_PEDIDO para um campo cancelado', () {
+    test('Mapear STATUS_PEDIDO para um campo cancelado', () {
       final jsonCanceled = {
         'CODPREVENDA': 1,
         'ID_COMANDA': 1,
