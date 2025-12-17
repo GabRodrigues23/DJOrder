@@ -1,5 +1,5 @@
 import 'package:djorder/features/model/order.dart';
-import 'package:djorder/features/model/order_itens.dart';
+import 'package:djorder/features/model/order_items.dart';
 import 'package:djorder/shared/enums/order_status_type.dart';
 import 'package:djorder/shared/extensions/order_status_extension.dart';
 import 'package:flutter_test/flutter_test.dart';
@@ -9,7 +9,7 @@ void main() {
     Order createOrder({
       String canceled = 'N',
       int? coo,
-      List<OrderItens> items = const [],
+      List<OrderItems> items = const [],
     }) {
       return Order(
         id: 1,
@@ -23,7 +23,7 @@ void main() {
       );
     }
 
-    final activeItem = OrderItens(
+    final activeItem = OrderItems(
       id: 1,
       description: 'X',
       qtd: 1,

@@ -1,4 +1,4 @@
-import 'package:djorder/features/model/order_itens.dart';
+import 'package:djorder/features/model/order_items.dart';
 
 class Order {
   final int id;
@@ -10,7 +10,7 @@ class Order {
   final double subtotal;
   final double serviceTax;
   final DateTime oppeningDate;
-  final List<OrderItens> products;
+  final List<OrderItems> products;
 
   Order({
     required this.id,
@@ -52,7 +52,7 @@ class Order {
       serviceTax: (json['TAXA_SERVICO']).toDouble(),
       oppeningDate:
           DateTime.tryParse(json['DATAHORA_INICIO'] ?? '') ?? DateTime.now(),
-      products: productsList.map((i) => OrderItens.fromJson(i)).toList(),
+      products: productsList.map((i) => OrderItems.fromJson(i)).toList(),
     );
   }
 

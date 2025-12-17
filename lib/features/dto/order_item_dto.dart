@@ -1,10 +1,10 @@
 import 'package:djorder/core/utils/dto_utils.dart';
 import 'package:djorder/features/dto/order_item_additional_dto.dart';
-import 'package:djorder/features/model/order_itens.dart';
+import 'package:djorder/features/model/order_items.dart';
 
-extension OrderItemDto on OrderItens {
-  static OrderItens fromJson(Map<String, dynamic> json) {
-    return OrderItens(
+extension OrderItemDto on OrderItems {
+  static OrderItems fromJson(Map<String, dynamic> json) {
+    return OrderItems(
       id: DtoUtils.get<int>(json['CODPRODUTO'], defaultValue: 0),
       description: DtoUtils.get<String>(json['DESCRICAO'], defaultValue: ''),
       qtd: DtoUtils.get<double>(json['QTD'], defaultValue: 0),
@@ -16,7 +16,7 @@ extension OrderItemDto on OrderItens {
     );
   }
 
-  static List<OrderItens> fromList(List<dynamic> list) {
+  static List<OrderItems> fromList(List<dynamic> list) {
     return list.map((i) => OrderItemDto.fromJson(i)).toList();
   }
 }

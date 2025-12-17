@@ -1,15 +1,15 @@
 import 'package:djorder/features/model/order.dart';
 import 'package:djorder/features/model/order_additional.dart';
-import 'package:djorder/features/model/order_itens.dart';
+import 'package:djorder/features/model/order_items.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 void main() {
   group('Calculos Order', () {
-    OrderItens createItem(
+    OrderItems createItem(
       double price, {
       List<OrderAdditional> additional = const [],
     }) {
-      return OrderItens(
+      return OrderItems(
         id: 1,
         description: 'Item Teste',
         qtd: 1,

@@ -25,6 +25,7 @@
 * **Alta Performance:** Leve e rápido, rodando como aplicação de console.
 * **Integração Firebird:** Leitura direta das tabelas `PREVENDA`, `PRE_ITEM` e `PRODUTO`.
 * **Formatação ISO 8601:** Tratamento de datas compatível com Flutter.
+* **Testes Unitários:** Testes automatizados para garantir o bom funcionamento.
 
 ---
 
@@ -52,14 +53,18 @@
 ## Backend
 ```bash
 └── djorder_server/ 
-    └── src/
-        ├── controllers/
-        │   └── controller_orders.pas
-        ├── routes/
-        │   └── routes.pas
-        ├── services/
-        │   └── connection.pas
-        └── djorder_server.lpr 
+    ├── src/
+    │   ├── controllers/
+    │   │   └── controller_orders.pas
+    │   ├── routes/
+    │   │   └── routes.pas
+    │   └── services/
+    │       └── connection.pas
+    ├── djorder_server.exe 
+    ├── djorder_server.lpi 
+    └── djorder_server.lpr 
+
+
 
 ```
 
@@ -86,7 +91,7 @@
     │   │   ├── model/
     │   │   │   ├── order.dart
     │   │   │   ├── order_additional.dart
-    │   │   │   └── order_itens.dart
+    │   │   │   └── order_items.dart
     │   │   ├── repository/
     │   │   │   └── order_repository.dart    
     │   │   ├── service/
@@ -114,6 +119,16 @@
     │   │       ├── order_status_extension.dart
     │   │       └── order_theme_extensiond.dart
     │   └── main.dart
+    ├── test/
+    │   └── core/          
+    │       ├── dto/
+    │       │   └── order_dto_parsing_test.dart
+    │       ├── extensions/
+    │       │   └── order_status_test.dart
+    │       ├── model/
+    │       │   └── order_test.dart    
+    │       └── viewmodel/
+    │           └── order_view_model_test.dart
     ├── pubspec.yaml
     └── README.md
 
@@ -133,7 +148,7 @@
 
 1. Abra o projeto:
    ```
-   backend/djorder_server.lpi
+   djorder_server/djorder_server.lpi
    ```
 2. Compile o projeto (`Ctrl + F9`).
 3. Garanta que o `fbclient.dll` e o banco de dados estejam acessíveis.
@@ -147,7 +162,7 @@ O servidor iniciará em modo console escutando na porta **9000**.
 
 1. Acesse a pasta do projeto Flutter:
    ```bash
-   cd frontend
+   cd djorder
    ```
 2. Instale as dependências:
    ```bash
