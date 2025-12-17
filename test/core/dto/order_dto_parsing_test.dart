@@ -1,5 +1,4 @@
 import 'package:djorder/features/dto/order_dto.dart';
-import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 void main() {
@@ -25,10 +24,6 @@ void main() {
         expect(order.oppeningDate.month, 12);
         expect(order.oppeningDate.hour, 21);
         expect(order.oppeningDate.minute, 30);
-        debugPrint('Ano: ${order.oppeningDate.year}');
-        debugPrint('Mês: ${order.oppeningDate.month}');
-        debugPrint('Horas: ${order.oppeningDate.hour}');
-        debugPrint('Minutos: ${order.oppeningDate.minute}');
       },
     );
 
@@ -52,10 +47,6 @@ void main() {
           DateTime.now().difference(order.oppeningDate).inSeconds < 5,
           true,
         );
-        debugPrint('Data de Abertura: ${order.oppeningDate}');
-        debugPrint(
-          'Diferença em Segundos: ${DateTime.now().difference(order.oppeningDate).inSeconds < 5}',
-        );
       },
     );
 
@@ -71,7 +62,6 @@ void main() {
 
       final order = OrderDto.fromJson(jsonCanceled);
       expect(order.canceled, 'S');
-      debugPrint('Pedido Cancelado: ${order.canceled}');
     });
   });
 }
