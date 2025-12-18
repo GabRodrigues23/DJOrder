@@ -129,11 +129,13 @@ class OrderDetailsPanel extends StatelessWidget {
                                               size: 14,
                                               color: Colors.grey,
                                             ),
-                                            Text(
-                                              "${additional.qtd.toInt()}x ${additional.description}",
-                                              style: const TextStyle(
-                                                fontSize: 12,
-                                                color: Colors.grey,
+                                            Expanded(
+                                              child: Text(
+                                                "${additional.qtd.toInt()}x ${additional.description}",
+                                                style: const TextStyle(
+                                                  fontSize: 12,
+                                                  color: Colors.grey,
+                                                ),
                                               ),
                                             ),
                                             if (additional.price > 0)
@@ -207,8 +209,8 @@ class OrderDetailsPanel extends StatelessWidget {
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
-          Text(label, style: const TextStyle(color: Colors.grey)),
-          Text(value, style: const TextStyle(fontWeight: FontWeight.w500)),
+          Text(label, style: TextStyle(color: Colors.grey) , textAlign: TextAlign.start,softWrap: false,),
+          Expanded(child: Text(value, style: TextStyle(fontWeight: FontWeight.w500), softWrap: true, textAlign: TextAlign.end,)),
         ],
       ),
     );

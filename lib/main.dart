@@ -11,7 +11,7 @@ void main() async {
   await SettingsService().init();
 
   WindowOptions windowOptions = const WindowOptions(
-    minimumSize: Size(1280, 720),
+    minimumSize: Size(1024, 768),
     center: true,
     title: 'DJORDER',
   );
