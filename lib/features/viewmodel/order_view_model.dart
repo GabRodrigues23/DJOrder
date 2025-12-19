@@ -10,12 +10,13 @@ import 'package:djorder/features/model/order.dart';
 class OrderViewModel extends ChangeNotifier {
   final OrderRepositoryInterface _repository;
   OrderViewModel(this._repository);
+
   List<Order> _allOrders = [];
   OrderStatus? currentFilter;
   bool isLoading = false;
-  String errorMessage = '';
   Timer? _timer;
   String _searchQuery = '';
+  String errorMessage = '';
   final AudioPlayer _audioPlayer = AudioPlayer();
 
   int _lastActiveCount = 0;
@@ -23,15 +24,27 @@ class OrderViewModel extends ChangeNotifier {
 
   List<Order> get orders {
     return _allOrders.where((order) {
-      final query = _searchQuery.toUpperCase();
-      final bool matchesSearch =
-          _searchQuery.isEmpty ||
-          order.idOrder.toString().contains(query) ||
-          (order.clientName?.toUpperCase().contains(query) ?? false);
-      final bool matchesFilter =
-          currentFilter == null || order.calculatedStatus == currentFilter;
+      if (currentFilter != null && order.calculatedStatus != currentFilter) {
+        return false;
+      }
 
-      return matchesSearch && matchesFilter;
+      final query = _searchQuery.toUpperCase().trim();
+
+      if (query.isEmpty) {
+        return true;
+      }
+
+      if (query.startsWith('MESA')) {
+        final tableNumber = query.replaceFirst('MESA', '').trim();
+        return tableNumber.isNotEmpty &&
+            order.idTable.toString() == tableNumber;
+      }
+
+      if (int.tryParse(query) != null) {
+        return order.idOrder.toString() == query;
+      }
+
+      return order.clientName?.toUpperCase().contains(query) ?? false;
     }).toList();
   }
 
