@@ -20,6 +20,7 @@ class _OrderItemWidgetState extends State<OrderItemWidget> {
   Timer? _timer;
   String _timeText = '';
   Color _clockColor = Colors.white;
+  bool focus = false;
   final _settings = SettingsService();
 
   @override
@@ -77,6 +78,10 @@ class _OrderItemWidgetState extends State<OrderItemWidget> {
     _clockColor = Colors.white;
   }
 
+  bool updateFocus(focus) {
+    return focus = !focus;
+  }
+
   @override
   Widget build(BuildContext context) {
     final status = widget.order.calculatedStatus;
@@ -102,17 +107,10 @@ class _OrderItemWidgetState extends State<OrderItemWidget> {
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                mainAxisAlignment: _timeText.isNotEmpty
+                    ? MainAxisAlignment.spaceBetween
+                    : MainAxisAlignment.end,
                 children: [
-                  Text(
-                    '#${widget.order.idOrder}',
-                    style: const TextStyle(
-                      fontSize: 22,
-                      fontWeight: FontWeight.bold,
-                      color: Colors.white,
-                    ),
-                  ),
-
                   if (_timeText.isNotEmpty)
                     Container(
                       padding: const EdgeInsets.symmetric(
@@ -138,72 +136,91 @@ class _OrderItemWidgetState extends State<OrderItemWidget> {
                         ],
                       ),
                     ),
+                  PopupMenuButton(
+                    tooltip: 'Menu',
+                    padding: EdgeInsets.zero,
+                    icon: Icon(Icons.more_horiz),
+                    itemBuilder: (context) => [
+                      PopupMenuItem(child: Text('Adicionar Produto')),
+                      PopupMenuItem(child: Text('Informar/Alterar Cliente')),
+                      PopupMenuItem(child: Text('Incluir/Alterar Mesa')),
+                      PopupMenuItem(child: Text('Adicionar n° Pessoas')),
+                      PopupMenuItem(child: Text('Imprimir Pedido')),
+                      PopupMenuItem(
+                        child: Text('Imprimir Conferência de Conta'),
+                      ),
+                      PopupMenuItem(child: Text('Finalizar Comanda')),
+                      PopupMenuItem(child: Text('Cancelar Comanda')),
+                    ],
+                  ),
                 ],
               ),
-
-              if (showDetails) ...[
-                Text(
-                  '${widget.order.clientName}',
-                  textAlign: TextAlign.center,
-                  maxLines: 1,
-                  overflow: TextOverflow.ellipsis,
+              !showDetails
+                  ? Center(
+                      child: Text(
+                        '#${widget.order.idOrder}',
+                        style: const TextStyle(
+                          fontSize: 22,
+                          fontWeight: FontWeight.bold,
+                          color: Colors.white,
+                        ),
+                      ),
+                    )
+                  : Column(
+                      children: [
+                        Text(
+                          '#${widget.order.idOrder}',
+                          style: const TextStyle(
+                            fontSize: 22,
+                            fontWeight: FontWeight.bold,
+                            color: Colors.white,
+                          ),
+                        ),
+                        Text(
+                          '${widget.order.clientName}',
+                          textAlign: TextAlign.center,
+                          maxLines: 1,
+                          overflow: TextOverflow.ellipsis,
+                          style: const TextStyle(
+                            color: Colors.white,
+                            fontWeight: FontWeight.w600,
+                            fontSize: 14,
+                          ),
+                        ),
+                        Visibility(
+                          visible:
+                              widget.order.idTable != null &&
+                              widget.order.idTable != 0,
+                          child: Text(
+                            'Mesa: ${widget.order.idTable}',
+                            textAlign: TextAlign.center,
+                            maxLines: 1,
+                            overflow: TextOverflow.ellipsis,
+                            style: const TextStyle(
+                              color: Colors.white,
+                              fontWeight: FontWeight.w600,
+                              fontSize: 14,
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
+              Container(
+                alignment: Alignment.bottomCenter,
+                padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                decoration: BoxDecoration(
+                  color: Colors.black26,
+                  borderRadius: BorderRadius.circular(4),
+                ),
+                child: Text(
+                  'R\$ ${FormatUtils.formatValue(widget.order.effectiveSubtotal.toStringAsFixed(2))}',
                   style: const TextStyle(
                     color: Colors.white,
-                    fontWeight: FontWeight.w600,
-                    fontSize: 14,
+                    fontWeight: FontWeight.bold,
+                    fontSize: 13,
                   ),
                 ),
-              ],
-
-              if (showDetails) ...[
-                if (widget.order.idTable != null && widget.order.idTable != 0)
-                  Text(
-                    'Mesa: ${widget.order.idTable}',
-                    textAlign: TextAlign.center,
-                    maxLines: 1,
-                    overflow: TextOverflow.ellipsis,
-                    style: const TextStyle(
-                      color: Colors.white,
-                      fontWeight: FontWeight.w600,
-                      fontSize: 14,
-                    ),
-                  )
-                else
-                  Text(
-                    '',
-                    textAlign: TextAlign.center,
-                    maxLines: 1,
-                    overflow: TextOverflow.ellipsis,
-                    style: const TextStyle(
-                      color: Colors.white,
-                      fontWeight: FontWeight.w600,
-                      fontSize: 14,
-                    ),
-                  ),
-              ],
-
-              if (showDetails)
-                Container(
-                  alignment: Alignment.bottomCenter,
-                  padding: const EdgeInsets.symmetric(
-                    horizontal: 8,
-                    vertical: 4,
-                  ),
-                  decoration: BoxDecoration(
-                    color: Colors.black26,
-                    borderRadius: BorderRadius.circular(4),
-                  ),
-                  child: Text(
-                    'R\$ ${FormatUtils.formatValue(widget.order.effectiveSubtotal.toStringAsFixed(2))}',
-                    style: const TextStyle(
-                      color: Colors.white,
-                      fontWeight: FontWeight.bold,
-                      fontSize: 13,
-                    ),
-                  ),
-                )
-              else
-                const SizedBox(height: 20),
+              ),
             ],
           ),
         ),

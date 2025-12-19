@@ -15,13 +15,35 @@ class OrderDetailsPanel extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
-          const Text(
-            'Detalhes da Comanda',
-            style: TextStyle(
-              fontSize: 18,
-              fontWeight: FontWeight.bold,
-              color: Colors.grey,
-            ),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Expanded(
+                child: Text(
+                  'Detalhes da Comanda',
+                  style: TextStyle(
+                    fontSize: 18,
+                    fontWeight: FontWeight.bold,
+                    color: Colors.grey,
+                  ),
+                ),
+              ),
+              PopupMenuButton(
+                tooltip: 'Menu',
+                padding: EdgeInsets.zero,
+                icon: Icon(Icons.menu),
+                itemBuilder: (context) => [
+                  PopupMenuItem(child: Text('Adicionar Produtos')),
+                  PopupMenuItem(child: Text('Informar/Alterar Cliente')),
+                  PopupMenuItem(child: Text('Incluir/Alterar Mesa')),
+                  PopupMenuItem(child: Text('Adicionar n° Pessoas')),
+                  PopupMenuItem(child: Text('Imprimir Pedido')),
+                  PopupMenuItem(child: Text('Imprimir Conferência de Conta')),
+                  PopupMenuItem(child: Text('Finalizar Comanda')),
+                  PopupMenuItem(child: Text('Cancelar Comanda')),
+                ],
+              ),
+            ],
           ),
           const Divider(),
 
@@ -209,8 +231,20 @@ class OrderDetailsPanel extends StatelessWidget {
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
-          Text(label, style: TextStyle(color: Colors.grey) , textAlign: TextAlign.start,softWrap: false,),
-          Expanded(child: Text(value, style: TextStyle(fontWeight: FontWeight.w500), softWrap: true, textAlign: TextAlign.end,)),
+          Text(
+            label,
+            style: TextStyle(color: Colors.grey),
+            textAlign: TextAlign.start,
+            softWrap: false,
+          ),
+          Expanded(
+            child: Text(
+              value,
+              style: TextStyle(fontWeight: FontWeight.w500),
+              softWrap: true,
+              textAlign: TextAlign.end,
+            ),
+          ),
         ],
       ),
     );

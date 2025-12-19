@@ -42,8 +42,8 @@ class OrderGridPanel extends StatelessWidget {
       ),
       child: GridView.builder(
         padding: const EdgeInsets.all(16),
-        gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-          crossAxisCount: 5,
+        gridDelegate: SliverGridDelegateWithMaxCrossAxisExtent(
+          maxCrossAxisExtent: 200,
           childAspectRatio: 0.85,
           mainAxisSpacing: 16,
           crossAxisSpacing: 16,
@@ -54,6 +54,7 @@ class OrderGridPanel extends StatelessWidget {
           final isSelected = activeOrder?.idOrder == order.idOrder;
 
           return Container(
+            constraints: BoxConstraints(maxHeight: 150, maxWidth: 100),
             decoration: isSelected
                 ? BoxDecoration(
                     border: Border.all(
@@ -67,6 +68,7 @@ class OrderGridPanel extends StatelessWidget {
               order: order,
               onTap: () {
                 onOrderSelected(order.idOrder);
+
                 debugPrint('Clicou na comanda ${order.idOrder}');
               },
             ),
