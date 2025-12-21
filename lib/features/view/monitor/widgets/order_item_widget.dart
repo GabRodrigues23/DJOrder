@@ -1,5 +1,7 @@
 import 'dart:async';
 import 'package:djorder/core/utils/format_utils.dart';
+import 'package:djorder/features/view/monitor/widgets/actions_button_widget.dart';
+import 'package:djorder/shared/mixins/menu_options_mixin.dart';
 import 'package:flutter/material.dart';
 import 'package:djorder/shared/enums/order_status_type.dart';
 import 'package:djorder/shared/extensions/order_status_extension.dart';
@@ -16,7 +18,8 @@ class OrderItemWidget extends StatefulWidget {
   State<OrderItemWidget> createState() => _OrderItemWidgetState();
 }
 
-class _OrderItemWidgetState extends State<OrderItemWidget> {
+class _OrderItemWidgetState extends State<OrderItemWidget>
+    with MenuOptionsMixin {
   Timer? _timer;
   String _timeText = '';
   Color _clockColor = Colors.white;
@@ -136,22 +139,11 @@ class _OrderItemWidgetState extends State<OrderItemWidget> {
                         ],
                       ),
                     ),
-                  PopupMenuButton(
-                    tooltip: 'Menu',
-                    padding: EdgeInsets.zero,
-                    icon: Icon(Icons.more_horiz),
-                    itemBuilder: (context) => [
-                      PopupMenuItem(child: Text('Adicionar Produto')),
-                      PopupMenuItem(child: Text('Informar/Alterar Cliente')),
-                      PopupMenuItem(child: Text('Incluir/Alterar Mesa')),
-                      PopupMenuItem(child: Text('Adicionar n° Pessoas')),
-                      PopupMenuItem(child: Text('Imprimir Pedido')),
-                      PopupMenuItem(
-                        child: Text('Imprimir Conferência de Conta'),
-                      ),
-                      PopupMenuItem(child: Text('Finalizar Comanda')),
-                      PopupMenuItem(child: Text('Cancelar Comanda')),
-                    ],
+                  ActionsButtonWidget(
+                    order: widget.order,
+                    onSelected: (option) {
+                      handleMenuAction(context, option, widget.order);
+                    },
                   ),
                 ],
               ),
@@ -205,19 +197,25 @@ class _OrderItemWidgetState extends State<OrderItemWidget> {
                         ),
                       ],
                     ),
-              Container(
-                alignment: Alignment.bottomCenter,
-                padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
-                decoration: BoxDecoration(
-                  color: Colors.black26,
-                  borderRadius: BorderRadius.circular(4),
-                ),
-                child: Text(
-                  'R\$ ${FormatUtils.formatValue(widget.order.effectiveSubtotal.toStringAsFixed(2))}',
-                  style: const TextStyle(
-                    color: Colors.white,
-                    fontWeight: FontWeight.bold,
-                    fontSize: 13,
+              Visibility(
+                visible: showDetails,
+                child: Container(
+                  alignment: Alignment.bottomCenter,
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: 8,
+                    vertical: 4,
+                  ),
+                  decoration: BoxDecoration(
+                    color: Colors.black26,
+                    borderRadius: BorderRadius.circular(4),
+                  ),
+                  child: Text(
+                    'R\$ ${FormatUtils.formatValue(widget.order.effectiveSubtotal.toStringAsFixed(2))}',
+                    style: const TextStyle(
+                      color: Colors.white,
+                      fontWeight: FontWeight.bold,
+                      fontSize: 13,
+                    ),
                   ),
                 ),
               ),
