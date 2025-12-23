@@ -1,7 +1,7 @@
+import 'package:flutter/material.dart';
 import 'package:djorder/features/model/order.dart';
 import 'package:djorder/shared/enums/order_status_type.dart';
 import 'package:djorder/shared/extensions/order_status_extension.dart';
-import 'package:flutter/material.dart';
 
 enum MenuOption {
   addProduct,
@@ -16,70 +16,51 @@ enum MenuOption {
   cancel;
 
   String getLabel(Order order) {
-    switch (this) {
-      case MenuOption.addProduct:
-        return 'Adicionar Produtos';
-      case MenuOption.changeClient:
-        return (order.clientName == null || order.clientName!.isEmpty)
-            ? 'Incluir Cliente'
-            : 'Alterar Cliente';
-      case MenuOption.changeTable:
-        return (order.idTable == null || order.idTable == 0)
-            ? 'Incluir Mesa'
-            : 'Alterar Mesa';
-      case MenuOption.addPeopleNumber:
-        return 'Adicionar n° de Pessoas';
-      case MenuOption.printOrder:
-        return 'Imprimir Pedido';
-      case MenuOption.printAccount:
-        return 'Conferência de Contas';
-      case MenuOption.finalize:
-        return 'Finalizar Comanda';
-      case MenuOption.block:
-        return 'Bloquear Comanda';
-      case MenuOption.unblock:
-        return 'Desbloquear Comanda';
-      case MenuOption.cancel:
-        return 'Cancelar Comanda';
-    }
+    final labels = <MenuOption, String>{
+      MenuOption.addProduct: 'Adicionar Produtos',
+      MenuOption.changeClient:
+          (order.clientName == null ||
+              order.clientName!.isEmpty ||
+              order.clientName! == 'VENDAS AO CONSUMIDOR')
+          ? 'Incluir Cliente'
+          : 'Alterar Cliente',
+      MenuOption.changeTable: (order.idTable == null || order.idTable == 0)
+          ? 'Incluir Mesa'
+          : 'Alterar Mesa',
+      MenuOption.addPeopleNumber: 'Adicionar n° de Pessoas',
+      MenuOption.printOrder: 'Imprimir Pedido',
+      MenuOption.printAccount: 'Conferência de Contas',
+      MenuOption.finalize: 'Finalizar Comanda',
+      MenuOption.block: 'Bloquear Comanda',
+      MenuOption.unblock: 'Desbloquear Comanda',
+      MenuOption.cancel: 'Cancelar Comanda',
+    };
+    return labels[this] ?? '';
   }
 
   IconData get icon {
-    switch (this) {
-      case MenuOption.addProduct:
-        return Icons.fastfood;
-      case MenuOption.changeClient:
-        return Icons.person;
-      case MenuOption.changeTable:
-        return Icons.table_restaurant;
-      case MenuOption.addPeopleNumber:
-        return Icons.person_add_alt_1;
-      case MenuOption.printOrder:
-        return Icons.print;
-      case MenuOption.printAccount:
-        return Icons.receipt_long;
-      case MenuOption.finalize:
-        return Icons.check_circle_outline;
-      case MenuOption.block:
-        return Icons.lock_outline;
-      case MenuOption.unblock:
-        return Icons.lock_open;
-      case MenuOption.cancel:
-        return Icons.cancel;
-    }
+    final icons = <MenuOption, IconData>{
+      MenuOption.addProduct: Icons.fastfood,
+      MenuOption.changeClient: Icons.person,
+      MenuOption.changeTable: Icons.table_restaurant,
+      MenuOption.addPeopleNumber: Icons.person_add_alt_1,
+      MenuOption.printOrder: Icons.print,
+      MenuOption.printAccount: Icons.receipt_long,
+      MenuOption.finalize: Icons.check_circle_outline,
+      MenuOption.block: Icons.lock_outline,
+      MenuOption.unblock: Icons.lock_open,
+      MenuOption.cancel: Icons.cancel,
+    };
+    return icons[this] ?? Icons.error;
   }
 
   Color? get color {
-    switch (this) {
-      case MenuOption.finalize:
-        return Colors.green[700];
-      case MenuOption.block:
-        return Colors.orange[700];
-      case MenuOption.cancel:
-        return Colors.red[700];
-      default:
-        return Colors.grey[700];
-    }
+    final colors = <MenuOption, Color?>{
+      MenuOption.finalize: Colors.green[700],
+      MenuOption.block: Colors.orange[700],
+      MenuOption.cancel: Colors.red[700],
+    };
+    return colors[this] ?? Colors.grey[700];
   }
 
   static List<MenuOption> getOptionsFor(Order order) {
