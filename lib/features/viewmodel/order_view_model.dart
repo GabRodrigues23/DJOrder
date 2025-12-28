@@ -48,6 +48,11 @@ class OrderViewModel extends ChangeNotifier {
     }).toList();
   }
 
+  void clearSearchQuery() {
+    _searchQuery = '';
+    notifyListeners();
+  }
+
   void setSearchQuery(String query) {
     _searchQuery = query;
     notifyListeners();

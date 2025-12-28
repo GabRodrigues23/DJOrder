@@ -1,9 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:djorder/shared/enums/order_status_type.dart';
 
-class OrderFiltersBar extends StatelessWidget {
+class OrderFiltersBar extends StatefulWidget {
   final OrderStatus? currentFilter;
-
   final Function(OrderStatus?) onFilterChanged;
   final Function(String) onSearchChanged;
 
@@ -13,6 +12,19 @@ class OrderFiltersBar extends StatelessWidget {
     required this.onFilterChanged,
     required this.onSearchChanged,
   });
+
+  @override
+  State<OrderFiltersBar> createState() => _OrderFiltersBarState();
+}
+
+class _OrderFiltersBarState extends State<OrderFiltersBar> {
+  final TextEditingController _controller = TextEditingController();
+
+  @override
+  void dispose() {
+    super.dispose();
+    _controller.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -25,13 +37,21 @@ class OrderFiltersBar extends StatelessWidget {
             width: 400,
             height: 40,
             child: TextField(
-              onChanged: onSearchChanged,
+              controller: _controller,
+              onChanged: widget.onSearchChanged,
               decoration: InputDecoration(
                 hintText: 'Buscar',
                 prefixIcon: const Icon(
                   Icons.search,
                   size: 20,
                   color: Colors.grey,
+                ),
+                suffixIcon: IconButton(
+                  onPressed: () {
+                    _controller.clear();
+                    widget.onSearchChanged('');
+                  },
+                  icon: Icon(Icons.clear, size: 20, color: Colors.red[300]),
                 ),
                 contentPadding: const EdgeInsets.symmetric(
                   vertical: 0,
@@ -77,12 +97,12 @@ class OrderFiltersBar extends StatelessWidget {
   }
 
   Widget _buildChip(OrderStatus? status, String label, Color color) {
-    final isSelected = currentFilter == status;
+    final isSelected = widget.currentFilter == status;
 
     return FilterChip(
       label: Text(label),
       selected: isSelected,
-      onSelected: (_) => onFilterChanged(status),
+      onSelected: (_) => widget.onFilterChanged(status),
       selectedColor: color.withAlpha(2),
       checkmarkColor: color,
       labelStyle: TextStyle(
