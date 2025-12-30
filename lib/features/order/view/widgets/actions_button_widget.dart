@@ -1,4 +1,4 @@
-import 'package:djorder/features/model/order.dart';
+import 'package:djorder/features/order/model/order.dart';
 import 'package:djorder/shared/enums/menu_options_type.dart';
 import 'package:flutter/material.dart';
 

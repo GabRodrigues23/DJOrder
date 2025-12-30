@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:djorder/features/model/order.dart';
-import 'package:djorder/features/interfaces/order_repository_interface.dart';
-import 'package:djorder/features/service/order_service.dart';
-import 'package:djorder/features/dto/order_dto.dart';
+import 'package:djorder/features/order/model/order.dart';
+import 'package:djorder/features/order/interfaces/order_repository_interface.dart';
+import 'package:djorder/features/order/service/order_service.dart';
+import 'package:djorder/features/order/dto/order_dto.dart';
 
 class OrderRepository implements OrderRepositoryInterface {
   final OrderService _service;

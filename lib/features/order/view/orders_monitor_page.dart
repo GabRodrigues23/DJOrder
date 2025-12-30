@@ -1,12 +1,12 @@
-import 'package:djorder/features/view/monitor/widgets/order_grid_panel.dart';
+import 'package:djorder/features/order/view/widgets/order_grid_panel.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_modular/flutter_modular.dart';
-import 'package:djorder/features/model/order.dart';
-import 'package:djorder/features/repository/order_repository.dart';
-import 'package:djorder/features/service/order_service.dart';
-import 'package:djorder/features/view/monitor/widgets/order_details_panel.dart';
-import 'package:djorder/features/view/monitor/widgets/order_filters_bar.dart';
-import 'package:djorder/features/viewmodel/order_view_model.dart';
+import 'package:djorder/features/order/model/order.dart';
+import 'package:djorder/features/order/repository/order_repository.dart';
+import 'package:djorder/features/order/service/order_service.dart';
+import 'package:djorder/features/order/view/widgets/order_details_panel.dart';
+import 'package:djorder/features/order/view/widgets/order_filters_bar.dart';
+import 'package:djorder/features/order/viewmodel/order_view_model.dart';
 
 class OrdersMonitorPage extends StatefulWidget {
   const OrdersMonitorPage({super.key});

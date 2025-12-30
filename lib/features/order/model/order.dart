@@ -1,4 +1,4 @@
-import 'package:djorder/features/model/order_items.dart';
+import 'package:djorder/features/order/model/order_items.dart';
 
 class Order {
   final int id;

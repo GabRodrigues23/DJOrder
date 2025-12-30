@@ -3,9 +3,9 @@ import 'package:flutter/material.dart';
 import 'package:audioplayers/audioplayers.dart';
 import 'package:djorder/shared/enums/order_status_type.dart';
 import 'package:djorder/shared/extensions/order_status_extension.dart';
-import 'package:djorder/features/service/settings_service.dart';
-import 'package:djorder/features/interfaces/order_repository_interface.dart';
-import 'package:djorder/features/model/order.dart';
+import 'package:djorder/features/settings/service/settings_service.dart';
+import 'package:djorder/features/order/interfaces/order_repository_interface.dart';
+import 'package:djorder/features/order/model/order.dart';
 
 class OrderViewModel extends ChangeNotifier {
   final OrderRepositoryInterface _repository;

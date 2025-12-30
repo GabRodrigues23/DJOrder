@@ -1,7 +1,7 @@
 import 'package:flutter_modular/flutter_modular.dart';
-import 'package:djorder/features/view/home/home_page.dart';
-import 'package:djorder/features/view/settings/settings_page.dart';
-import 'package:djorder/features/view/monitor/orders_monitor_page.dart';
+import 'package:djorder/features/home/view/home_page.dart';
+import 'package:djorder/features/settings/view/settings_page.dart';
+import 'package:djorder/features/order/view/orders_monitor_page.dart';
 
 class ModuleRoutes extends Module {
   @override

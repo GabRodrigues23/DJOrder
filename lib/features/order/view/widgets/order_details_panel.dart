@@ -1,8 +1,8 @@
-import 'package:djorder/features/view/monitor/widgets/actions_button_widget.dart';
+import 'package:djorder/features/order/view/widgets/actions_button_widget.dart';
 import 'package:djorder/shared/mixins/menu_options_mixin.dart';
 import 'package:flutter/material.dart';
 import 'package:djorder/core/utils/format_utils.dart';
-import 'package:djorder/features/model/order.dart';
+import 'package:djorder/features/order/model/order.dart';
 
 class OrderDetailsPanel extends StatelessWidget with MenuOptionsMixin {
   final Order? order;

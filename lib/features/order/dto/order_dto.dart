@@ -1,5 +1,5 @@
-import 'package:djorder/features/dto/order_item_dto.dart';
-import 'package:djorder/features/model/order.dart';
+import 'package:djorder/features/order/dto/order_item_dto.dart';
+import 'package:djorder/features/order/model/order.dart';
 import 'package:djorder/core/utils/dto_utils.dart';
 
 class OrderDto {

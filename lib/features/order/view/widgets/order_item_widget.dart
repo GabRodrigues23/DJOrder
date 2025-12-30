@@ -1,12 +1,12 @@
 import 'dart:async';
 import 'package:djorder/core/utils/format_utils.dart';
-import 'package:djorder/features/view/monitor/widgets/actions_button_widget.dart';
+import 'package:djorder/features/order/view/widgets/actions_button_widget.dart';
 import 'package:djorder/shared/mixins/menu_options_mixin.dart';
 import 'package:flutter/material.dart';
 import 'package:djorder/shared/enums/order_status_type.dart';
 import 'package:djorder/shared/extensions/order_status_extension.dart';
-import 'package:djorder/features/model/order.dart';
-import 'package:djorder/features/service/settings_service.dart';
+import 'package:djorder/features/order/model/order.dart';
+import 'package:djorder/features/settings/service/settings_service.dart';
 
 class OrderItemWidget extends StatefulWidget {
   final Order order;

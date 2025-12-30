@@ -1,6 +1,6 @@
 import 'package:djorder/core/utils/dto_utils.dart';
-import 'package:djorder/features/dto/order_item_additional_dto.dart';
-import 'package:djorder/features/model/order_items.dart';
+import 'package:djorder/features/order/dto/order_item_additional_dto.dart';
+import 'package:djorder/features/order/model/order_items.dart';
 
 extension OrderItemDto on OrderItems {
   static OrderItems fromJson(Map<String, dynamic> json) {

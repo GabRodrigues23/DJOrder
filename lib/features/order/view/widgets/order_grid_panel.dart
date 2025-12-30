@@ -1,6 +1,6 @@
-import 'package:djorder/features/model/order.dart';
-import 'package:djorder/features/view/monitor/widgets/order_item_widget.dart';
-import 'package:djorder/features/viewmodel/order_view_model.dart';
+import 'package:djorder/features/order/model/order.dart';
+import 'package:djorder/features/order/view/widgets/order_item_widget.dart';
+import 'package:djorder/features/order/viewmodel/order_view_model.dart';
 import 'package:flutter/material.dart';
 
 class OrderGridPanel extends StatelessWidget {
