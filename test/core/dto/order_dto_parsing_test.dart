@@ -1,4 +1,4 @@
-import 'package:djorder/features/dto/order_dto.dart';
+import 'package:djorder/features/order/dto/order_dto.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 void main() {
@@ -27,28 +27,22 @@ void main() {
       },
     );
 
-    test(
-      'Retorno de DateTime.now() se a data for NULL ou inválida',
-      () {
-        final json = {
-          'CODPREVENDA': 1,
-          'ID_COMANDA': 50,
-          'SUBTOTAL': 0,
-          'TAXA_SERVICO': 0,
-          'DATAHORA_INICIO': null,
-          'STATUS_PEDIDO': 'N',
-          'products': [],
-        };
+    test('Retorno de DateTime.now() se a data for NULL ou inválida', () {
+      final json = {
+        'CODPREVENDA': 1,
+        'ID_COMANDA': 50,
+        'SUBTOTAL': 0,
+        'TAXA_SERVICO': 0,
+        'DATAHORA_INICIO': null,
+        'STATUS_PEDIDO': 'N',
+        'products': [],
+      };
 
-        final order = OrderDto.fromJson(json);
+      final order = OrderDto.fromJson(json);
 
-        expect(order.oppeningDate, isNotNull);
-        expect(
-          DateTime.now().difference(order.oppeningDate).inSeconds < 5,
-          true,
-        );
-      },
-    );
+      expect(order.oppeningDate, isNotNull);
+      expect(DateTime.now().difference(order.oppeningDate).inSeconds < 5, true);
+    });
 
     test('Mapear STATUS_PEDIDO para um campo cancelado', () {
       final jsonCanceled = {

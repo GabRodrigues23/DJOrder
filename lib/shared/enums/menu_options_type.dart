@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:djorder/features/model/order.dart';
+import 'package:djorder/features/order/model/order.dart';
 import 'package:djorder/shared/enums/order_status_type.dart';
 import 'package:djorder/shared/extensions/order_status_extension.dart';
 

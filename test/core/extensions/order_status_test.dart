@@ -1,5 +1,5 @@
-import 'package:djorder/features/model/order.dart';
-import 'package:djorder/features/model/order_items.dart';
+import 'package:djorder/features/order/model/order.dart';
+import 'package:djorder/features/order/model/order_items.dart';
 import 'package:djorder/shared/enums/order_status_type.dart';
 import 'package:djorder/shared/extensions/order_status_extension.dart';
 import 'package:flutter_test/flutter_test.dart';
@@ -32,7 +32,7 @@ void main() {
       additional: [],
     );
 
-    test('Comanda Livre quando status for cancelado' , () {
+    test('Comanda Livre quando status for cancelado', () {
       final order = createOrder(canceled: 'S', items: [activeItem]);
       expect(order.calculatedStatus, OrderStatus.free);
     });
@@ -47,12 +47,9 @@ void main() {
       expect(order.calculatedStatus, OrderStatus.lock);
     });
 
-    test(
-      'Comanda bloqueada se houver produtos e coo 0 ou coo nulo',
-      () {
-        final order = createOrder(coo: 0, items: [activeItem]);
-        expect(order.calculatedStatus, OrderStatus.busy);
-      },
-    );
+    test('Comanda bloqueada se houver produtos e coo 0 ou coo nulo', () {
+      final order = createOrder(coo: 0, items: [activeItem]);
+      expect(order.calculatedStatus, OrderStatus.busy);
+    });
   });
 }
