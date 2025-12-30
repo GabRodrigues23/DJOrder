@@ -18,4 +18,13 @@ class OrderRepository implements OrderRepositoryInterface {
       rethrow;
     }
   }
+
+  @override
+  Future<void> changeClient(int idOrder, String newName) async {
+    final nameClean = newName.trim();
+    if (nameClean.isEmpty) {
+      throw Exception("O nome do cliente não pode ser vazio");
+    }
+    await _service.changeClient(idOrder, clientName: nameClean);
+  }
 }

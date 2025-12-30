@@ -27,4 +27,26 @@ class OrderService {
       throw Exception('Erro ao carregar lista de comandas');
     }
   }
+
+  Future<void> changeClient(
+    int idOrder, {
+    String? clientName,
+    int? tableId,
+    bool? isCanceled,
+  }) async {
+    final baseUrl = _settings.apiUrl;
+    final Map<String, dynamic> data = {};
+
+    if (clientName != null) data['clientName'] = clientName;
+    if (tableId != null) data['tableId'] = tableId;
+    if (isCanceled != null) data['isCanceled'] = isCanceled;
+
+    if (data.isEmpty) return;
+
+    try {
+      await _dio.put('$baseUrl/orders/$idOrder', data: data);
+    } catch (e) {
+      throw Exception('Falha na comunicação com servidor: $e');
+    }
+  }
 }

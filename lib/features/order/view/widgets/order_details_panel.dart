@@ -1,8 +1,10 @@
 import 'package:djorder/features/order/view/widgets/actions_button_widget.dart';
+import 'package:djorder/features/order/viewmodel/order_view_model.dart';
 import 'package:djorder/shared/mixins/menu_options_mixin.dart';
 import 'package:flutter/material.dart';
 import 'package:djorder/core/utils/format_utils.dart';
 import 'package:djorder/features/order/model/order.dart';
+import 'package:flutter_modular/flutter_modular.dart';
 
 class OrderDetailsPanel extends StatelessWidget with MenuOptionsMixin {
   final Order? order;
@@ -11,6 +13,8 @@ class OrderDetailsPanel extends StatelessWidget with MenuOptionsMixin {
 
   @override
   Widget build(BuildContext context) {
+    final viewModel = context.watch<OrderViewModel>();
+
     if (order == null)
       return const Center(
         child: Text(
@@ -42,7 +46,7 @@ class OrderDetailsPanel extends StatelessWidget with MenuOptionsMixin {
               ActionsButtonWidget(
                 order: order!,
                 onSelected: (option) =>
-                    handleMenuAction(context, option, order!),
+                    handleMenuAction(context, option, order!, viewModel),
               ),
             ],
           ),

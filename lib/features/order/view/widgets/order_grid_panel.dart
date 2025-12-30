@@ -1,6 +1,7 @@
 import 'package:djorder/features/order/model/order.dart';
 import 'package:djorder/features/order/view/widgets/order_item_widget.dart';
 import 'package:djorder/features/order/viewmodel/order_view_model.dart';
+import 'package:djorder/shared/enums/menu_options_type.dart';
 import 'package:flutter/material.dart';
 
 class OrderGridPanel extends StatelessWidget {
@@ -68,9 +69,9 @@ class OrderGridPanel extends StatelessWidget {
               order: order,
               onTap: () {
                 onOrderSelected(order.idOrder);
-
                 debugPrint('Clicou na comanda ${order.idOrder}');
               },
+              onChangeClient: () => MenuOption.changeClient,
             ),
           );
         },

@@ -1,18 +1,26 @@
 import 'dart:async';
 import 'package:djorder/core/utils/format_utils.dart';
 import 'package:djorder/features/order/view/widgets/actions_button_widget.dart';
+import 'package:djorder/features/order/viewmodel/order_view_model.dart';
 import 'package:djorder/shared/mixins/menu_options_mixin.dart';
 import 'package:flutter/material.dart';
 import 'package:djorder/shared/enums/order_status_type.dart';
 import 'package:djorder/shared/extensions/order_status_extension.dart';
 import 'package:djorder/features/order/model/order.dart';
 import 'package:djorder/features/settings/service/settings_service.dart';
+import 'package:flutter_modular/flutter_modular.dart';
 
 class OrderItemWidget extends StatefulWidget {
   final Order order;
-  final VoidCallback? onTap;
+  final VoidCallback onTap;
+  final VoidCallback? onChangeClient;
 
-  const OrderItemWidget({super.key, required this.order, this.onTap});
+  const OrderItemWidget({
+    super.key,
+    required this.order,
+    required this.onTap,
+    this.onChangeClient,
+  });
 
   @override
   State<OrderItemWidget> createState() => _OrderItemWidgetState();
@@ -87,6 +95,7 @@ class _OrderItemWidgetState extends State<OrderItemWidget>
 
   @override
   Widget build(BuildContext context) {
+    final viewModel = context.watch<OrderViewModel>();
     final status = widget.order.calculatedStatus;
     final bool showDetails = status != OrderStatus.free;
 
@@ -142,7 +151,12 @@ class _OrderItemWidgetState extends State<OrderItemWidget>
                   ActionsButtonWidget(
                     order: widget.order,
                     onSelected: (option) {
-                      handleMenuAction(context, option, widget.order);
+                      handleMenuAction(
+                        context,
+                        option,
+                        widget.order,
+                        viewModel,
+                      );
                     },
                   ),
                 ],

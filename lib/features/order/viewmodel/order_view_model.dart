@@ -13,14 +13,14 @@ class OrderViewModel extends ChangeNotifier {
 
   List<Order> _allOrders = [];
   OrderStatus? currentFilter;
+  int _lastActiveCount = 0;
   bool isLoading = false;
+  bool _isPaused = false;
+  bool _isFirstLoad = true;
   Timer? _timer;
   String _searchQuery = '';
   String errorMessage = '';
   final AudioPlayer _audioPlayer = AudioPlayer();
-
-  int _lastActiveCount = 0;
-  bool _isFirstLoad = true;
 
   List<Order> get orders {
     return _allOrders.where((order) {
@@ -48,13 +48,33 @@ class OrderViewModel extends ChangeNotifier {
     }).toList();
   }
 
-  void clearSearchQuery() {
-    _searchQuery = '';
-    notifyListeners();
+  void startAutoRefresh() {
+    _timer?.cancel();
+
+    final interval = SettingsService().refreshInterval;
+    debugPrint('Iniciando AutoRefresh com intervalo de $interval segundos');
+
+    _timer = Timer.periodic(Duration(seconds: interval), (timer) {
+      loadData();
+      debugPrint('Atualizando dados automaticamente...');
+    });
+  }
+
+  void stopAutoRefresh() {
+    _timer?.cancel();
+  }
+
+  void setPaused(bool value) {
+    _isPaused = value;
   }
 
   void setSearchQuery(String query) {
     _searchQuery = query;
+    notifyListeners();
+  }
+
+  void clearSearchQuery() {
+    _searchQuery = '';
     notifyListeners();
   }
 
@@ -63,7 +83,27 @@ class OrderViewModel extends ChangeNotifier {
     notifyListeners();
   }
 
+  void _checkAndPlaySound(int currentCount) async {
+    if (!SettingsService().isSoundEnabled) return;
+
+    if (_isFirstLoad) {
+      _lastActiveCount = currentCount;
+      return;
+    }
+
+    if (currentCount > _lastActiveCount) {
+      try {
+        await _audioPlayer.play(AssetSource('sounds/alert.mp3'));
+      } catch (e) {
+        debugPrint('Erro ao tocar som: $e');
+      }
+    }
+    _lastActiveCount = currentCount;
+  }
+
   Future<void> loadData() async {
+    if (_isPaused) return;
+
     isLoading = true;
     errorMessage = '';
     notifyListeners();
@@ -90,37 +130,14 @@ class OrderViewModel extends ChangeNotifier {
     }
   }
 
-  void _checkAndPlaySound(int currentCount) async {
-    if (!SettingsService().isSoundEnabled) return;
-
-    if (_isFirstLoad) {
-      _lastActiveCount = currentCount;
-      return;
+  Future<void> changeClient(int idOrder, String newName) async {
+    try {
+      await _repository.changeClient(idOrder, newName);
+      await loadData();
+    } catch (e) {
+      errorMessage = e.toString();
+      debugPrint('Erro no ViewModel: $e');
+      notifyListeners();
     }
-
-    if (currentCount > _lastActiveCount) {
-      try {
-        await _audioPlayer.play(AssetSource('sounds/alert.mp3'));
-      } catch (e) {
-        debugPrint('Erro ao tocar som: $e');
-      }
-    }
-    _lastActiveCount = currentCount;
-  }
-
-  void startAutoRefresh() {
-    _timer?.cancel();
-
-    final interval = SettingsService().refreshInterval;
-    debugPrint('Iniciando AutoRefresh com intervalo de $interval segundos');
-
-    _timer = Timer.periodic(Duration(seconds: interval), (timer) {
-      loadData();
-      debugPrint('Atualizando dados automaticamente...');
-    });
-  }
-
-  void stopAutoRefresh() {
-    _timer?.cancel();
   }
 }
