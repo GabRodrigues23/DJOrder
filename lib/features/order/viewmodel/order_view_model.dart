@@ -136,7 +136,18 @@ class OrderViewModel extends ChangeNotifier {
       await loadData();
     } catch (e) {
       errorMessage = e.toString();
-      debugPrint('Erro no ViewModel: $e');
+      debugPrint('Erro no ViewModel (changeClient): $e');
+      notifyListeners();
+    }
+  }
+
+  Future<void> changeTable(int idOrder, int? newTable) async {
+    try {
+      await _repository.changeTable(idOrder, newTable!);
+      await loadData();
+    } catch (e) {
+      errorMessage = e.toString();
+      debugPrint('Erro no ViewModel (changeTable): $e');
       notifyListeners();
     }
   }

@@ -3,39 +3,49 @@ import 'package:djorder/features/order/viewmodel/order_view_model.dart';
 import 'package:djorder/shared/enums/menu_options_type.dart';
 import 'package:flutter/material.dart';
 
-class ChangeClientModal extends StatefulWidget {
+class ChangeTableModal extends StatefulWidget {
   final Order order;
   final OrderViewModel viewModel;
-  const ChangeClientModal({
+  const ChangeTableModal({
     super.key,
     required this.order,
     required this.viewModel,
   });
 
   @override
-  State<ChangeClientModal> createState() => _ChangeClientModalState();
+  State<ChangeTableModal> createState() => _ChangeTableModalState();
 }
 
-class _ChangeClientModalState extends State<ChangeClientModal> {
-  late TextEditingController _clientNameController;
+class _ChangeTableModalState extends State<ChangeTableModal> {
+  late TextEditingController _tableIdController;
 
   @override
   void initState() {
     super.initState();
 
     final p = widget.order;
-    _clientNameController = TextEditingController(text: p.clientName);
+    _tableIdController = TextEditingController(text: p.idTable.toString());
   }
 
   @override
   void dispose() {
     super.dispose();
-    _clientNameController.dispose();
+    _tableIdController.dispose();
   }
 
   void _save() async {
-    final String newName = _clientNameController.text;
-    await widget.viewModel.changeClient(widget.order.idOrder, newName);
+    final String text = _tableIdController.text.trim();
+    final int? newTable = text.isEmpty ? 0 : int.tryParse(text);
+
+    if (newTable == null) {
+      ScaffoldMessenger.of(
+        context,
+      ).showSnackBar(const SnackBar(content: Text('Número da mesa inválido')));
+      return;
+    }
+
+    await widget.viewModel.changeTable(widget.order.idOrder, newTable);
+
     if (!mounted) return;
 
     if (widget.viewModel.errorMessage.isEmpty) Navigator.pop(context);
@@ -45,7 +55,7 @@ class _ChangeClientModalState extends State<ChangeClientModal> {
   Widget build(BuildContext context) {
     return AlertDialog(
       title: Text(
-        MenuOption.changeClient.getLabel(widget.order),
+        MenuOption.changeTable.getLabel(widget.order),
         textAlign: TextAlign.center,
       ),
       scrollable: true,
@@ -71,9 +81,10 @@ class _ChangeClientModalState extends State<ChangeClientModal> {
           const SizedBox(height: 24),
 
           TextField(
-            controller: _clientNameController,
+            controller: _tableIdController,
+            keyboardType: TextInputType.number,
             decoration: const InputDecoration(
-              labelText: 'Nome do Cliente:',
+              labelText: 'N° da Mesa:',
               border: OutlineInputBorder(),
               contentPadding: EdgeInsets.symmetric(horizontal: 12, vertical: 8),
             ),

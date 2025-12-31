@@ -25,6 +25,11 @@ class OrderRepository implements OrderRepositoryInterface {
     if (nameClean.isEmpty) {
       throw Exception("O nome do cliente não pode ser vazio");
     }
-    await _service.changeClient(idOrder, clientName: nameClean);
+    await _service.updateOrder(idOrder, clientName: nameClean);
+  }
+
+  @override
+  Future<void> changeTable(int idOrder, int? newTable) async {
+    await _service.updateOrder(idOrder, tableId: newTable);
   }
 }

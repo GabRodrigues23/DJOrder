@@ -1,5 +1,6 @@
 import 'package:djorder/features/order/model/order.dart';
 import 'package:djorder/features/order/view/modals/change_client_modal.dart';
+import 'package:djorder/features/order/view/modals/change_table_modal.dart';
 import 'package:djorder/features/order/viewmodel/order_view_model.dart';
 import 'package:djorder/shared/enums/menu_options_type.dart';
 import 'package:flutter/material.dart';
@@ -24,8 +25,13 @@ mixin MenuOptionsMixin {
                 ChangeClientModal(order: order, viewModel: viewModel),
           );
         },
-        MenuOption.changeTable: () =>
-            debugPrint('Abrir modal de mesa para a comanda #${order.idOrder}'),
+        MenuOption.changeTable: () {
+          showDialog(
+            context: context,
+            builder: (_) =>
+                ChangeTableModal(order: order, viewModel: viewModel),
+          );
+        },
         MenuOption.addPeopleNumber: () => debugPrint(
           'Abrir modal de n° pessoas para a comanda #${order.idOrder}',
         ),

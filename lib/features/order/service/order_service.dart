@@ -28,7 +28,7 @@ class OrderService {
     }
   }
 
-  Future<void> changeClient(
+  Future<void> updateOrder(
     int idOrder, {
     String? clientName,
     int? tableId,
