@@ -29,6 +29,7 @@ class OrderItemWidget extends StatefulWidget {
 class _OrderItemWidgetState extends State<OrderItemWidget>
     with MenuOptionsMixin {
   Timer? _timer;
+  int peopleNumber = 1;
   String _timeText = '';
   Color _clockColor = Colors.white;
   bool focus = false;
@@ -115,56 +116,13 @@ class _OrderItemWidgetState extends State<OrderItemWidget>
         ),
         child: Padding(
           padding: const EdgeInsets.all(8),
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          child: Stack(
             children: [
-              Row(
-                mainAxisAlignment: _timeText.isNotEmpty
-                    ? MainAxisAlignment.spaceBetween
-                    : MainAxisAlignment.end,
-                children: [
-                  if (_timeText.isNotEmpty)
-                    Container(
-                      padding: const EdgeInsets.symmetric(
-                        horizontal: 6,
-                        vertical: 2,
-                      ),
-                      decoration: BoxDecoration(
-                        color: Colors.black26,
-                        borderRadius: BorderRadius.circular(4),
-                      ),
-                      child: Row(
-                        children: [
-                          Icon(Icons.access_time, size: 14, color: _clockColor),
-                          const SizedBox(width: 4),
-                          Text(
-                            _timeText,
-                            style: TextStyle(
-                              color: _clockColor,
-                              fontWeight: FontWeight.bold,
-                              fontSize: 12,
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
-                  ActionsButtonWidget(
-                    order: widget.order,
-                    onSelected: (option) {
-                      handleMenuAction(
-                        context,
-                        option,
-                        widget.order,
-                        viewModel,
-                      );
-                    },
-                  ),
-                ],
-              ),
               !showDetails
                   ? Center(
                       child: Text(
                         '#${widget.order.idOrder}',
+                        textAlign: TextAlign.center,
                         style: const TextStyle(
                           fontSize: 22,
                           fontWeight: FontWeight.bold,
@@ -172,33 +130,21 @@ class _OrderItemWidgetState extends State<OrderItemWidget>
                         ),
                       ),
                     )
-                  : Column(
-                      children: [
-                        Text(
-                          '#${widget.order.idOrder}',
-                          style: const TextStyle(
-                            fontSize: 22,
-                            fontWeight: FontWeight.bold,
-                            color: Colors.white,
+                  : Center(
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Text(
+                            '#${widget.order.idOrder}',
+                            textAlign: TextAlign.center,
+                            style: const TextStyle(
+                              fontSize: 22,
+                              fontWeight: FontWeight.bold,
+                              color: Colors.white,
+                            ),
                           ),
-                        ),
-                        Text(
-                          '${widget.order.clientName}',
-                          textAlign: TextAlign.center,
-                          maxLines: 1,
-                          overflow: TextOverflow.ellipsis,
-                          style: const TextStyle(
-                            color: Colors.white,
-                            fontWeight: FontWeight.w600,
-                            fontSize: 14,
-                          ),
-                        ),
-                        Visibility(
-                          visible:
-                              widget.order.idTable != null &&
-                              widget.order.idTable != 0,
-                          child: Text(
-                            'Mesa: ${widget.order.idTable}',
+                          Text(
+                            '${widget.order.clientName}',
                             textAlign: TextAlign.center,
                             maxLines: 1,
                             overflow: TextOverflow.ellipsis,
@@ -208,28 +154,115 @@ class _OrderItemWidgetState extends State<OrderItemWidget>
                               fontSize: 14,
                             ),
                           ),
+                          Visibility(
+                            visible:
+                                widget.order.idTable != null &&
+                                widget.order.idTable != 0,
+                            child: Text(
+                              'Mesa: ${widget.order.idTable}',
+                              textAlign: TextAlign.center,
+                              maxLines: 1,
+                              overflow: TextOverflow.ellipsis,
+                              style: const TextStyle(
+                                color: Colors.white,
+                                fontWeight: FontWeight.w600,
+                                fontSize: 14,
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+
+              Positioned(
+                top: 0,
+                left: 0,
+                right: 0,
+                child: Row(
+                  mainAxisAlignment: _timeText.isNotEmpty
+                      ? MainAxisAlignment.spaceBetween
+                      : MainAxisAlignment.end,
+                  children: [
+                    if (_timeText.isNotEmpty)
+                      Container(
+                        padding: const EdgeInsets.symmetric(
+                          horizontal: 6,
+                          vertical: 2,
                         ),
-                      ],
+                        decoration: BoxDecoration(
+                          color: Colors.black26,
+                          borderRadius: BorderRadius.circular(4),
+                        ),
+                        child: Row(
+                          children: [
+                            Icon(
+                              Icons.access_time,
+                              size: 14,
+                              color: _clockColor,
+                            ),
+                            const SizedBox(width: 4),
+                            Text(
+                              _timeText,
+                              style: TextStyle(
+                                color: _clockColor,
+                                fontWeight: FontWeight.bold,
+                                fontSize: 12,
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                    ActionsButtonWidget(
+                      order: widget.order,
+                      onSelected: (option) {
+                        handleMenuAction(
+                          context,
+                          option,
+                          widget.order,
+                          viewModel,
+                        );
+                      },
                     ),
-              Visibility(
-                visible: showDetails,
-                child: Container(
-                  alignment: Alignment.bottomCenter,
-                  padding: const EdgeInsets.symmetric(
-                    horizontal: 8,
-                    vertical: 4,
-                  ),
-                  decoration: BoxDecoration(
-                    color: Colors.black26,
-                    borderRadius: BorderRadius.circular(4),
-                  ),
-                  child: Text(
-                    'R\$ ${FormatUtils.formatValue(widget.order.effectiveSubtotal.toStringAsFixed(2))}',
-                    style: const TextStyle(
-                      color: Colors.white,
-                      fontWeight: FontWeight.bold,
-                      fontSize: 13,
-                    ),
+                  ],
+                ),
+              ),
+
+              Positioned(
+                bottom: 0,
+                left: 0,
+                right: 0,
+                child: Visibility(
+                  visible: showDetails,
+                  child: Column(
+                    children: [
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.end,
+                        spacing: 4,
+                        children: [
+                          Text('1'),
+                          Icon(Icons.people, size: 20, color: Colors.black26),
+                        ],
+                      ),
+                      Container(
+                        alignment: Alignment.bottomCenter,
+                        padding: const EdgeInsets.symmetric(
+                          horizontal: 8,
+                          vertical: 4,
+                        ),
+                        decoration: BoxDecoration(
+                          color: Colors.black26,
+                          borderRadius: BorderRadius.circular(4),
+                        ),
+                        child: Text(
+                          'R\$ ${FormatUtils.formatValue(widget.order.effectiveSubtotal.toStringAsFixed(2))}',
+                          style: const TextStyle(
+                            color: Colors.white,
+                            fontWeight: FontWeight.bold,
+                            fontSize: 13,
+                          ),
+                        ),
+                      ),
+                    ],
                   ),
                 ),
               ),
