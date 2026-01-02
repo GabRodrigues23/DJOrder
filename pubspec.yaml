@@ -17,6 +17,8 @@ dependencies:
   window_manager: ^0.3.8
   audioplayers: ^6.5.1
   flutter_launcher_icons: ^0.14.4
+  pdf: ^3.11.3
+  printing: ^5.14.2
 
 flutter_launcher_icons:
   windows: 
