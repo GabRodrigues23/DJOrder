@@ -19,6 +19,12 @@ class OrderRepository implements OrderRepositoryInterface {
     }
   }
 
+  // @override
+  // Future<Order> printOrder(int idOrder) async {
+  //   final data = await _service.loadById(idOrder);
+  //   return OrderDto.fromJson(data);
+  // }
+
   @override
   Future<void> changeClient(int idOrder, String newName) async {
     final nameClean = newName.trim();

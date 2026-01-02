@@ -1,21 +1,22 @@
+import 'package:flutter/material.dart';
+import 'dart:async';
 import 'package:djorder/features/order/model/order.dart';
 import 'package:djorder/features/order/view/modals/cancel_order_modal.dart';
 import 'package:djorder/features/order/view/modals/change_client_modal.dart';
 import 'package:djorder/features/order/view/modals/change_table_modal.dart';
 import 'package:djorder/features/order/viewmodel/order_view_model.dart';
 import 'package:djorder/shared/enums/menu_options_type.dart';
-import 'package:flutter/material.dart';
 
 mixin MenuOptionsMixin {
-  void handleMenuAction(
+  Future<void> handleMenuAction(
     BuildContext context,
     MenuOption option,
     Order order,
     OrderViewModel viewModel,
-  ) {
+  ) async {
     viewModel.setPaused(true);
     try {
-      final actions = <MenuOption, VoidCallback>{
+      final actions = <MenuOption, FutureOr<void> Function()>{
         MenuOption.addProduct: () => debugPrint(
           'Abrir modal de produtos para a comanda #${order.idOrder}',
         ),
@@ -36,8 +37,9 @@ mixin MenuOptionsMixin {
         MenuOption.addPeopleNumber: () => debugPrint(
           'Abrir modal de n° pessoas para a comanda #${order.idOrder}',
         ),
-        MenuOption.printOrder: () =>
-            debugPrint('Imprimir pedidos para a comanda #${order.idOrder}'),
+        MenuOption.printOrder: () async {
+          await viewModel.printOrder(order);
+        },
         MenuOption.printAccount: () => debugPrint(
           'Imprimir conferência de contas para a comanda #${order.idOrder}',
         ),
@@ -55,7 +57,11 @@ mixin MenuOptionsMixin {
           );
         },
       };
-      actions[option]?.call();
+      final action = actions[option];
+      if (action != null) {
+        await action();
+      }
+      // actions[option]?.call();
     } finally {
       viewModel.setPaused(false);
     }

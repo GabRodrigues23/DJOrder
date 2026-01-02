@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'package:djorder/features/order/addon/print_order_service.dart';
 import 'package:flutter/material.dart';
 import 'package:audioplayers/audioplayers.dart';
 import 'package:djorder/shared/enums/order_status_type.dart';
@@ -9,6 +10,7 @@ import 'package:djorder/features/order/model/order.dart';
 
 class OrderViewModel extends ChangeNotifier {
   final OrderRepositoryInterface _repository;
+  final PrintOrderService _printService = PrintOrderService();
   OrderViewModel(this._repository);
 
   List<Order> _allOrders = [];
@@ -159,6 +161,27 @@ class OrderViewModel extends ChangeNotifier {
     } catch (e) {
       errorMessage = e.toString();
       debugPrint('Erro no ViewModel (cancelOrder): $e');
+      notifyListeners();
+    }
+  }
+
+  Future<void> printOrder(Order order) async {
+    try {
+      isLoading = true;
+      errorMessage = '';
+      notifyListeners();
+
+      // Verificação de segurança
+      if (order.id == 0 && order.products.isEmpty) {
+        throw Exception('Esta comanda está vazia no sistema.');
+      }
+
+      await _printService.generateAndPrintOrder(order);
+    } catch (e) {
+      errorMessage = 'Falha ao imprimir: ${e.toString()}';
+      debugPrint('Erro no ViewModel (printOrder): $e');
+    } finally {
+      isLoading = false;
       notifyListeners();
     }
   }
