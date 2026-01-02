@@ -1,4 +1,5 @@
 import 'package:djorder/features/order/model/order.dart';
+import 'package:djorder/features/order/view/modals/cancel_order_modal.dart';
 import 'package:djorder/features/order/view/modals/change_client_modal.dart';
 import 'package:djorder/features/order/view/modals/change_table_modal.dart';
 import 'package:djorder/features/order/viewmodel/order_view_model.dart';
@@ -46,8 +47,13 @@ mixin MenuOptionsMixin {
             debugPrint('Bloquear a comanda #${order.idOrder}'),
         MenuOption.unblock: () =>
             debugPrint('Desbloquear a comanda #${order.idOrder}'),
-        MenuOption.cancel: () =>
-            debugPrint('Cancelar a comanda #${order.idOrder}'),
+        MenuOption.cancel: () {
+          showDialog(
+            context: context,
+            builder: (_) =>
+                CancelOrderModal(order: order, viewModel: viewModel),
+          );
+        },
       };
       actions[option]?.call();
     } finally {

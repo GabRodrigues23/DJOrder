@@ -151,4 +151,15 @@ class OrderViewModel extends ChangeNotifier {
       notifyListeners();
     }
   }
+
+  Future<void> cancelOrder(int idOrder, bool newCanceledStatus) async {
+    try {
+      await _repository.cancelOrder(idOrder, newCanceledStatus);
+      await loadData();
+    } catch (e) {
+      errorMessage = e.toString();
+      debugPrint('Erro no ViewModel (cancelOrder): $e');
+      notifyListeners();
+    }
+  }
 }

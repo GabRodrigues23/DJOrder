@@ -32,4 +32,9 @@ class OrderRepository implements OrderRepositoryInterface {
   Future<void> changeTable(int idOrder, int? newTable) async {
     await _service.updateOrder(idOrder, tableId: newTable);
   }
+
+  @override
+  Future<void> cancelOrder(int idOrder, bool newCanceledStatus) async {
+    await _service.updateOrder(idOrder, isCanceled: newCanceledStatus);
+  }
 }
