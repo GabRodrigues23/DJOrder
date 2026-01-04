@@ -1,3 +1,4 @@
+import 'package:djorder/features/order/view/modals/change_people_count_modal.dart';
 import 'package:flutter/material.dart';
 import 'dart:async';
 import 'package:djorder/features/order/model/order.dart';
@@ -34,9 +35,13 @@ mixin MenuOptionsMixin {
                 ChangeTableModal(order: order, viewModel: viewModel),
           );
         },
-        MenuOption.addPeopleNumber: () => debugPrint(
-          'Abrir modal de n° pessoas para a comanda #${order.idOrder}',
-        ),
+        MenuOption.changePeopleCount: () {
+          showDialog(
+            context: context,
+            builder: (_) =>
+                ChangePeopleCountModal(order: order, viewModel: viewModel),
+          );
+        },
         MenuOption.printOrder: () async {
           await viewModel.printOrder(order);
         },

@@ -29,7 +29,6 @@ class OrderItemWidget extends StatefulWidget {
 class _OrderItemWidgetState extends State<OrderItemWidget>
     with MenuOptionsMixin {
   Timer? _timer;
-  int peopleNumber = 1;
   String _timeText = '';
   Color _clockColor = Colors.white;
   bool focus = false;
@@ -239,7 +238,10 @@ class _OrderItemWidgetState extends State<OrderItemWidget>
                         mainAxisAlignment: MainAxisAlignment.end,
                         spacing: 4,
                         children: [
-                          Text('1'),
+                          Text(
+                            '${widget.order.peopleCount}',
+                            style: TextStyle(color: Colors.black26),
+                          ),
                           Icon(Icons.people, size: 20, color: Colors.black26),
                         ],
                       ),

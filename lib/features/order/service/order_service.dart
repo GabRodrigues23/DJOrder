@@ -28,28 +28,6 @@ class OrderService {
     }
   }
 
-  // Future<Map<String, dynamic>> loadById(int idOrder) async {
-  //   final baseUrl = _settings.apiUrl;
-
-  //   try {
-  //     if (baseUrl.isEmpty) throw Exception('Url da API não configurada');
-
-  //     final response = await _dio.get('$baseUrl/orders');
-
-  //     if (response.data is List) {
-  //       final List list = response.data;
-  //       final orderMap = list.firstWhere(
-  //         (order) => order['idOrder'] == idOrder,
-  //         orElse: () => throw Exception('Comanda não encontrada na lista'),
-  //       );
-  //       return Map<String, dynamic>.from(orderMap);
-  //     }
-  //     throw Exception('Formato de resposta inválido');
-  //   } catch (e) {
-  //     throw Exception('Erro ao localizar comanda: $e');
-  //   }
-  // }
-
   Future<void> updateOrder(
     int idOrder, {
     String? clientName,

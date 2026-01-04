@@ -49,8 +49,10 @@ class PrintOrderService {
                       'Mesa: ${order.idTable}',
                       style: pw.TextStyle(fontSize: 8),
                     ),
-                  // mock
-                  pw.Text('N° Pessoas: 1', style: pw.TextStyle(fontSize: 8)),
+                  pw.Text(
+                    'N° Pessoas: ${order.peopleCount}',
+                    style: pw.TextStyle(fontSize: 8),
+                  ),
                 ],
               ),
               pw.Row(

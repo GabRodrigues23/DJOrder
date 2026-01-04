@@ -14,6 +14,7 @@ class OrderDetailsPanel extends StatelessWidget with MenuOptionsMixin {
   @override
   Widget build(BuildContext context) {
     final viewModel = context.watch<OrderViewModel>();
+    final int peopleCount = order?.peopleCount ?? 1;
 
     if (order == null)
       return const Center(
@@ -175,6 +176,11 @@ class OrderDetailsPanel extends StatelessWidget with MenuOptionsMixin {
                 _infoRow(
                   "Serviço:",
                   "R\$ ${FormatUtils.formatValue(order!.serviceTax.toStringAsFixed(2))}",
+                ),
+
+                _infoRow(
+                  "Valor por Pessoa:",
+                  "R\$ ${FormatUtils.formatValue((order!.totalValue / peopleCount).toStringAsFixed(2))}",
                 ),
                 const SizedBox(height: 10),
                 Container(

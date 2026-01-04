@@ -156,6 +156,21 @@ class OrderViewModel extends ChangeNotifier {
     }
   }
 
+  Future<void> changePeopleCount(int id, int newPeopleCount) async {
+    await _repository.updatePeopleCount(
+      idPreSales: id,
+      peopleCount: newPeopleCount,
+    );
+
+    _allOrders = orders.map((order) {
+      if (order.id == id) {
+        return order.copyWith(peopleCount: newPeopleCount);
+      }
+      return order;
+    }).toList();
+    notifyListeners();
+  }
+
   Future<void> cancelOrder(int idOrder, bool newCanceledStatus) async {
     try {
       await _repository.cancelOrder(idOrder, newCanceledStatus);

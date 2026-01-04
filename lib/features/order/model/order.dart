@@ -4,6 +4,7 @@ class Order {
   final int id;
   final int idOrder;
   final int? idTable;
+  final int? peopleCount;
   final int? status;
   final String canceled;
   final String? clientName;
@@ -16,6 +17,7 @@ class Order {
     required this.id,
     required this.idOrder,
     this.idTable,
+    this.peopleCount,
     this.status,
     required this.canceled,
     this.clientName,
@@ -24,6 +26,22 @@ class Order {
     required this.oppeningDate,
     required this.products,
   });
+
+  Order copyWith({int? peopleCount}) {
+    return Order(
+      id: id,
+      idOrder: idOrder,
+      idTable: idTable,
+      peopleCount: peopleCount ?? this.peopleCount,
+      status: status,
+      canceled: canceled,
+      clientName: clientName,
+      subtotal: subtotal,
+      serviceTax: serviceTax,
+      oppeningDate: oppeningDate,
+      products: products,
+    );
+  }
 
   factory Order.empty(int orderId) {
     return Order(

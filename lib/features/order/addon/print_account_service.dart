@@ -49,8 +49,10 @@ class PrintAccountService {
                       'Mesa: ${order.idTable}',
                       style: pw.TextStyle(fontSize: 8),
                     ),
-                  pw.Text('N° Pessoas: 1', style: pw.TextStyle(fontSize: 8)),
-                  /*pw.Text('N° Pessoas: ${order.peopleNumber}', style: pw.TextStyle(fontSize: 10)*/
+                  pw.Text(
+                    'N° Pessoas: ${order.peopleCount}',
+                    style: pw.TextStyle(fontSize: 8),
+                  ),
                 ],
               ),
               pw.Row(
@@ -176,7 +178,7 @@ class PrintAccountService {
                     ),
                     pw.SizedBox(height: 2),
                     pw.Text(
-                      'Valor por pessoa: R\$ ${(order.totalValue / 2 /*order.peopleNumber*/ ).toStringAsFixed(2).replaceAll('.', ',')}',
+                      'Valor por pessoa: R\$ ${(order.totalValue / order.peopleCount!).toStringAsFixed(2).replaceAll('.', ',')}',
                       style: pw.TextStyle(fontSize: 8),
                     ),
                     pw.SizedBox(height: 2),
