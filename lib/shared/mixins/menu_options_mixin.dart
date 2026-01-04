@@ -40,9 +40,9 @@ mixin MenuOptionsMixin {
         MenuOption.printOrder: () async {
           await viewModel.printOrder(order);
         },
-        MenuOption.printAccount: () => debugPrint(
-          'Imprimir conferência de contas para a comanda #${order.idOrder}',
-        ),
+        MenuOption.printAccount: () async {
+          await viewModel.printAccount(order);
+        },
         MenuOption.finalize: () =>
             debugPrint('Finalizar a comanda #${order.idOrder}'),
         MenuOption.block: () =>
@@ -61,7 +61,6 @@ mixin MenuOptionsMixin {
       if (action != null) {
         await action();
       }
-      // actions[option]?.call();
     } finally {
       viewModel.setPaused(false);
     }
