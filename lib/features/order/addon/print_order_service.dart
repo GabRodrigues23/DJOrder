@@ -47,16 +47,31 @@ class PrintOrderService {
                   if (order.idTable! > 0)
                     pw.Text(
                       'Mesa: ${order.idTable}',
-                      style: pw.TextStyle(fontSize: 10),
+                      style: pw.TextStyle(fontSize: 8),
                     ),
                   // mock
-                  pw.Text('N° Pessoas: 1', style: pw.TextStyle(fontSize: 10)),
+                  pw.Text('N° Pessoas: 1', style: pw.TextStyle(fontSize: 8)),
                 ],
               ),
-              pw.Text(
-                'Hora Abertura: ${order.oppeningDate.hour}:${order.oppeningDate.minute}:${order.oppeningDate.second}',
-                style: pw.TextStyle(fontSize: 10),
-                textAlign: pw.TextAlign.end,
+              pw.Row(
+                children: [
+                  pw.Expanded(
+                    flex: 2,
+                    child: pw.Text(
+                      'Hora Abertura: ${order.oppeningDate.hour}:${order.oppeningDate.minute}:${order.oppeningDate.second}',
+                      style: pw.TextStyle(fontSize: 8),
+                      textAlign: pw.TextAlign.start,
+                    ),
+                  ),
+                  pw.Expanded(
+                    flex: 1,
+                    child: pw.Text(
+                      'Data: ${order.oppeningDate.day}/${order.oppeningDate.month}/${order.oppeningDate.year}',
+                      style: pw.TextStyle(fontSize: 8),
+                      textAlign: pw.TextAlign.end,
+                    ),
+                  ),
+                ],
               ),
 
               pw.Divider(),
@@ -65,19 +80,19 @@ class PrintOrderService {
                 return pw.Column(
                   crossAxisAlignment: pw.CrossAxisAlignment.start,
                   children: [
-                    pw.Row(
-                      crossAxisAlignment: pw.CrossAxisAlignment.start,
-                      children: [
-                        pw.Text(
-                          '${item.qtd.toInt()} x ${item.description}',
-                          style: pw.TextStyle(fontSize: 10),
-                          maxLines: 2,
-                          overflow: pw.TextOverflow.clip,
-                        ),
-                      ],
-                    ),
-
-                    if (item.additional.isNotEmpty)
+                    if (item.status == 'N')
+                      pw.Row(
+                        crossAxisAlignment: pw.CrossAxisAlignment.start,
+                        children: [
+                          pw.Text(
+                            '${item.qtd.toInt()} x ${item.description}',
+                            style: pw.TextStyle(fontSize: 10),
+                            maxLines: 2,
+                            overflow: pw.TextOverflow.clip,
+                          ),
+                        ],
+                      ),
+                    if (item.status == 'N' && item.additional.isNotEmpty)
                       pw.Padding(
                         padding: const pw.EdgeInsets.only(left: 8, top: 2),
                         child: pw.Column(
