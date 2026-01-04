@@ -23,35 +23,84 @@ class PrintOrderService {
                   ),
                 ),
               ),
-              pw.SizedBox(height: 5),
-              pw.Text('Cliente: ${order.clientName ?? "Consumidor"}'),
-              pw.Divider(),
-              ...order.products.map(
-                (item) => pw.Padding(
-                  padding: const pw.EdgeInsets.symmetric(vertical: 2),
-                  child: pw.Row(
-                    mainAxisAlignment: pw.MainAxisAlignment.spaceBetween,
-                    children: [
-                      pw.Text('${item.qtd}x ${item.description}'),
-                      pw.Text(
-                        'R\$ ${(item.price * item.qtd).toStringAsFixed(2)}',
-                      ),
-                    ],
+              pw.SizedBox(height: 10),
+              pw.Row(
+                mainAxisAlignment: pw.MainAxisAlignment.spaceBetween,
+                children: [
+                  pw.Expanded(flex: 1, child: pw.Text('Cliente:')),
+                  pw.Expanded(
+                    flex: 3,
+                    child: pw.Text(
+                      '${order.clientName}',
+                      textAlign: pw.TextAlign.right,
+                      maxLines: 2,
+                      overflow: pw.TextOverflow.clip,
+                    ),
                   ),
-                ),
+                ],
+              ),
+              pw.SizedBox(height: 2),
+
+              pw.Row(
+                mainAxisAlignment: pw.MainAxisAlignment.spaceBetween,
+                children: [
+                  if (order.idTable! > 0)
+                    pw.Text(
+                      'Mesa: ${order.idTable}',
+                      style: pw.TextStyle(fontSize: 10),
+                    ),
+                  // mock
+                  pw.Text('N° Pessoas: 1', style: pw.TextStyle(fontSize: 10)),
+                ],
+              ),
+              pw.Text(
+                'Hora Abertura: ${order.oppeningDate.hour}:${order.oppeningDate.minute}:${order.oppeningDate.second}',
+                style: pw.TextStyle(fontSize: 10),
+                textAlign: pw.TextAlign.end,
               ),
 
               pw.Divider(),
-              pw.Align(
-                alignment: pw.Alignment.centerRight,
-                child: pw.Text(
-                  'Total: R\$ ${order.totalValue.toStringAsFixed(2)}',
-                  style: pw.TextStyle(
-                    fontWeight: pw.FontWeight.bold,
-                    fontSize: 14,
-                  ),
-                ),
-              ),
+
+              ...order.products.map((item) {
+                return pw.Column(
+                  crossAxisAlignment: pw.CrossAxisAlignment.start,
+                  children: [
+                    pw.Row(
+                      crossAxisAlignment: pw.CrossAxisAlignment.start,
+                      children: [
+                        pw.Text(
+                          '${item.qtd.toInt()} x ${item.description}',
+                          style: pw.TextStyle(fontSize: 10),
+                          maxLines: 2,
+                          overflow: pw.TextOverflow.clip,
+                        ),
+                      ],
+                    ),
+
+                    if (item.additional.isNotEmpty)
+                      pw.Padding(
+                        padding: const pw.EdgeInsets.only(left: 8, top: 2),
+                        child: pw.Column(
+                          crossAxisAlignment: pw.CrossAxisAlignment.start,
+                          children: item.additional
+                              .map(
+                                (add) => pw.Text(
+                                  add.qtd.toInt() > 1
+                                      ? '+${add.qtd.toInt()} ${add.description}'
+                                      : '+  ${add.description}',
+                                  style: pw.TextStyle(
+                                    fontSize: 7,
+                                    fontStyle: pw.FontStyle.italic,
+                                  ),
+                                ),
+                              )
+                              .toList(),
+                        ),
+                      ),
+                    pw.SizedBox(height: 4),
+                  ],
+                );
+              }),
             ],
           );
         },
