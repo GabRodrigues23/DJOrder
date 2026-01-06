@@ -60,7 +60,7 @@ class PrintOrderService {
                   pw.Expanded(
                     flex: 2,
                     child: pw.Text(
-                      'Hora Abertura: ${order.oppeningDate.hour}:${order.oppeningDate.minute}:${order.oppeningDate.second}',
+                      'Hora Abertura: ${order.oppeningDate.hour.toString().padLeft(2, '0')}:${order.oppeningDate.minute.toString().padLeft(2, '0')}:${order.oppeningDate.second.toString().padLeft(2, '0')}',
                       style: pw.TextStyle(fontSize: 8),
                       textAlign: pw.TextAlign.start,
                     ),
@@ -68,7 +68,7 @@ class PrintOrderService {
                   pw.Expanded(
                     flex: 1,
                     child: pw.Text(
-                      'Data: ${order.oppeningDate.day}/${order.oppeningDate.month}/${order.oppeningDate.year}',
+                      'Data: ${order.oppeningDate.day.toString().padLeft(2, '0')}/${order.oppeningDate.month.toString().padLeft(2, '0')}/${order.oppeningDate.year.toString().padLeft(2, '0')}',
                       style: pw.TextStyle(fontSize: 8),
                       textAlign: pw.TextAlign.end,
                     ),

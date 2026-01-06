@@ -35,7 +35,8 @@ class ProductViewModel extends ChangeNotifier {
     } else {
       final q = query.toUpperCase();
       filteredProducts = _allProducts.where((p) {
-        return p.description.toUpperCase().contains(q) || p.id.toString() == q;
+        return p.description.toUpperCase().contains(q) ||
+            p.barcode.toString() == q;
       }).toList();
     }
     notifyListeners();

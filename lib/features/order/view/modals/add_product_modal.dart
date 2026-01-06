@@ -136,7 +136,7 @@ class _AddProductModalState extends State<AddProductModal> {
                         .isNotEmpty) ...[
                   const Divider(),
                   const Text(
-                    "Adicionais / Observações:",
+                    "Adicionais:",
                     style: TextStyle(fontWeight: FontWeight.bold),
                   ),
 
@@ -277,7 +277,13 @@ class _AddProductModalState extends State<AddProductModal> {
                 }
                 await _confirmAdd();
               },
-              child: Text('ADICIONAR ITEM'),
+              child: Text(
+                'ADICIONAR ITEM',
+                style: TextStyle(
+                  color: Colors.white,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
             ),
           ],
         );
