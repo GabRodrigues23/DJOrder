@@ -1,3 +1,4 @@
+import 'package:djorder/core/constants/colors.dart';
 import 'package:djorder/features/order/model/order.dart';
 import 'package:djorder/features/order/viewmodel/order_view_model.dart';
 import 'package:flutter/material.dart';
@@ -45,16 +46,23 @@ class _CancelOrderModalState extends State<CancelOrderModal> {
       actions: [
         Row(
           mainAxisAlignment: MainAxisAlignment.end,
+          spacing: 5,
           children: [
             TextButton(
-              child: Text('Fechar'),
               onPressed: () => Navigator.pop(context),
+              child: Text(
+                'Fechar',
+                style: TextStyle(color: labelButtonCancelColor),
+              ),
             ),
-            TextButton(
+            ElevatedButton(
               onPressed: _save,
+              style: ElevatedButton.styleFrom(
+                backgroundColor: buttonConfirmColor,
+              ),
               child: Text(
                 'Confirmar',
-                style: TextStyle(color: Colors.green[700], fontSize: 16),
+                style: TextStyle(color: labelButtonConfirmColor),
               ),
             ),
           ],

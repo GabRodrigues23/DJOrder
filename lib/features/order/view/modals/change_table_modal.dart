@@ -1,3 +1,4 @@
+import 'package:djorder/core/constants/colors.dart';
 import 'package:djorder/features/order/model/order.dart';
 import 'package:djorder/features/order/viewmodel/order_view_model.dart';
 import 'package:djorder/shared/enums/menu_options_type.dart';
@@ -94,12 +95,18 @@ class _ChangeTableModalState extends State<ChangeTableModal> {
       actions: [
         TextButton(
           onPressed: () => Navigator.pop(context),
-          child: const Text('Cancelar', style: TextStyle(color: Colors.red)),
+          child: Text(
+            'Cancelar',
+            style: TextStyle(color: labelButtonCancelColor),
+          ),
         ),
         ElevatedButton(
           onPressed: _save,
-          style: ElevatedButton.styleFrom(backgroundColor: Colors.blue[900]),
-          child: const Text('Salvar', style: TextStyle(color: Colors.white)),
+          style: ElevatedButton.styleFrom(backgroundColor: buttonConfirmColor),
+          child: Text(
+            'Salvar',
+            style: TextStyle(color: labelButtonConfirmColor),
+          ),
         ),
       ],
     );

@@ -1,3 +1,4 @@
+import 'package:djorder/core/constants/colors.dart';
 import 'package:djorder/features/order/interfaces/order_repository_interface.dart';
 import 'package:djorder/features/order/viewmodel/order_view_model.dart';
 import 'package:djorder/features/product/viewmodel/product_view_model.dart';
@@ -254,14 +255,14 @@ class _AddProductModalState extends State<AddProductModal> {
           actions: [
             TextButton(
               onPressed: () => Navigator.pop(context),
-              child: const Text(
+              child: Text(
                 'Cancelar',
-                style: TextStyle(color: Colors.red),
+                style: TextStyle(color: labelButtonCancelColor),
               ),
             ),
             ElevatedButton(
               style: ElevatedButton.styleFrom(
-                backgroundColor: const Color(0xFF180E6D),
+                backgroundColor: buttonConfirmColor,
                 padding: const EdgeInsets.symmetric(
                   horizontal: 24,
                   vertical: 12,
