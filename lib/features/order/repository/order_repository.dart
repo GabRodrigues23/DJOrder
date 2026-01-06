@@ -1,9 +1,12 @@
+import 'package:djorder/features/product/model/additional.dart';
 import 'package:flutter/material.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:djorder/features/order/model/order.dart';
+import 'package:djorder/features/order/dto/order_dto.dart';
 import 'package:djorder/features/order/interfaces/order_repository_interface.dart';
 import 'package:djorder/features/order/service/order_service.dart';
-import 'package:djorder/features/order/dto/order_dto.dart';
-import 'package:shared_preferences/shared_preferences.dart';
+import 'package:djorder/features/product/model/product.dart';
+import 'package:djorder/features/product/dto/product_dto.dart';
 
 class OrderRepository implements OrderRepositoryInterface {
   final OrderService _service;
@@ -19,14 +22,52 @@ class OrderRepository implements OrderRepositoryInterface {
       return data.map((json) {
         final order = OrderDto.fromJson(json);
 
-        final peopleCount = orderPrefs.getInt(_peopleKey(order.id)) ?? 1;
+        bool isFree =
+            (order.status == 0 || order.status == null) &&
+            order.products.isEmpty;
 
-        return order.copyWith(peopleCount: peopleCount);
+        if (isFree) {
+          orderPrefs.remove(_peopleKey(order.id));
+          return order.copyWith(peopleCount: 1);
+        } else {
+          final peopleCount = orderPrefs.getInt(_peopleKey(order.id)) ?? 1;
+          return order.copyWith(peopleCount: peopleCount);
+        }
       }).toList();
     } catch (e) {
       debugPrint('Erro no repository: $e');
       rethrow;
     }
+  }
+
+  @override
+  Future<List<Product>> getCatalog() async {
+    final data = await _service.loadProducts();
+    return data.map((json) => ProductDto.fromJson(json)).toList();
+  }
+
+  @override
+  Future<void> includeProduct(
+    int idPreSale,
+    int visualId,
+    Product product,
+    double quantity, [
+    List<AdditionalItem>? additionals,
+  ]) async {
+    final additionalsJson = additionals
+        ?.map(
+          (e) => {'id': e.id, 'description': e.description, 'price': e.price},
+        )
+        .toList();
+
+    await _service.addProduct(
+      idPreSale,
+      visualId: visualId,
+      idProduct: product.id,
+      qtd: quantity,
+      unitPrice: product.price,
+      additionals: additionalsJson,
+    );
   }
 
   @override

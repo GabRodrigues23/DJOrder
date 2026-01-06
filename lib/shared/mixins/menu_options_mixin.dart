@@ -1,3 +1,4 @@
+import 'package:djorder/features/order/view/modals/add_product_modal.dart';
 import 'package:djorder/features/order/view/modals/change_people_count_modal.dart';
 import 'package:flutter/material.dart';
 import 'dart:async';
@@ -18,25 +19,33 @@ mixin MenuOptionsMixin {
     viewModel.setPaused(true);
     try {
       final actions = <MenuOption, FutureOr<void> Function()>{
-        MenuOption.addProduct: () => debugPrint(
-          'Abrir modal de produtos para a comanda #${order.idOrder}',
-        ),
-        MenuOption.changeClient: () {
-          showDialog(
+        MenuOption.addProduct: () async {
+          await showDialog(
+            context: context,
+            barrierDismissible: false,
+            builder: (_) => AddProductModal(
+              idPreSale: order.id,
+              visualId: order.idOrder,
+              orderViewModel: viewModel,
+            ),
+          );
+        },
+        MenuOption.changeClient: () async {
+          await showDialog(
             context: context,
             builder: (_) =>
                 ChangeClientModal(order: order, viewModel: viewModel),
           );
         },
-        MenuOption.changeTable: () {
-          showDialog(
+        MenuOption.changeTable: () async {
+          await showDialog(
             context: context,
             builder: (_) =>
                 ChangeTableModal(order: order, viewModel: viewModel),
           );
         },
-        MenuOption.changePeopleCount: () {
-          showDialog(
+        MenuOption.changePeopleCount: () async {
+          await showDialog(
             context: context,
             builder: (_) =>
                 ChangePeopleCountModal(order: order, viewModel: viewModel),
@@ -54,8 +63,8 @@ mixin MenuOptionsMixin {
             debugPrint('Bloquear a comanda #${order.idOrder}'),
         MenuOption.unblock: () =>
             debugPrint('Desbloquear a comanda #${order.idOrder}'),
-        MenuOption.cancel: () {
-          showDialog(
+        MenuOption.cancel: () async {
+          await showDialog(
             context: context,
             builder: (_) =>
                 CancelOrderModal(order: order, viewModel: viewModel),

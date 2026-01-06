@@ -1,7 +1,19 @@
 import 'package:djorder/features/order/model/order.dart';
+import 'package:djorder/features/product/model/additional.dart';
+import 'package:djorder/features/product/model/product.dart';
 
 abstract class OrderRepositoryInterface {
   Future<List<Order>> loadAll();
+
+  Future<List<Product>> getCatalog();
+  Future<void> includeProduct(
+    int idPreSale,
+    int visualId,
+    Product product,
+    double quantity, [
+    List<AdditionalItem>? additionals,
+  ]);
+
   Future<void> changeClient(int idOrder, String newName);
   Future<void> changeTable(int idOrder, int newTable);
 
