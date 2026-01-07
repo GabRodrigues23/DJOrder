@@ -1,5 +1,6 @@
 import 'package:djorder/features/order/model/order.dart';
 import 'package:djorder/shared/enums/menu_options_type.dart';
+import 'package:djorder/shared/extensions/menu_options_extension.dart';
 import 'package:flutter/material.dart';
 
 class ActionsButtonWidget extends StatelessWidget {
@@ -14,7 +15,7 @@ class ActionsButtonWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final availableOptions = MenuOption.getOptionsFor(order);
+    final availableOptions = MenuOptionsExtension.getOptionsFor(order);
 
     if (availableOptions.isEmpty) return const SizedBox();
 
@@ -32,7 +33,7 @@ class ActionsButtonWidget extends StatelessWidget {
                 Icon(option.icon, size: 20, color: option.color),
                 const SizedBox(width: 12),
                 Text(
-                  option.getLabel(order),
+                  option.label,
                   style: TextStyle(
                     color: option.color,
                     fontWeight: FontWeight.w500,

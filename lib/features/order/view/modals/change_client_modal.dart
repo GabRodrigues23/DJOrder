@@ -7,10 +7,12 @@ import 'package:flutter/material.dart';
 class ChangeClientModal extends StatefulWidget {
   final Order order;
   final OrderViewModel viewModel;
+  final MenuOption option;
   const ChangeClientModal({
     super.key,
     required this.order,
     required this.viewModel,
+    required this.option,
   });
 
   @override
@@ -23,8 +25,9 @@ class _ChangeClientModalState extends State<ChangeClientModal> {
   @override
   void initState() {
     super.initState();
-    final p = widget.order;
-    _clientNameController = TextEditingController(text: p.clientName);
+    _clientNameController = TextEditingController(
+      text: widget.order.clientName,
+    );
   }
 
   @override
@@ -44,10 +47,7 @@ class _ChangeClientModalState extends State<ChangeClientModal> {
   @override
   Widget build(BuildContext context) {
     return AlertDialog(
-      title: Text(
-        MenuOption.changeClient.getLabel(widget.order),
-        textAlign: TextAlign.center,
-      ),
+      title: Text(widget.option.label, textAlign: TextAlign.center),
       scrollable: true,
       content: Column(
         mainAxisSize: MainAxisSize.min,
@@ -55,7 +55,7 @@ class _ChangeClientModalState extends State<ChangeClientModal> {
           Container(
             padding: const EdgeInsets.all(8),
             decoration: BoxDecoration(
-              color: Colors.blueGrey,
+              color: buttonColor,
               borderRadius: BorderRadius.circular(8),
             ),
             child: Row(
@@ -63,7 +63,10 @@ class _ChangeClientModalState extends State<ChangeClientModal> {
               children: [
                 Text(
                   'Comanda: #${widget.order.idOrder}',
-                  style: const TextStyle(fontWeight: FontWeight.bold),
+                  style: TextStyle(
+                    fontWeight: FontWeight.bold,
+                    color: labelButtonColor,
+                  ),
                 ),
               ],
             ),
@@ -71,6 +74,7 @@ class _ChangeClientModalState extends State<ChangeClientModal> {
           const SizedBox(height: 24),
 
           TextField(
+            autofocus: true,
             controller: _clientNameController,
             decoration: const InputDecoration(
               labelText: 'Nome do Cliente:',
@@ -83,18 +87,12 @@ class _ChangeClientModalState extends State<ChangeClientModal> {
       actions: [
         TextButton(
           onPressed: () => Navigator.pop(context),
-          child: Text(
-            'Cancelar',
-            style: TextStyle(color: labelButtonCancelColor),
-          ),
+          child: Text('Cancelar', style: TextStyle(color: labelCancelColor)),
         ),
         ElevatedButton(
           onPressed: _save,
-          style: ElevatedButton.styleFrom(backgroundColor: buttonConfirmColor),
-          child: Text(
-            'Salvar',
-            style: TextStyle(color: labelButtonConfirmColor),
-          ),
+          style: ElevatedButton.styleFrom(backgroundColor: buttonColor),
+          child: Text('Salvar', style: TextStyle(color: labelButtonColor)),
         ),
       ],
     );

@@ -257,12 +257,12 @@ class _AddProductModalState extends State<AddProductModal> {
               onPressed: () => Navigator.pop(context),
               child: Text(
                 'Cancelar',
-                style: TextStyle(color: labelButtonCancelColor),
+                style: TextStyle(color: labelCancelColor),
               ),
             ),
             ElevatedButton(
               style: ElevatedButton.styleFrom(
-                backgroundColor: buttonConfirmColor,
+                backgroundColor: buttonColor,
                 padding: const EdgeInsets.symmetric(
                   horizontal: 24,
                   vertical: 12,

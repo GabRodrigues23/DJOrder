@@ -53,7 +53,7 @@ class _ChangePeopleCountModalState extends State<ChangePeopleCountModal> {
   Widget build(BuildContext context) {
     return AlertDialog(
       title: Text(
-        MenuOption.changePeopleCount.getLabel(widget.order),
+        MenuOption.changePeopleCount.label,
         textAlign: TextAlign.center,
       ),
       scrollable: true,
@@ -63,7 +63,7 @@ class _ChangePeopleCountModalState extends State<ChangePeopleCountModal> {
           Container(
             padding: const EdgeInsets.all(8),
             decoration: BoxDecoration(
-              color: Colors.blueGrey,
+              color: buttonColor,
               borderRadius: BorderRadius.circular(8),
             ),
             child: Row(
@@ -71,7 +71,10 @@ class _ChangePeopleCountModalState extends State<ChangePeopleCountModal> {
               children: [
                 Text(
                   'Comanda: #${widget.order.idOrder}',
-                  style: const TextStyle(fontWeight: FontWeight.bold),
+                  style: TextStyle(
+                    fontWeight: FontWeight.bold,
+                    color: labelButtonColor,
+                  ),
                 ),
               ],
             ),
@@ -92,18 +95,12 @@ class _ChangePeopleCountModalState extends State<ChangePeopleCountModal> {
       actions: [
         TextButton(
           onPressed: () => Navigator.pop(context),
-          child: Text(
-            'Cancelar',
-            style: TextStyle(color: labelButtonCancelColor),
-          ),
+          child: Text('Cancelar', style: TextStyle(color: labelCancelColor)),
         ),
         ElevatedButton(
           onPressed: _save,
-          style: ElevatedButton.styleFrom(backgroundColor: buttonConfirmColor),
-          child: Text(
-            'Salvar',
-            style: TextStyle(color: labelButtonConfirmColor),
-          ),
+          style: ElevatedButton.styleFrom(backgroundColor: buttonColor),
+          child: Text('Salvar', style: TextStyle(color: labelButtonColor)),
         ),
       ],
     );

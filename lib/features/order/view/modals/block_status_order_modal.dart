@@ -35,18 +35,12 @@ class BlockStatusOrderModal extends StatelessWidget {
       actions: [
         TextButton(
           onPressed: () => Navigator.pop(context),
-          child: Text(
-            'Fechar',
-            style: TextStyle(color: labelButtonCancelColor),
-          ),
+          child: Text('Fechar', style: TextStyle(color: labelCancelColor)),
         ),
         ElevatedButton(
           onPressed: () => _save(context),
-          style: ElevatedButton.styleFrom(backgroundColor: buttonConfirmColor),
-          child: Text(
-            buttonLabel,
-            style: TextStyle(color: labelButtonConfirmColor),
-          ),
+          style: ElevatedButton.styleFrom(backgroundColor: buttonColor),
+          child: Text(buttonLabel, style: TextStyle(color: labelButtonColor)),
         ),
       ],
     );

@@ -31,18 +31,44 @@ mixin MenuOptionsMixin {
             ),
           );
         },
+        MenuOption.addClient: () async {
+          await showDialog(
+            context: context,
+            builder: (_) => ChangeClientModal(
+              order: order,
+              viewModel: viewModel,
+              option: option,
+            ),
+          );
+        },
         MenuOption.changeClient: () async {
           await showDialog(
             context: context,
-            builder: (_) =>
-                ChangeClientModal(order: order, viewModel: viewModel),
+            builder: (_) => ChangeClientModal(
+              order: order,
+              viewModel: viewModel,
+              option: option,
+            ),
+          );
+        },
+        MenuOption.addTable: () async {
+          await showDialog(
+            context: context,
+            builder: (_) => ChangeTableModal(
+              order: order,
+              viewModel: viewModel,
+              option: option,
+            ),
           );
         },
         MenuOption.changeTable: () async {
           await showDialog(
             context: context,
-            builder: (_) =>
-                ChangeTableModal(order: order, viewModel: viewModel),
+            builder: (_) => ChangeTableModal(
+              order: order,
+              viewModel: viewModel,
+              option: option,
+            ),
           );
         },
         MenuOption.changePeopleCount: () async {

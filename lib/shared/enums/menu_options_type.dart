@@ -1,89 +1,30 @@
 import 'package:flutter/material.dart';
-import 'package:djorder/features/order/model/order.dart';
-import 'package:djorder/shared/enums/order_status_type.dart';
-import 'package:djorder/shared/extensions/order_status_extension.dart';
 
 enum MenuOption {
-  addProduct,
-  changeClient,
-  changeTable,
-  changePeopleCount,
-  printOrder,
-  printAccount,
-  finalize,
-  block,
-  unblock,
-  cancel;
+  addProduct('Adicionar Produtos', Icons.fastfood),
+  addClient('Incluir Cliente', Icons.person),
+  changeClient('Alterar Cliente', Icons.person),
+  addTable('Incluir Mesa', Icons.table_restaurant),
+  changeTable('Alterar Mesa', Icons.table_restaurant),
+  changePeopleCount('Alterar n° de Pessoas', Icons.person_add_alt_1),
+  printOrder('Imprimir Pedido', Icons.print),
+  printAccount('Conferência de Contas', Icons.receipt_long),
+  finalize(
+    'Finalizar Pedido',
+    Icons.check_circle_outline,
+    color: Color(0xFF388E3C),
+  ),
+  block('Bloquear Pedido', Icons.lock_outline, color: Color(0xFFF57C00)),
+  unblock('Desbloquear Pedido', Icons.lock_open, color: Color(0xFFF57C00)),
+  cancel('Cancelar Pedido', Icons.cancel, color: Color(0xFFD32F2F));
 
-  String getLabel(Order order) {
-    final labels = <MenuOption, String>{
-      MenuOption.addProduct: 'Adicionar Produtos',
-      MenuOption.changeClient:
-          (order.clientName == null ||
-              order.clientName!.isEmpty ||
-              order.clientName! == 'VENDAS AO CONSUMIDOR')
-          ? 'Incluir Cliente'
-          : 'Alterar Cliente',
-      MenuOption.changeTable: (order.idTable == null || order.idTable == 0)
-          ? 'Incluir Mesa'
-          : 'Alterar Mesa',
-      MenuOption.changePeopleCount: 'Adicionar n° de Pessoas',
-      MenuOption.printOrder: 'Imprimir Pedido',
-      MenuOption.printAccount: 'Conferência de Contas',
-      MenuOption.finalize: 'Finalizar Comanda',
-      MenuOption.block: 'Bloquear Comanda',
-      MenuOption.unblock: 'Desbloquear Comanda',
-      MenuOption.cancel: 'Cancelar Comanda',
-    };
-    return labels[this] ?? '';
-  }
+  final String label;
+  final IconData icon;
+  final Color? color;
 
-  IconData get icon {
-    final icons = <MenuOption, IconData>{
-      MenuOption.addProduct: Icons.fastfood,
-      MenuOption.changeClient: Icons.person,
-      MenuOption.changeTable: Icons.table_restaurant,
-      MenuOption.changePeopleCount: Icons.person_add_alt_1,
-      MenuOption.printOrder: Icons.print,
-      MenuOption.printAccount: Icons.receipt_long,
-      MenuOption.finalize: Icons.check_circle_outline,
-      MenuOption.block: Icons.lock_outline,
-      MenuOption.unblock: Icons.lock_open,
-      MenuOption.cancel: Icons.cancel,
-    };
-    return icons[this] ?? Icons.error;
-  }
-
-  Color? get color {
-    final colors = <MenuOption, Color?>{
-      MenuOption.finalize: Colors.green[700],
-      MenuOption.block: Colors.orange[700],
-      MenuOption.unblock: Colors.orange[700],
-      MenuOption.cancel: Colors.red[700],
-    };
-    return colors[this] ?? Colors.grey[700];
-  }
-
-  static List<MenuOption> getOptionsFor(Order order) {
-    final status = order.calculatedStatus;
-    if (status == OrderStatus.free) {
-      return [MenuOption.addProduct];
-    }
-
-    if (status == OrderStatus.lock) {
-      return [MenuOption.unblock];
-    }
-
-    return [
-      MenuOption.addProduct,
-      MenuOption.changeClient,
-      MenuOption.changeTable,
-      MenuOption.changePeopleCount,
-      MenuOption.printOrder,
-      MenuOption.printAccount,
-      MenuOption.finalize,
-      MenuOption.block,
-      MenuOption.cancel,
-    ];
-  }
+  const MenuOption(
+    this.label,
+    this.icon, {
+    this.color = const Color(0xFF616161),
+  });
 }
