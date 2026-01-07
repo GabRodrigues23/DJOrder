@@ -3,7 +3,7 @@ import 'package:pdf/widgets.dart' as pw;
 import 'package:printing/printing.dart';
 import 'package:djorder/features/order/model/order.dart';
 
-class PrintAccountService {
+class PrintAccountLayout {
   Future<void> generateAndPrintAccount(Order order) async {
     final pdf = pw.Document();
 

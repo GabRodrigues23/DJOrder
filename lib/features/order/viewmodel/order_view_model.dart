@@ -1,6 +1,6 @@
 import 'dart:async';
-import 'package:djorder/features/order/addon/print_account_service.dart';
-import 'package:djorder/features/order/addon/print_order_service.dart';
+import 'package:djorder/features/order/addon/print_account_layout.dart';
+import 'package:djorder/features/order/addon/print_order_layout.dart';
 import 'package:flutter/material.dart';
 import 'package:audioplayers/audioplayers.dart';
 import 'package:djorder/shared/enums/order_status_type.dart';
@@ -11,8 +11,8 @@ import 'package:djorder/features/order/model/order.dart';
 
 class OrderViewModel extends ChangeNotifier {
   final OrderRepositoryInterface _repository;
-  final PrintOrderService _printOrderService = PrintOrderService();
-  final PrintAccountService _printAccountService = PrintAccountService();
+  final PrintOrderLayout _printOrderService = PrintOrderLayout();
+  final PrintAccountLayout _printAccountService = PrintAccountLayout();
   OrderViewModel(this._repository);
 
   List<Order> _allOrders = [];
