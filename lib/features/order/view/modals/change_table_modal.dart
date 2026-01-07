@@ -23,7 +23,6 @@ class _ChangeTableModalState extends State<ChangeTableModal> {
   @override
   void initState() {
     super.initState();
-
     final p = widget.order;
     _tableIdController = TextEditingController(text: p.idTable.toString());
   }

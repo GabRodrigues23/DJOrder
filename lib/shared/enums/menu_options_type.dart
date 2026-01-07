@@ -58,6 +58,7 @@ enum MenuOption {
     final colors = <MenuOption, Color?>{
       MenuOption.finalize: Colors.green[700],
       MenuOption.block: Colors.orange[700],
+      MenuOption.unblock: Colors.orange[700],
       MenuOption.cancel: Colors.red[700],
     };
     return colors[this] ?? Colors.grey[700];

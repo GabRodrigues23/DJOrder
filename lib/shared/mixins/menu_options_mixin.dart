@@ -1,4 +1,5 @@
 import 'package:djorder/features/order/view/modals/add_product_modal.dart';
+import 'package:djorder/features/order/view/modals/block_status_order_modal.dart';
 import 'package:djorder/features/order/view/modals/change_people_count_modal.dart';
 import 'package:flutter/material.dart';
 import 'dart:async';
@@ -59,10 +60,26 @@ mixin MenuOptionsMixin {
         },
         MenuOption.finalize: () =>
             debugPrint('Finalizar a comanda #${order.idOrder}'),
-        MenuOption.block: () =>
-            debugPrint('Bloquear a comanda #${order.idOrder}'),
-        MenuOption.unblock: () =>
-            debugPrint('Desbloquear a comanda #${order.idOrder}'),
+        MenuOption.block: () async {
+          await showDialog(
+            context: context,
+            builder: (_) => BlockStatusOrderModal(
+              order: order,
+              viewModel: viewModel,
+              isBlocked: true,
+            ),
+          );
+        },
+        MenuOption.unblock: () async {
+          await showDialog(
+            context: context,
+            builder: (_) => BlockStatusOrderModal(
+              order: order,
+              viewModel: viewModel,
+              isBlocked: false,
+            ),
+          );
+        },
         MenuOption.cancel: () async {
           await showDialog(
             context: context,
@@ -77,6 +94,7 @@ mixin MenuOptionsMixin {
       }
     } finally {
       viewModel.setPaused(false);
+      await viewModel.loadData();
     }
   }
 }

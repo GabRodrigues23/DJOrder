@@ -23,7 +23,6 @@ class _ChangePeopleCountModalState extends State<ChangePeopleCountModal> {
   @override
   void initState() {
     super.initState();
-
     final p = widget.order;
     _peopleCountController = TextEditingController(
       text: p.peopleCount.toString(),

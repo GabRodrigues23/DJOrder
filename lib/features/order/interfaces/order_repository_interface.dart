@@ -24,4 +24,5 @@ abstract class OrderRepositoryInterface {
   Future<int> getPeopleCount(int idOrder);
 
   Future<void> cancelOrder(int idOrder, bool newCanceledStatus);
+  Future<void> blockOrder(int idOrder, bool newBlockedStatus);
 }

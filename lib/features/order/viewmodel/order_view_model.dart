@@ -66,6 +66,7 @@ class OrderViewModel extends ChangeNotifier {
 
   void stopAutoRefresh() {
     _timer?.cancel();
+    debugPrint('Parando AutoRefresh...');
   }
 
   void setPaused(bool value) {
@@ -137,7 +138,6 @@ class OrderViewModel extends ChangeNotifier {
   Future<void> changeClient(int idOrder, String newName) async {
     try {
       await _repository.changeClient(idOrder, newName);
-      await loadData();
     } catch (e) {
       errorMessage = e.toString();
       debugPrint('Erro no ViewModel (changeClient): $e');
@@ -148,7 +148,6 @@ class OrderViewModel extends ChangeNotifier {
   Future<void> changeTable(int idOrder, int? newTable) async {
     try {
       await _repository.changeTable(idOrder, newTable!);
-      await loadData();
     } catch (e) {
       errorMessage = e.toString();
       debugPrint('Erro no ViewModel (changeTable): $e');
@@ -174,10 +173,19 @@ class OrderViewModel extends ChangeNotifier {
   Future<void> cancelOrder(int idOrder, bool newCanceledStatus) async {
     try {
       await _repository.cancelOrder(idOrder, newCanceledStatus);
-      await loadData();
     } catch (e) {
       errorMessage = e.toString();
       debugPrint('Erro no ViewModel (cancelOrder): $e');
+      notifyListeners();
+    }
+  }
+
+  Future<void> blockOrder(int idOrder, bool newBlockedStatus) async {
+    try {
+      await _repository.blockOrder(idOrder, newBlockedStatus);
+    } catch (e) {
+      errorMessage = e.toString();
+      debugPrint('Erro no ViewModel (blockOrder): $e');
       notifyListeners();
     }
   }

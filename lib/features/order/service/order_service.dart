@@ -33,6 +33,7 @@ class OrderService {
     String? clientName,
     int? tableId,
     bool? isCanceled,
+    bool? isBlocked,
   }) async {
     final baseUrl = _settings.apiUrl;
     final Map<String, dynamic> data = {};
@@ -40,6 +41,7 @@ class OrderService {
     if (clientName != null) data['clientName'] = clientName;
     if (tableId != null) data['tableId'] = tableId;
     if (isCanceled != null) data['isCanceled'] = isCanceled;
+    if (isBlocked != null) data['isBlocked'] = isBlocked;
 
     if (data.isEmpty) return;
 

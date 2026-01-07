@@ -23,7 +23,6 @@ class _ChangeClientModalState extends State<ChangeClientModal> {
   @override
   void initState() {
     super.initState();
-
     final p = widget.order;
     _clientNameController = TextEditingController(text: p.clientName);
   }

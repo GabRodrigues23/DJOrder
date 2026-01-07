@@ -103,4 +103,9 @@ class OrderRepository implements OrderRepositoryInterface {
   Future<void> cancelOrder(int idOrder, bool newCanceledStatus) async {
     await _service.updateOrder(idOrder, isCanceled: newCanceledStatus);
   }
+
+  @override
+  Future<void> blockOrder(int idOrder, bool newBlockedStatus) async {
+    await _service.updateOrder(idOrder, isBlocked: newBlockedStatus);
+  }
 }

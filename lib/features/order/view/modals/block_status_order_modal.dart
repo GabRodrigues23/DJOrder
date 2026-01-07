@@ -1,30 +1,37 @@
-import 'package:djorder/features/order/model/order.dart';
 import 'package:djorder/core/constants/colors.dart';
+import 'package:djorder/features/order/model/order.dart';
 import 'package:djorder/features/order/viewmodel/order_view_model.dart';
 import 'package:flutter/material.dart';
 
-class CancelOrderModal extends StatelessWidget {
+class BlockStatusOrderModal extends StatelessWidget {
   final Order order;
   final OrderViewModel viewModel;
+  final bool isBlocked;
 
-  const CancelOrderModal({
+  const BlockStatusOrderModal({
     super.key,
     required this.order,
     required this.viewModel,
+    required this.isBlocked,
   });
 
   Future<void> _save(BuildContext context) async {
-    await viewModel.cancelOrder(order.idOrder, true);
-
+    await viewModel.blockOrder(order.idOrder, isBlocked);
     if (context.mounted && viewModel.errorMessage.isEmpty)
       Navigator.pop(context);
   }
 
   @override
   Widget build(BuildContext context) {
+    final title = isBlocked ? 'Bloquear Pedido' : 'Desbloquear Pedido';
+    final content = isBlocked
+        ? 'Deseja confirmar o Bloqueio deste Pedido?'
+        : 'Deseja confirmar o Desbloqueio deste pedido';
+    final buttonLabel = isBlocked ? 'Bloquear' : 'Desbloquear';
+
     return AlertDialog(
-      title: Text('Cancelar o Pedido'),
-      content: Text('Deseja confirmar o cancelamento do pedido?'),
+      title: Text(title),
+      content: Text(content),
       actions: [
         TextButton(
           onPressed: () => Navigator.pop(context),
@@ -37,7 +44,7 @@ class CancelOrderModal extends StatelessWidget {
           onPressed: () => _save(context),
           style: ElevatedButton.styleFrom(backgroundColor: buttonConfirmColor),
           child: Text(
-            'Confirmar',
+            buttonLabel,
             style: TextStyle(color: labelButtonConfirmColor),
           ),
         ),
