@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:flutter_modular/flutter_modular.dart';
 import 'package:djorder/features/settings/service/settings_service.dart';
+import 'package:go_router/go_router.dart';
 
 class SettingsPage extends StatefulWidget {
   const SettingsPage({super.key});
@@ -66,7 +66,7 @@ class _SettingsPageState extends State<SettingsPage> {
           backgroundColor: Colors.green,
         ),
       );
-      Modular.to.navigate('/');
+      context.go('/');
     }
   }
 
@@ -81,7 +81,7 @@ class _SettingsPageState extends State<SettingsPage> {
         backgroundColor: const Color(0xFF180E6D),
         leading: IconButton(
           icon: const Icon(Icons.arrow_back, color: Colors.white),
-          onPressed: () => Modular.to.navigate('/'),
+          onPressed: () => context.go('/'),
         ),
       ),
       body: Center(

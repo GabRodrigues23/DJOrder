@@ -1,8 +1,8 @@
+import 'package:djorder/core/router/app_router.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_modular/flutter_modular.dart';
 
-class AppWidget extends StatelessWidget {
-  const AppWidget({super.key});
+class BuildApp extends StatelessWidget {
+  const BuildApp({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -14,7 +14,7 @@ class AppWidget extends StatelessWidget {
         useMaterial3: true,
         colorSchemeSeed: const Color(0xFF180E6D),
       ),
-      routerConfig: Modular.routerConfig,
+      routerConfig: AppRouter().router,
     );
   }
 }

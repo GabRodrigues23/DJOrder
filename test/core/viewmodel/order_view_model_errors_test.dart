@@ -61,6 +61,11 @@ class FakeOrderRepository implements OrderRepositoryInterface {
   }) {
     throw UnimplementedError();
   }
+
+  @override
+  Future<void> blockOrder(int idOrder, bool newBlockedStatus) {
+    throw UnimplementedError();
+  }
 }
 
 void main() {
