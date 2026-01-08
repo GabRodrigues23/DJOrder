@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_modular/flutter_modular.dart';
+import 'package:go_router/go_router.dart';
 
 class HomePage extends StatelessWidget {
   const HomePage({super.key});
@@ -41,7 +41,7 @@ class HomePage extends StatelessWidget {
                 SizedBox(height: 25),
                 ElevatedButton(
                   onPressed: () {
-                    Modular.to.pushReplacementNamed('/manager');
+                    context.go('/monitor');
                   },
                   style: ElevatedButton.styleFrom(fixedSize: Size(150, 45)),
                   child: Text(
@@ -60,7 +60,7 @@ class HomePage extends StatelessWidget {
       ),
       bottomNavigationBar: TextButton.icon(
         onPressed: () {
-          Modular.to.pushReplacementNamed('/settings');
+          context.go('/settings');
         },
         icon: Icon(Icons.settings, color: Color(0xFFA9A9A9)),
         label: const Text(

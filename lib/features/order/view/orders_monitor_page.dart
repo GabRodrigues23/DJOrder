@@ -1,12 +1,11 @@
 import 'package:djorder/features/order/view/widgets/order_grid_panel.dart';
+import 'package:djorder/setup/setup_get_it_injector.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_modular/flutter_modular.dart';
 import 'package:djorder/features/order/model/order.dart';
-import 'package:djorder/features/order/repository/order_repository.dart';
-import 'package:djorder/features/order/service/order_service.dart';
 import 'package:djorder/features/order/view/widgets/order_details_panel.dart';
 import 'package:djorder/features/order/view/widgets/order_filters_bar.dart';
 import 'package:djorder/features/order/viewmodel/order_view_model.dart';
+import 'package:go_router/go_router.dart';
 
 class OrdersMonitorPage extends StatefulWidget {
   const OrdersMonitorPage({super.key});
@@ -24,9 +23,7 @@ class _OrdersMonitorPageState extends State<OrdersMonitorPage> {
   @override
   void initState() {
     super.initState();
-    final service = OrderService();
-    final repository = OrderRepository(service);
-    viewModel = OrderViewModel(repository);
+    viewModel = getIt();
 
     viewModel.loadData();
     viewModel.startAutoRefresh();
@@ -65,7 +62,7 @@ class _OrdersMonitorPageState extends State<OrdersMonitorPage> {
           ),
           IconButton(
             onPressed: () {
-              Modular.to.pushReplacementNamed('/');
+              context.go('/');
             },
             icon: Icon(Icons.keyboard_return, color: Color(0xFFFFFFFF)),
           ),

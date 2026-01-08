@@ -3,16 +3,18 @@ import 'package:dio/dio.dart';
 import 'package:djorder/features/settings/service/settings_service.dart';
 
 class OrderService {
-  final Dio _dio = Dio();
-  final _settings = SettingsService();
+  final Dio dio;
+  final SettingsService settings;
+
+  OrderService(this.dio, this.settings);
 
   Future<List<Map<String, dynamic>>> loadAll() async {
-    final baseUrl = _settings.apiUrl;
+    final baseUrl = settings.apiUrl;
 
     try {
       if (baseUrl.isEmpty) throw Exception('Url da API não configurada');
 
-      final response = await _dio.get('$baseUrl/orders');
+      final response = await dio.get('$baseUrl/orders');
 
       if (response.data is List) {
         return List<Map<String, dynamic>>.from(response.data);
@@ -35,7 +37,7 @@ class OrderService {
     bool? isCanceled,
     bool? isBlocked,
   }) async {
-    final baseUrl = _settings.apiUrl;
+    final baseUrl = settings.apiUrl;
     final Map<String, dynamic> data = {};
 
     if (clientName != null) data['clientName'] = clientName;
@@ -46,19 +48,19 @@ class OrderService {
     if (data.isEmpty) return;
 
     try {
-      await _dio.put('$baseUrl/orders/$idOrder', data: data);
+      await dio.put('$baseUrl/orders/$idOrder', data: data);
     } catch (e) {
       throw Exception('Falha na comunicação com servidor: $e');
     }
   }
 
   Future<List<Map<String, dynamic>>> loadProducts() async {
-    final baseUrl = _settings.apiUrl;
+    final baseUrl = settings.apiUrl;
 
     try {
       if (baseUrl.isEmpty) throw Exception('Url da API não configurada');
 
-      final response = await _dio.get('$baseUrl/products');
+      final response = await dio.get('$baseUrl/products');
 
       if (response.data is List) {
         return List<Map<String, dynamic>>.from(response.data);
@@ -82,9 +84,9 @@ class OrderService {
     required double unitPrice,
     List<Map<String, dynamic>>? additionals,
   }) async {
-    final baseUrl = _settings.apiUrl;
+    final baseUrl = settings.apiUrl;
     try {
-      await _dio.post(
+      await dio.post(
         '$baseUrl/orders/$idPreSale/products',
         data: {
           'idOrder': visualId,

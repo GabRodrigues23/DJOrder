@@ -2,8 +2,8 @@ import 'package:djorder/core/constants/colors.dart';
 import 'package:djorder/features/order/interfaces/order_repository_interface.dart';
 import 'package:djorder/features/order/viewmodel/order_view_model.dart';
 import 'package:djorder/features/product/viewmodel/product_view_model.dart';
+import 'package:djorder/setup/setup_get_it_injector.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_modular/flutter_modular.dart';
 
 class AddProductModal extends StatefulWidget {
   final int idPreSale;
@@ -28,9 +28,8 @@ class _AddProductModalState extends State<AddProductModal> {
   @override
   void initState() {
     super.initState();
-    _addProductViewModel = ProductViewModel(
-      Modular.get<OrderRepositoryInterface>(),
-    );
+
+    _addProductViewModel = ProductViewModel(getIt<OrderRepositoryInterface>());
     _addProductViewModel.loadCatalog();
   }
 

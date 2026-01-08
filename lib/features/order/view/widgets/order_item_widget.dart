@@ -2,13 +2,13 @@ import 'dart:async';
 import 'package:djorder/core/utils/format_utils.dart';
 import 'package:djorder/features/order/view/widgets/actions_button_widget.dart';
 import 'package:djorder/features/order/viewmodel/order_view_model.dart';
+import 'package:djorder/setup/setup_get_it_injector.dart';
 import 'package:djorder/shared/mixins/menu_options_mixin.dart';
 import 'package:flutter/material.dart';
 import 'package:djorder/shared/enums/order_status_type.dart';
 import 'package:djorder/shared/extensions/order_status_extension.dart';
 import 'package:djorder/features/order/model/order.dart';
 import 'package:djorder/features/settings/service/settings_service.dart';
-import 'package:flutter_modular/flutter_modular.dart';
 
 class OrderItemWidget extends StatefulWidget {
   final Order order;
@@ -95,45 +95,34 @@ class _OrderItemWidgetState extends State<OrderItemWidget>
 
   @override
   Widget build(BuildContext context) {
-    final viewModel = context.watch<OrderViewModel>();
-    final status = widget.order.calculatedStatus;
-    final bool showDetails = status != OrderStatus.free;
+    final viewModel = getIt<OrderViewModel>();
 
-    return GestureDetector(
-      onTap: widget.onTap,
-      child: Container(
-        decoration: BoxDecoration(
-          color: status.color,
-          borderRadius: BorderRadius.circular(8),
-          boxShadow: const [
-            BoxShadow(
-              offset: Offset(2, 4),
-              color: Colors.black26,
-              blurRadius: 4,
+    return ListenableBuilder(
+      listenable: viewModel,
+      builder: (context, _) {
+        final status = widget.order.calculatedStatus;
+        final bool showDetails = status != OrderStatus.free;
+        return GestureDetector(
+          onTap: widget.onTap,
+          child: Container(
+            decoration: BoxDecoration(
+              color: status.color,
+              borderRadius: BorderRadius.circular(8),
+              boxShadow: const [
+                BoxShadow(
+                  offset: Offset(2, 4),
+                  color: Colors.black26,
+                  blurRadius: 4,
+                ),
+              ],
             ),
-          ],
-        ),
-        child: Padding(
-          padding: const EdgeInsets.all(8),
-          child: Stack(
-            children: [
-              !showDetails
-                  ? Center(
-                      child: Text(
-                        '#${widget.order.idOrder}',
-                        textAlign: TextAlign.center,
-                        style: const TextStyle(
-                          fontSize: 22,
-                          fontWeight: FontWeight.bold,
-                          color: Colors.white,
-                        ),
-                      ),
-                    )
-                  : Center(
-                      child: Column(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          Text(
+            child: Padding(
+              padding: const EdgeInsets.all(8),
+              child: Stack(
+                children: [
+                  !showDetails
+                      ? Center(
+                          child: Text(
                             '#${widget.order.idOrder}',
                             textAlign: TextAlign.center,
                             style: const TextStyle(
@@ -142,136 +131,156 @@ class _OrderItemWidgetState extends State<OrderItemWidget>
                               color: Colors.white,
                             ),
                           ),
-                          Text(
-                            '${widget.order.clientName}',
-                            textAlign: TextAlign.center,
-                            maxLines: 1,
-                            overflow: TextOverflow.ellipsis,
-                            style: const TextStyle(
-                              color: Colors.white,
-                              fontWeight: FontWeight.w600,
-                              fontSize: 14,
+                        )
+                      : Center(
+                          child: Column(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              Text(
+                                '#${widget.order.idOrder}',
+                                textAlign: TextAlign.center,
+                                style: const TextStyle(
+                                  fontSize: 22,
+                                  fontWeight: FontWeight.bold,
+                                  color: Colors.white,
+                                ),
+                              ),
+                              Text(
+                                '${widget.order.clientName}',
+                                textAlign: TextAlign.center,
+                                maxLines: 1,
+                                overflow: TextOverflow.ellipsis,
+                                style: const TextStyle(
+                                  color: Colors.white,
+                                  fontWeight: FontWeight.w600,
+                                  fontSize: 14,
+                                ),
+                              ),
+                              Visibility(
+                                visible:
+                                    widget.order.idTable != null &&
+                                    widget.order.idTable != 0,
+                                child: Text(
+                                  'Mesa: ${widget.order.idTable}',
+                                  textAlign: TextAlign.center,
+                                  maxLines: 1,
+                                  overflow: TextOverflow.ellipsis,
+                                  style: const TextStyle(
+                                    color: Colors.white,
+                                    fontWeight: FontWeight.w600,
+                                    fontSize: 14,
+                                  ),
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+
+                  Positioned(
+                    top: 0,
+                    left: 0,
+                    right: 0,
+                    child: Row(
+                      mainAxisAlignment: _timeText.isNotEmpty
+                          ? MainAxisAlignment.spaceBetween
+                          : MainAxisAlignment.end,
+                      children: [
+                        if (_timeText.isNotEmpty)
+                          Container(
+                            padding: const EdgeInsets.symmetric(
+                              horizontal: 6,
+                              vertical: 2,
+                            ),
+                            decoration: BoxDecoration(
+                              color: Colors.black26,
+                              borderRadius: BorderRadius.circular(4),
+                            ),
+                            child: Row(
+                              children: [
+                                Icon(
+                                  Icons.access_time,
+                                  size: 14,
+                                  color: _clockColor,
+                                ),
+                                const SizedBox(width: 4),
+                                Text(
+                                  _timeText,
+                                  style: TextStyle(
+                                    color: _clockColor,
+                                    fontWeight: FontWeight.bold,
+                                    fontSize: 12,
+                                  ),
+                                ),
+                              ],
                             ),
                           ),
-                          Visibility(
-                            visible:
-                                widget.order.idTable != null &&
-                                widget.order.idTable != 0,
+                        ActionsButtonWidget(
+                          order: widget.order,
+                          onSelected: (option) {
+                            handleMenuAction(
+                              context,
+                              option,
+                              widget.order,
+                              viewModel,
+                            );
+                          },
+                        ),
+                      ],
+                    ),
+                  ),
+
+                  Positioned(
+                    bottom: 0,
+                    left: 0,
+                    right: 0,
+                    child: Visibility(
+                      visible: showDetails,
+                      child: Column(
+                        children: [
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.end,
+                            spacing: 4,
+                            children: [
+                              Text(
+                                '${widget.order.peopleCount}',
+                                style: TextStyle(color: Colors.black26),
+                              ),
+                              Icon(
+                                Icons.people,
+                                size: 20,
+                                color: Colors.black26,
+                              ),
+                            ],
+                          ),
+                          Container(
+                            alignment: Alignment.bottomCenter,
+                            padding: const EdgeInsets.symmetric(
+                              horizontal: 8,
+                              vertical: 4,
+                            ),
+                            decoration: BoxDecoration(
+                              color: Colors.black26,
+                              borderRadius: BorderRadius.circular(4),
+                            ),
                             child: Text(
-                              'Mesa: ${widget.order.idTable}',
-                              textAlign: TextAlign.center,
-                              maxLines: 1,
-                              overflow: TextOverflow.ellipsis,
+                              'R\$ ${FormatUtils.formatValue(widget.order.effectiveSubtotal.toStringAsFixed(2))}',
                               style: const TextStyle(
                                 color: Colors.white,
-                                fontWeight: FontWeight.w600,
-                                fontSize: 14,
-                              ),
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
-
-              Positioned(
-                top: 0,
-                left: 0,
-                right: 0,
-                child: Row(
-                  mainAxisAlignment: _timeText.isNotEmpty
-                      ? MainAxisAlignment.spaceBetween
-                      : MainAxisAlignment.end,
-                  children: [
-                    if (_timeText.isNotEmpty)
-                      Container(
-                        padding: const EdgeInsets.symmetric(
-                          horizontal: 6,
-                          vertical: 2,
-                        ),
-                        decoration: BoxDecoration(
-                          color: Colors.black26,
-                          borderRadius: BorderRadius.circular(4),
-                        ),
-                        child: Row(
-                          children: [
-                            Icon(
-                              Icons.access_time,
-                              size: 14,
-                              color: _clockColor,
-                            ),
-                            const SizedBox(width: 4),
-                            Text(
-                              _timeText,
-                              style: TextStyle(
-                                color: _clockColor,
                                 fontWeight: FontWeight.bold,
-                                fontSize: 12,
+                                fontSize: 13,
                               ),
                             ),
-                          ],
-                        ),
-                      ),
-                    ActionsButtonWidget(
-                      order: widget.order,
-                      onSelected: (option) {
-                        handleMenuAction(
-                          context,
-                          option,
-                          widget.order,
-                          viewModel,
-                        );
-                      },
-                    ),
-                  ],
-                ),
-              ),
-
-              Positioned(
-                bottom: 0,
-                left: 0,
-                right: 0,
-                child: Visibility(
-                  visible: showDetails,
-                  child: Column(
-                    children: [
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.end,
-                        spacing: 4,
-                        children: [
-                          Text(
-                            '${widget.order.peopleCount}',
-                            style: TextStyle(color: Colors.black26),
                           ),
-                          Icon(Icons.people, size: 20, color: Colors.black26),
                         ],
                       ),
-                      Container(
-                        alignment: Alignment.bottomCenter,
-                        padding: const EdgeInsets.symmetric(
-                          horizontal: 8,
-                          vertical: 4,
-                        ),
-                        decoration: BoxDecoration(
-                          color: Colors.black26,
-                          borderRadius: BorderRadius.circular(4),
-                        ),
-                        child: Text(
-                          'R\$ ${FormatUtils.formatValue(widget.order.effectiveSubtotal.toStringAsFixed(2))}',
-                          style: const TextStyle(
-                            color: Colors.white,
-                            fontWeight: FontWeight.bold,
-                            fontSize: 13,
-                          ),
-                        ),
-                      ),
-                    ],
+                    ),
                   ),
-                ),
+                ],
               ),
-            ],
+            ),
           ),
-        ),
-      ),
+        );
+      },
     );
   }
 }
