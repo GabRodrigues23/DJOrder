@@ -14,13 +14,15 @@ class OrderItemWidget extends StatefulWidget {
   final Order order;
   final VoidCallback onTap;
   final VoidCallback? onChangeClient;
+  final OrderViewModel viewModel;
 
-  const OrderItemWidget({
+  OrderItemWidget({
     super.key,
     required this.order,
     required this.onTap,
     this.onChangeClient,
-  });
+    OrderViewModel? viewModel,
+  }) : viewModel = viewModel ?? getIt<OrderViewModel>();
 
   @override
   State<OrderItemWidget> createState() => _OrderItemWidgetState();

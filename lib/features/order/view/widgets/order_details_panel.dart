@@ -8,8 +8,10 @@ import 'package:djorder/features/order/model/order.dart';
 
 class OrderDetailsPanel extends StatelessWidget with MenuOptionsMixin {
   final Order? order;
+  final OrderViewModel viewModel;
 
-  const OrderDetailsPanel({super.key, required this.order});
+  OrderDetailsPanel({super.key, required this.order, OrderViewModel? viewModel})
+    : viewModel = viewModel ?? getIt<OrderViewModel>();
 
   @override
   Widget build(BuildContext context) {

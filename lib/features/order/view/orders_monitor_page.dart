@@ -1,5 +1,4 @@
 import 'package:djorder/features/order/view/widgets/order_grid_panel.dart';
-import 'package:djorder/setup/setup_get_it_injector.dart';
 import 'package:flutter/material.dart';
 import 'package:djorder/features/order/model/order.dart';
 import 'package:djorder/features/order/view/widgets/order_details_panel.dart';
@@ -8,31 +7,30 @@ import 'package:djorder/features/order/viewmodel/order_view_model.dart';
 import 'package:go_router/go_router.dart';
 
 class OrdersMonitorPage extends StatefulWidget {
-  const OrdersMonitorPage({super.key});
+  final OrderViewModel viewModel;
+
+  const OrdersMonitorPage({super.key, required this.viewModel});
 
   @override
   State<OrdersMonitorPage> createState() => _OrdersMonitorPageState();
 }
 
 class _OrdersMonitorPageState extends State<OrdersMonitorPage> {
-  late final OrderViewModel viewModel;
-
   Order? selectedOrder;
   int? selectedIdOrder;
 
   @override
   void initState() {
     super.initState();
-    viewModel = getIt();
 
-    viewModel.loadData();
-    viewModel.startAutoRefresh();
+    widget.viewModel.loadData();
+    widget.viewModel.startAutoRefresh();
   }
 
   @override
   void dispose() {
     super.dispose();
-    viewModel.stopAutoRefresh();
+    widget.viewModel.stopAutoRefresh();
   }
 
   void _handleOrderSelection(int idOrder) {
@@ -57,7 +55,7 @@ class _OrdersMonitorPageState extends State<OrdersMonitorPage> {
         backgroundColor: const Color(0xFF180E6D),
         actions: [
           IconButton(
-            onPressed: () => viewModel.loadData(),
+            onPressed: () => widget.viewModel.loadData(),
             icon: const Icon(Icons.refresh, color: Color(0xFFFFFFFF)),
           ),
           IconButton(
@@ -70,13 +68,13 @@ class _OrdersMonitorPageState extends State<OrdersMonitorPage> {
       ),
 
       body: ListenableBuilder(
-        listenable: viewModel,
+        listenable: widget.viewModel,
         builder: (context, _) {
           Order? activeOrder;
 
-          if (selectedIdOrder != null && viewModel.orders.isNotEmpty) {
+          if (selectedIdOrder != null && widget.viewModel.orders.isNotEmpty) {
             try {
-              activeOrder = viewModel.orders.firstWhere(
+              activeOrder = widget.viewModel.orders.firstWhere(
                 (element) => element.idOrder == selectedIdOrder,
               );
             } catch (e) {
@@ -87,13 +85,13 @@ class _OrdersMonitorPageState extends State<OrdersMonitorPage> {
           return Column(
             children: [
               OrderFiltersBar(
-                currentFilter: viewModel.currentFilter,
+                currentFilter: widget.viewModel.currentFilter,
                 onFilterChanged: (newStatus) {
-                  viewModel.setFilter(newStatus);
+                  widget.viewModel.setFilter(newStatus);
                 },
                 onSearchChanged: (query) {
-                  if (query.isEmpty) viewModel.clearSearchQuery();
-                  viewModel.setSearchQuery(query);
+                  if (query.isEmpty) widget.viewModel.clearSearchQuery();
+                  widget.viewModel.setSearchQuery(query);
                 },
               ),
               Expanded(
@@ -102,7 +100,7 @@ class _OrdersMonitorPageState extends State<OrdersMonitorPage> {
                     Expanded(
                       flex: 3,
                       child: OrderGridPanel(
-                        viewModel: viewModel,
+                        viewModel: widget.viewModel,
                         activeOrder: activeOrder,
                         onOrderSelected: _handleOrderSelection,
                       ),
