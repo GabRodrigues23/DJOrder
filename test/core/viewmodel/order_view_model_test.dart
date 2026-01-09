@@ -231,7 +231,10 @@ void main() {
       () async {
         final emptyOrder = Order.empty(1);
         await viewModel.print(emptyOrder, PrintType.order);
-        expect(viewModel.errorMessage, contains('Falha ao imprimir pedido'));
+        expect(
+          viewModel.errorMessage,
+          contains('Esta comanda está vazia no sistema.'),
+        );
       },
     );
 
@@ -240,7 +243,10 @@ void main() {
       () async {
         final emptyOrder = Order.empty(1);
         await viewModel.print(emptyOrder, PrintType.account);
-        expect(viewModel.errorMessage, contains('Falha ao imprimir pedido'));
+        expect(
+          viewModel.errorMessage,
+          contains('Esta comanda está vazia no sistema.'),
+        );
       },
     );
   });
