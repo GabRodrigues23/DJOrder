@@ -44,7 +44,7 @@ class OrderGridPanel extends StatelessWidget {
       child: GridView.builder(
         padding: const EdgeInsets.all(16),
         gridDelegate: SliverGridDelegateWithMaxCrossAxisExtent(
-          maxCrossAxisExtent: 200,
+          maxCrossAxisExtent: 150,
           childAspectRatio: 0.85,
           mainAxisSpacing: 16,
           crossAxisSpacing: 16,

@@ -21,7 +21,7 @@ void setupGetItInjector() {
     () => OrderRepository(getIt<OrderService>()),
   );
 
-  getIt.registerFactory<OrderViewModel>(
+  getIt.registerLazySingleton<OrderViewModel>(
     () => OrderViewModel(getIt<OrderRepositoryInterface>()),
   );
 }
