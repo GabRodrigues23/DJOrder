@@ -4,6 +4,7 @@ import 'package:djorder/features/order/viewmodel/order_view_model.dart';
 import 'package:djorder/features/product/model/additional.dart';
 import 'package:djorder/features/product/model/product.dart';
 import 'package:djorder/features/settings/service/settings_service.dart';
+import 'package:djorder/shared/enums/print_type.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -225,10 +226,22 @@ void main() {
       },
     );
 
-    test('printOrder deve retornar erro se a comanda estiver vazia', () async {
-      final emptyOrder = Order.empty(1);
-      await viewModel.printOrder(emptyOrder);
-      expect(viewModel.errorMessage, contains('Falha ao imprimir pedido'));
-    });
+    test(
+      'Imprimir pedido deve retornar erro se a comanda estiver vazia',
+      () async {
+        final emptyOrder = Order.empty(1);
+        await viewModel.print(emptyOrder, PrintType.order);
+        expect(viewModel.errorMessage, contains('Falha ao imprimir pedido'));
+      },
+    );
+
+    test(
+      'Imprimir conferência de contas deve retornar erro se a comanda estiver vazia',
+      () async {
+        final emptyOrder = Order.empty(1);
+        await viewModel.print(emptyOrder, PrintType.account);
+        expect(viewModel.errorMessage, contains('Falha ao imprimir pedido'));
+      },
+    );
   });
 }

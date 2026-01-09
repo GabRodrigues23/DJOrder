@@ -1,6 +1,7 @@
 import 'package:djorder/features/order/view/modals/add_product_modal.dart';
 import 'package:djorder/features/order/view/modals/block_status_order_modal.dart';
 import 'package:djorder/features/order/view/modals/change_people_count_modal.dart';
+import 'package:djorder/shared/enums/print_type.dart';
 import 'package:flutter/material.dart';
 import 'dart:async';
 import 'package:djorder/features/order/model/order.dart';
@@ -79,10 +80,10 @@ mixin MenuOptionsMixin {
           );
         },
         MenuOption.printOrder: () async {
-          await viewModel.printOrder(order);
+          await viewModel.print(order, PrintType.order);
         },
         MenuOption.printAccount: () async {
-          await viewModel.printAccount(order);
+          await viewModel.print(order, PrintType.account);
         },
         MenuOption.finalize: () =>
             debugPrint('Finalizar a comanda #${order.idOrder}'),

@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'package:djorder/features/order/addon/print_account_layout.dart';
 import 'package:djorder/features/order/addon/print_order_layout.dart';
+import 'package:djorder/shared/enums/print_type.dart';
 import 'package:flutter/material.dart';
 import 'package:audioplayers/audioplayers.dart';
 import 'package:djorder/shared/enums/order_status_type.dart';
@@ -11,9 +12,14 @@ import 'package:djorder/features/order/model/order.dart';
 
 class OrderViewModel extends ChangeNotifier {
   final OrderRepositoryInterface _repository;
+  OrderViewModel(this._repository);
+
   final PrintOrderLayout _printOrderService = PrintOrderLayout();
   final PrintAccountLayout _printAccountService = PrintAccountLayout();
-  OrderViewModel(this._repository);
+  late final Map<PrintType, Future<void> Function(Order)> _printMethods = {
+    PrintType.order: _printOrderService.generateAndPrintOrder,
+    PrintType.account: _printAccountService.generateAndPrintAccount,
+  };
 
   List<Order> _allOrders = [];
   OrderStatus? currentFilter;
@@ -190,7 +196,7 @@ class OrderViewModel extends ChangeNotifier {
     }
   }
 
-  Future<void> printOrder(Order order) async {
+  Future<void> print(Order order, PrintType type) async {
     try {
       isLoading = true;
       errorMessage = '';
@@ -200,30 +206,15 @@ class OrderViewModel extends ChangeNotifier {
         throw Exception('Esta comanda está vazia no sistema.');
       }
 
-      await _printOrderService.generateAndPrintOrder(order);
-    } catch (e) {
-      errorMessage = 'Falha ao imprimir pedido: ${e.toString()}';
-      debugPrint('Erro no ViewModel (printOrder): $e');
-    } finally {
-      isLoading = false;
-      notifyListeners();
-    }
-  }
-
-  Future<void> printAccount(Order order) async {
-    try {
-      isLoading = true;
-      errorMessage = '';
-      notifyListeners();
-
-      if (order.id == 0 && order.products.isEmpty) {
-        throw Exception('Esta comanda está vazia no sistema.');
+      final action = _printMethods[type];
+      if (action == null) {
+        throw Exception('Erro na impressão, tipo de impressão inválida');
       }
 
-      await _printAccountService.generateAndPrintAccount(order);
+      await action(order);
     } catch (e) {
-      errorMessage = 'Falha ao imprimir Conferência de Contas: ${e.toString()}';
-      debugPrint('Erro no ViewModel (printAccount): $e');
+      errorMessage = 'Falha ao imprimir ${type.label}: ${e.toString()}';
+      debugPrint('Erro no ViewModel (print ${type.name}): $e');
     } finally {
       isLoading = false;
       notifyListeners();
