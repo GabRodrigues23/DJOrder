@@ -11,8 +11,11 @@ import 'package:shared_preferences/shared_preferences.dart';
 class FakeOrderRepository implements OrderRepositoryInterface {
   bool shouldThrowError = false;
   List<Order> mockList = [];
-  bool wasCancelCalled = false;
-  int? lastTableChanged;
+  String? newClientName;
+  int? newPeopleCount;
+  int? newTableChanged;
+  bool wasCanceled = false;
+  bool wasBlocked = false;
 
   @override
   Future<List<Order>> loadAll() async {
@@ -22,12 +25,12 @@ class FakeOrderRepository implements OrderRepositoryInterface {
 
   @override
   Future<void> changeClient(int idOrder, String newName) async {
-    throw UnimplementedError();
+    newClientName = newName;
   }
 
   @override
   Future<void> changeTable(int idOrder, int newTable) async {
-    lastTableChanged = newTable;
+    newTableChanged = newTable;
   }
 
   @override
@@ -39,18 +42,18 @@ class FakeOrderRepository implements OrderRepositoryInterface {
   Future<void> updatePeopleCount({
     required int idPreSales,
     required int peopleCount,
-  }) {
-    throw UnimplementedError();
+  }) async {
+    newPeopleCount = peopleCount;
   }
 
   @override
   Future<void> cancelOrder(int idOrder, bool newCanceledStatus) async {
-    wasCancelCalled = true;
+    wasCanceled = newCanceledStatus;
   }
 
   @override
-  Future<void> blockOrder(int idOrder, bool newBlockedStatus) {
-    throw UnimplementedError();
+  Future<void> blockOrder(int idOrder, bool newBlockedStatus) async {
+    wasBlocked = newBlockedStatus;
   }
 
   @override
@@ -98,39 +101,13 @@ void main() {
   });
 
   group('Filtros e Busca por ID da Comanda, Nome do Cliente e ID da Mesa', () {
-    test('Deve filtrar pedidos pelo ID da Comanda', () async {
+    setUp(() {
       fakeRepository.mockList = [
         Order(
           id: 1,
           idOrder: 1,
-          canceled: 'N',
-          subtotal: 10.00,
-          serviceTax: 0.00,
-          oppeningDate: DateTime.now(),
-          products: [],
-        ),
-        Order(
-          id: 2,
-          idOrder: 2,
-          canceled: 'N',
-          subtotal: 10.00,
-          serviceTax: 0.00,
-          oppeningDate: DateTime.now(),
-          products: [],
-        ),
-      ];
-      await viewModel.loadData();
-      viewModel.setSearchQuery('1');
-
-      expect(viewModel.orders.any((o) => o.idOrder == 1), isTrue);
-      expect(viewModel.orders.any((o) => o.idOrder == 2), isFalse);
-    });
-
-    test('Deve filtrar pedidos pelo Nome do Cliente', () async {
-      fakeRepository.mockList = [
-        Order(
-          id: 1,
-          idOrder: 1,
+          idTable: 10,
+          peopleCount: 1,
           clientName: 'GABRIEL',
           canceled: 'N',
           subtotal: 10.00,
@@ -141,6 +118,8 @@ void main() {
         Order(
           id: 2,
           idOrder: 2,
+          idTable: 5,
+          peopleCount: 2,
           clientName: 'THALES',
           canceled: 'N',
           subtotal: 10.00,
@@ -149,79 +128,107 @@ void main() {
           products: [],
         ),
       ];
+    });
+
+    test('Deve filtrar pedidos pelo ID da Comanda', () async {
+      await viewModel.loadData();
+      viewModel.setSearchQuery('1');
+      expect(viewModel.orders.any((o) => o.idOrder == 1), isTrue);
+      expect(viewModel.orders.any((o) => o.idOrder == 2), isFalse);
+    });
+
+    test('Deve filtrar pedidos pelo Nome do Cliente', () async {
       await viewModel.loadData();
       viewModel.setSearchQuery('gabriel'.toUpperCase());
-
       expect(viewModel.orders.any((o) => o.idOrder == 1), isTrue);
       expect(viewModel.orders.any((o) => o.idOrder == 2), isFalse);
     });
 
     test('Deve filtrar pedidos pelo ID da Mesa', () async {
+      await viewModel.loadData();
+      viewModel.setSearchQuery('MESA 10');
+      expect(viewModel.orders.any((o) => o.idOrder == 1), isTrue);
+      expect(viewModel.orders.any((o) => o.idOrder == 2), isFalse);
+    });
+  });
+
+  group('Ações de Edição e Status', () {
+    test('changeClient deve atualizar o nome do cliente', () async {
+      await viewModel.changeClient(1, 'Novo Cliente');
+      expect(fakeRepository.newClientName, equals('Novo Cliente'));
+    });
+
+    test('changeTable deve atualizar a mesa', () async {
+      await viewModel.changeTable(1, 2);
+      expect(fakeRepository.newTableChanged, equals(2));
+    });
+
+    test('changePeopleCount deve atualizar a quantidade de pessoas', () async {
       fakeRepository.mockList = [
         Order(
           id: 1,
           idOrder: 1,
-          idTable: 10,
-          canceled: 'N',
-          subtotal: 5.00,
-          serviceTax: 0,
-          oppeningDate: DateTime.now(),
-          products: [],
-        ),
-        Order(
-          id: 2,
-          idOrder: 2,
-          idTable: 5,
+          peopleCount: 1,
           canceled: 'N',
           subtotal: 10.00,
-          serviceTax: 0,
-          oppeningDate: DateTime.now(),
-          products: [],
-        ),
-        Order(
-          id: 3,
-          idOrder: 3,
-          idTable: 10,
-          canceled: 'N',
-          subtotal: 5.00,
-          serviceTax: 0,
+          serviceTax: 0.00,
           oppeningDate: DateTime.now(),
           products: [],
         ),
       ];
       await viewModel.loadData();
-      viewModel.setSearchQuery('MESA 10');
+      await viewModel.changePeopleCount(1, 3);
+      expect(fakeRepository.newPeopleCount, equals(3));
+    });
 
-      expect(viewModel.orders.any((o) => o.idOrder == 1), isTrue);
-      expect(viewModel.orders.any((o) => o.idOrder == 2), isFalse);
-      expect(viewModel.orders.any((o) => o.idOrder == 3), isTrue);
+    test('blockOrder deve atualizar o status da comanda', () async {
+      await viewModel.blockOrder(1, true);
+      expect(fakeRepository.wasBlocked, isTrue);
+    });
+
+    test('cancelOrder deve cancelar a comanda', () async {
+      await viewModel.cancelOrder(1, true);
+      expect(fakeRepository.wasCanceled, isTrue);
     });
   });
 
-  group('Ações de Edição e Status', () async {
-    test('changeClient deve chamar o repositório', () async {
-      Order(
-        id: 1,
-        idOrder: 1,
-        clientName: 'Gabriel',
-        canceled: 'N',
-        subtotal: 10.00,
-        serviceTax: 0.00,
-        oppeningDate: DateTime.now(),
-        products: [],
-      );
-
-      await viewModel.changeClient(1, 'Novo Cliente');
-
-      expect(viewModel.orders.any((o) => o.idOrder == 1), 'Novo Cliente');
+  group('Teste de Estado', () {
+    test('Deve carregar 100 posições de comandas', () async {
+      fakeRepository.mockList = [
+        Order(
+          id: 1,
+          idOrder: 1,
+          canceled: 'N',
+          subtotal: 10.00,
+          serviceTax: 0.00,
+          oppeningDate: DateTime.now(),
+          products: [],
+        ),
+      ];
+      await viewModel.loadData();
+      expect(viewModel.orders.length, equals(100));
     });
-  });
 
-  group('Teste de Estado', () async {
-    fakeRepository.shouldThrowError = true;
-    await viewModel.loadData();
+    test('setPaused deve impedir loadData', () async {
+      viewModel.setPaused(true);
+      await viewModel.loadData();
+      expect(viewModel.isLoading, isFalse);
+    });
 
-    expect(viewModel.isLoading, isFalse);
-    expect(viewModel.errorMessage, contains('Erro ao buscar dados'));
+    test(
+      'Deve exibir mensagem de erro quando não houver comunicação',
+      () async {
+        fakeRepository.shouldThrowError = true;
+        await viewModel.loadData();
+        expect(viewModel.isLoading, isFalse);
+        expect(viewModel.errorMessage, contains('Erro ao buscar dados'));
+      },
+    );
+
+    test('printOrder deve retornar erro se a comanda estiver vazia', () async {
+      final emptyOrder = Order.empty(1);
+      await viewModel.printOrder(emptyOrder);
+      expect(viewModel.errorMessage, contains('Falha ao imprimir pedido'));
+    });
   });
 }
