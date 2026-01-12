@@ -245,11 +245,15 @@ class _OrderItemWidgetState extends State<OrderItemWidget>
                             children: [
                               Text(
                                 '${widget.order.peopleCount}',
-                                style: TextStyle(color: Colors.black26),
+                                style: TextStyle(
+                                  color: Colors.black26,
+                                  fontSize: 12,
+                                  fontWeight: FontWeight.bold,
+                                ),
                               ),
                               Icon(
                                 Icons.people,
-                                size: 20,
+                                size: 16,
                                 color: Colors.black26,
                               ),
                             ],
