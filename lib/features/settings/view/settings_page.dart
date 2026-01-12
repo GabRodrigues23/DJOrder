@@ -16,6 +16,7 @@ class _SettingsPageState extends State<SettingsPage> {
   late TextEditingController _urlController;
   late TextEditingController _warningController;
   late TextEditingController _criticalController;
+  late TextEditingController _orderLengthController;
 
   late int _refreshInterval;
   late bool _soundEnabled;
@@ -31,6 +32,9 @@ class _SettingsPageState extends State<SettingsPage> {
     _criticalController = TextEditingController(
       text: _service.criticalMinutes.toString(),
     );
+    _orderLengthController = TextEditingController(
+      text: _service.orderLength.toString(),
+    );
     _refreshInterval = _service.refreshInterval;
     _soundEnabled = _service.isSoundEnabled;
     _slaEnabled = _service.isSlaEnables;
@@ -41,6 +45,7 @@ class _SettingsPageState extends State<SettingsPage> {
     _urlController.dispose();
     _warningController.dispose();
     _criticalController.dispose();
+    _orderLengthController.dispose();
     super.dispose();
   }
 
@@ -53,6 +58,9 @@ class _SettingsPageState extends State<SettingsPage> {
     );
     await _service.setCriticalMinutes(
       int.tryParse(_criticalController.text) ?? 60,
+    );
+    await _service.setOrderLength(
+      int.tryParse(_orderLengthController.text) ?? 100,
     );
     await _service.setSoundEnabled(_soundEnabled);
 
@@ -140,6 +148,27 @@ class _SettingsPageState extends State<SettingsPage> {
               ),
 
               const SizedBox(height: 24),
+              _buildSectionTitle('Comandas'),
+              Card(
+                child: Padding(
+                  padding: const EdgeInsets.all(16),
+                  child: Column(
+                    children: [
+                      TextFormField(
+                        controller: _orderLengthController,
+                        decoration: const InputDecoration(
+                          labelText: 'Quantidade de Comandas',
+                          hintText: 'Qunatidade de Comandas à serem exibidas',
+                          border: OutlineInputBorder(),
+                          prefixIcon: Icon(Icons.add_circle_outlined),
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+
+              const SizedBox(height: 24),
               _buildSectionTitle('Alertas de Tempo (SLA)'),
               Card(
                 child: Column(
@@ -209,6 +238,7 @@ class _SettingsPageState extends State<SettingsPage> {
                   },
                 ),
               ),
+
               const SizedBox(height: 32),
               SizedBox(
                 height: 50,

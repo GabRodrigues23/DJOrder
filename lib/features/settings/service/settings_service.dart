@@ -7,6 +7,7 @@ class SettingsService {
   static const _keyWarningMinutes = 'warning_minutes';
   static const _keyCriticalMinutes = 'critical_minutes';
   static const _keySoundEnable = 'sound_enable';
+  static const _keyOrderLength = 'order_length';
 
   static final SettingsService _instance = SettingsService._internal();
   factory SettingsService() => _instance;
@@ -23,6 +24,7 @@ class SettingsService {
   bool get isSlaEnables => _prefs.getBool(_keySlaEnabled) ?? false;
   int get warningMinutes => _prefs.getInt(_keyWarningMinutes) ?? 30;
   int get criticalMinutes => _prefs.getInt(_keyCriticalMinutes) ?? 60;
+  int get orderLength => _prefs.getInt(_keyOrderLength) ?? 100;
   bool get isSoundEnabled => _prefs.getBool(_keySoundEnable) ?? false;
 
   Future<void> setApiUrl(String value) async {
@@ -43,6 +45,9 @@ class SettingsService {
 
   Future<void> setCriticalMinutes(int value) async =>
       await _prefs.setInt(_keyCriticalMinutes, value);
+
+  Future<void> setOrderLength(int value) async =>
+      await _prefs.setInt(_keyOrderLength, value);
 
   Future<void> setSoundEnabled(bool value) async =>
       await _prefs.setBool(_keySoundEnable, value);
