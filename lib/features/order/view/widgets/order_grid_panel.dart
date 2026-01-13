@@ -69,7 +69,6 @@ class OrderGridPanel extends StatelessWidget {
               order: order,
               onTap: () {
                 onOrderSelected(order.idOrder);
-                debugPrint('Clicou na comanda ${order.idOrder}');
               },
               onChangeClient: () => MenuOption.changeClient,
             ),

@@ -79,14 +79,17 @@ void main() {
 
   late OrderViewModel viewModel;
   late FakeOrderRepository fakeRepository;
+  late SettingsService settingsService;
 
   setUp(() async {
     SharedPreferences.setMockInitialValues({
       'isSoundEnabled': false,
       'refreshInterval': 5,
+      'order_length': 50,
     });
 
-    await SettingsService().init();
+    settingsService = SettingsService();
+    await settingsService.init();
 
     const channels = ['xyz.luan/audioplayers', 'xyz.luan/audioplayers.global'];
     for (var channelName in channels) {
@@ -98,7 +101,7 @@ void main() {
     }
 
     fakeRepository = FakeOrderRepository();
-    viewModel = OrderViewModel(fakeRepository);
+    viewModel = OrderViewModel(fakeRepository, settingsService);
   });
 
   group('Filtros e Busca por ID da Comanda, Nome do Cliente e ID da Mesa', () {
@@ -194,7 +197,7 @@ void main() {
   });
 
   group('Teste de Estado', () {
-    test('Deve carregar 100 posições de comandas', () async {
+    test('Deve carregar 50 posições de comandas', () async {
       fakeRepository.mockList = [
         Order(
           id: 1,
@@ -207,7 +210,7 @@ void main() {
         ),
       ];
       await viewModel.loadData();
-      expect(viewModel.orders.length, equals(100));
+      expect(viewModel.orders.length, equals(50));
     });
 
     test('setPaused deve impedir loadData', () async {

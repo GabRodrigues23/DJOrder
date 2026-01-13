@@ -22,6 +22,9 @@ void setupGetItInjector() {
   );
 
   getIt.registerLazySingleton<OrderViewModel>(
-    () => OrderViewModel(getIt<OrderRepositoryInterface>()),
+    () => OrderViewModel(
+      getIt<OrderRepositoryInterface>(),
+      getIt<SettingsService>(),
+    ),
   );
 }

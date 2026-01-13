@@ -12,7 +12,8 @@ import 'package:djorder/features/order/model/order.dart';
 
 class OrderViewModel extends ChangeNotifier {
   final OrderRepositoryInterface _repository;
-  OrderViewModel(this._repository);
+  final SettingsService _settingsService;
+  OrderViewModel(this._repository, this._settingsService);
 
   final PrintOrderLayout _printOrderService = PrintOrderLayout();
   final PrintAccountLayout _printAccountService = PrintAccountLayout();
@@ -122,9 +123,10 @@ class OrderViewModel extends ChangeNotifier {
     try {
       final activeOrders = await _repository.loadAll();
       _checkAndPlaySound(activeOrders.length);
+      final limit = _settingsService.orderLength;
 
       List<Order> tempList = [];
-      for (int i = 1; i <= 100; i++) {
+      for (int i = 1; i <= limit; i++) {
         final existingOrder = activeOrders.firstWhere(
           (order) => order.idOrder == i,
           orElse: () => Order.empty(i),
