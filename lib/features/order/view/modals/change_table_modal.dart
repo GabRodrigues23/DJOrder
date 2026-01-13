@@ -86,6 +86,7 @@ class _ChangeTableModalState extends State<ChangeTableModal> {
           TextField(
             controller: _tableIdController,
             keyboardType: TextInputType.number,
+            autofocus: true,
             decoration: const InputDecoration(
               labelText: 'N° da Mesa:',
               border: OutlineInputBorder(),

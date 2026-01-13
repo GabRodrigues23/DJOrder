@@ -84,6 +84,7 @@ class _ChangePeopleCountModalState extends State<ChangePeopleCountModal> {
           TextField(
             controller: _peopleCountController,
             keyboardType: TextInputType.number,
+            autofocus: true,
             decoration: const InputDecoration(
               labelText: 'N° de Pessoas:',
               border: OutlineInputBorder(),

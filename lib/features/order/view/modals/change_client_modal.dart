@@ -74,8 +74,8 @@ class _ChangeClientModalState extends State<ChangeClientModal> {
           const SizedBox(height: 24),
 
           TextField(
-            autofocus: true,
             controller: _clientNameController,
+            autofocus: true,
             decoration: const InputDecoration(
               labelText: 'Nome do Cliente:',
               border: OutlineInputBorder(),
