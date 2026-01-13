@@ -61,6 +61,16 @@ class ProductViewModel extends ChangeNotifier {
     }
   }
 
+  void clearSelection() {
+    selectedProduct = null;
+    _selectedAdditionals.clear();
+    quantity = 1;
+
+    filteredProducts = List.from(_allProducts);
+
+    notifyListeners();
+  }
+
   int _countSelectedInGroup(AdditionalGroup group) {
     int count = 0;
     for (var selected in _selectedAdditionals) {

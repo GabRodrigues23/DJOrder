@@ -1,13 +1,13 @@
-import 'package:djorder/features/order/view/modals/add_product_modal.dart';
-import 'package:djorder/features/order/view/modals/block_status_order_modal.dart';
-import 'package:djorder/features/order/view/modals/change_people_count_modal.dart';
+import 'package:djorder/features/order/view/modals/add_product_modal/add_product_modal.dart';
+import 'package:djorder/features/order/view/modals/block_status_order_modal/block_status_order_modal.dart';
+import 'package:djorder/features/order/view/modals/change_people_count_modal/change_people_count_modal.dart';
 import 'package:djorder/shared/enums/print_type.dart';
 import 'package:flutter/material.dart';
 import 'dart:async';
 import 'package:djorder/features/order/model/order.dart';
-import 'package:djorder/features/order/view/modals/cancel_order_modal.dart';
-import 'package:djorder/features/order/view/modals/change_client_modal.dart';
-import 'package:djorder/features/order/view/modals/change_table_modal.dart';
+import 'package:djorder/features/order/view/modals/cancel_order_modal/cancel_order_modal.dart';
+import 'package:djorder/features/order/view/modals/change_client_modal/change_client_modal.dart';
+import 'package:djorder/features/order/view/modals/add_product_modal/change_table_modal/change_table_modal.dart';
 import 'package:djorder/features/order/viewmodel/order_view_model.dart';
 import 'package:djorder/shared/enums/menu_options_type.dart';
 
