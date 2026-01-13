@@ -24,11 +24,20 @@ class OrderDetailsPanel extends StatelessWidget with MenuOptionsMixin {
         ),
       );
 
-    final viewModel = getIt<OrderViewModel>();
     return ListenableBuilder(
       listenable: viewModel,
       builder: (context, _) {
         final int peopleCount = order?.peopleCount ?? 1;
+        final bool isOrderFree = order!.products.isEmpty;
+
+        if (isOrderFree)
+          return Center(
+            child: Text(
+              'Comanda ${order!.idOrder} está livre, \nadicione produtos para abrir \na comanda',
+              textAlign: TextAlign.center,
+              style: TextStyle(color: Colors.grey),
+            ),
+          );
 
         return Container(
           color: Colors.white,
