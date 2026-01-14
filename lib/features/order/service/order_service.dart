@@ -100,4 +100,32 @@ class OrderService {
       throw Exception('Erro ao adicionar item: $e');
     }
   }
+
+  Future<void> cancelProduct(int idOrder, int seqItem) async {
+    final baseUrl = settings.apiUrl;
+    try {
+      await dio.put(
+        '$baseUrl/orders/$idOrder/products/$seqItem',
+        data: {'isCanceled': true},
+      );
+    } catch (e) {
+      throw Exception('Erro ao cancelar produto: $e');
+    }
+  }
+
+  Future<void> transferProduct(
+    int idOrder,
+    int seqItem,
+    int targetOrderId,
+  ) async {
+    final baseUrl = settings.apiUrl;
+    try {
+      await dio.post(
+        '$baseUrl/orders/$idOrder/products/$seqItem/transfer',
+        data: {'targetOrderId': targetOrderId},
+      );
+    } catch (e) {
+      throw Exception('Erro ao transferir produto: $e');
+    }
+  }
 }

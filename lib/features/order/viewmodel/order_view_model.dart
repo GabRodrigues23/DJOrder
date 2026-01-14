@@ -222,4 +222,68 @@ class OrderViewModel extends ChangeNotifier {
       notifyListeners();
     }
   }
+
+  Future<void> cancelProductAndCheckOrder(
+    int idOrderInternal,
+    int productSequence,
+  ) async {
+    _isPaused = true; // Pausa refresh automático
+    isLoading = true;
+    errorMessage = '';
+    notifyListeners();
+
+    try {
+      await _repository.cancelProduct(idOrderInternal, productSequence);
+
+      final activeOrders = await _repository.loadAll();
+
+      final updatedOrder = activeOrders.firstWhere(
+        (o) => o.id == idOrderInternal,
+        orElse: () => Order.empty(0),
+      );
+
+      if (updatedOrder.id != 0) {
+        final hasActiveItems = updatedOrder.products.any(
+          (p) => p.status != 'S',
+        );
+
+        if (!hasActiveItems) {
+          await _repository.cancelOrder(idOrderInternal, true);
+        }
+      }
+      await loadData();
+    } catch (e) {
+      errorMessage = e.toString().replaceAll('Exception: ', '');
+    } finally {
+      isLoading = false;
+      _isPaused = false;
+      notifyListeners();
+    }
+  }
+
+  Future<void> transferProduct(
+    int idOrderInternal,
+    int productSequence,
+    int targetOrderVisualId,
+  ) async {
+    _isPaused = true;
+    isLoading = true;
+    errorMessage = '';
+    notifyListeners();
+
+    try {
+      await _repository.transferProduct(
+        idOrderInternal,
+        productSequence,
+        targetOrderVisualId,
+      );
+      await loadData();
+    } catch (e) {
+      errorMessage = e.toString().replaceAll('Exception: ', '');
+    } finally {
+      isLoading = false;
+      _isPaused = false;
+      notifyListeners();
+    }
+  }
 }

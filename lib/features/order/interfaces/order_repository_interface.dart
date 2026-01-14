@@ -25,4 +25,7 @@ abstract class OrderRepositoryInterface {
 
   Future<void> cancelOrder(int idOrder, bool newCanceledStatus);
   Future<void> blockOrder(int idOrder, bool newBlockedStatus);
+
+  Future<void> cancelProduct(int idOrder, int seqItem);
+  Future<void> transferProduct(int idOrder, int seqItem, int targetOrderId);
 }

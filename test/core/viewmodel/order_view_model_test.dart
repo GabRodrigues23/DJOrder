@@ -72,6 +72,18 @@ class FakeOrderRepository implements OrderRepositoryInterface {
   ]) {
     throw UnimplementedError();
   }
+
+  @override
+  Future<void> cancelProduct(int idOrder, int seqItem) {
+    // TODO: implement cancelProduct
+    throw UnimplementedError();
+  }
+
+  @override
+  Future<void> transferProduct(int idOrder, int seqItem, int targetOrderId) {
+    // TODO: implement transferProduct
+    throw UnimplementedError();
+  }
 }
 
 void main() {

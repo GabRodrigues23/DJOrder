@@ -72,13 +72,9 @@ class ProductViewModel extends ChangeNotifier {
   }
 
   int _countSelectedInGroup(AdditionalGroup group) {
-    int count = 0;
-    for (var selected in _selectedAdditionals) {
-      if (group.items.any((item) => item.id == selected.id)) {
-        count++;
-      }
-    }
-    return count;
+    return _selectedAdditionals
+        .where((selected) => group.items.contains(selected))
+        .length;
   }
 
   void toggleAdditional(AdditionalGroup group, AdditionalItem item) {
