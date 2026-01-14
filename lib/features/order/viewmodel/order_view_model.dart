@@ -227,7 +227,7 @@ class OrderViewModel extends ChangeNotifier {
     int idOrderInternal,
     int productSequence,
   ) async {
-    _isPaused = true; // Pausa refresh automático
+    _isPaused = true;
     isLoading = true;
     errorMessage = '';
     notifyListeners();

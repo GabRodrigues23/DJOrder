@@ -267,9 +267,9 @@ class OrderDetailsPanel extends StatelessWidget
           value: option,
           child: Row(
             children: [
-              Icon(option.icon, size: 20, color: Colors.grey[700]),
+              Icon(option.icon, size: 20, color: option.color),
               const SizedBox(width: 12),
-              Text(option.label),
+              Text(option.label, style: TextStyle(color: option.color)),
             ],
           ),
         );

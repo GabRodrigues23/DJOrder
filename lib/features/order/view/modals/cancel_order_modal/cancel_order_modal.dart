@@ -1,17 +1,15 @@
 import 'package:djorder/features/order/model/order.dart';
 import 'package:djorder/core/constants/colors.dart';
 import 'package:djorder/features/order/viewmodel/order_view_model.dart';
+import 'package:djorder/setup/setup_get_it_injector.dart';
 import 'package:flutter/material.dart';
 
 class CancelOrderModal extends StatelessWidget {
   final Order order;
   final OrderViewModel viewModel;
 
-  const CancelOrderModal({
-    super.key,
-    required this.order,
-    required this.viewModel,
-  });
+  CancelOrderModal({super.key, required this.order, OrderViewModel? viewModel})
+    : viewModel = viewModel ?? getIt<OrderViewModel>();
 
   Future<void> _save(BuildContext context) async {
     await viewModel.cancelOrder(order.idOrder, true);
