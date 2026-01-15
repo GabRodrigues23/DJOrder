@@ -12,7 +12,7 @@ class OrderRepository implements OrderRepositoryInterface {
   final OrderService _service;
   OrderRepository(this._service);
 
-  String _peopleKey(int preSaleId) => 'order_presale_${preSaleId}_people';
+  String _peopleKey(int id) => 'order_presale_${id}_people';
 
   @override
   Future<List<Order>> loadAll() async {
@@ -48,8 +48,8 @@ class OrderRepository implements OrderRepositoryInterface {
 
   @override
   Future<void> includeProduct(
-    int idPreSale,
-    int visualId,
+    int id,
+    int idOrder,
     Product product,
     double quantity, [
     List<AdditionalItem>? additionals,
@@ -61,8 +61,8 @@ class OrderRepository implements OrderRepositoryInterface {
         .toList();
 
     await _service.addProduct(
-      idPreSale,
-      visualId: visualId,
+      id,
+      idOrder: idOrder,
       idProduct: product.id,
       qtd: quantity,
       unitPrice: product.price,
@@ -71,47 +71,47 @@ class OrderRepository implements OrderRepositoryInterface {
   }
 
   @override
-  Future<void> changeClient(int idOrder, String newName) async {
-    final nameClean = newName.trim();
+  Future<void> changeClient(int ids, String clientName) async {
+    final nameClean = clientName.trim();
     if (nameClean.isEmpty) {
       throw Exception("O nome do cliente não pode ser vazio");
     }
-    await _service.updateOrder(idOrder, clientName: nameClean);
+    await _service.updateOrder(ids, clientName: nameClean);
   }
 
   @override
-  Future<void> changeTable(int idOrder, int? newTable) async {
-    await _service.updateOrder(idOrder, tableId: newTable);
+  Future<void> changeTable(int ids, int? tableId) async {
+    await _service.updateOrder(ids, tableId: tableId);
   }
 
   @override
   Future<void> updatePeopleCount({
-    required int idPreSales,
+    required int id,
     required int peopleCount,
   }) async {
     final orderPrefs = await SharedPreferences.getInstance();
-    await orderPrefs.setInt(_peopleKey(idPreSales), peopleCount);
+    await orderPrefs.setInt(_peopleKey(id), peopleCount);
   }
 
   @override
-  Future<int> getPeopleCount(int orderId) async {
+  Future<int> getPeopleCount(int id) async {
     final orderPrefs = await SharedPreferences.getInstance();
-    return orderPrefs.getInt(_peopleKey(orderId)) ?? 1;
+    return orderPrefs.getInt(_peopleKey(id)) ?? 1;
   }
 
   @override
-  Future<void> cancelOrder(int idOrder, bool newCanceledStatus) async {
-    await _service.updateOrder(idOrder, isCanceled: newCanceledStatus);
+  Future<void> cancelOrder(int ids, bool canceledStatus) async {
+    await _service.updateOrder(ids, isCanceled: canceledStatus);
   }
 
   @override
-  Future<void> blockOrder(int idOrder, bool newBlockedStatus) async {
-    await _service.updateOrder(idOrder, isBlocked: newBlockedStatus);
+  Future<void> blockOrder(int ids, bool blockedStatus) async {
+    await _service.updateOrder(ids, isBlocked: blockedStatus);
   }
 
   @override
-  Future<void> cancelProduct(int idOrder, int seqItem) async {
-    await _service.cancelProduct(idOrder, seqItem);
+  Future<void> cancelProduct(int ids, int seqItem) async {
+    await _service.cancelProduct(ids, seqItem);
   }
 
   @override

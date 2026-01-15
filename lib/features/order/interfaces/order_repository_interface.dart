@@ -14,18 +14,15 @@ abstract class OrderRepositoryInterface {
     List<AdditionalItem>? additionals,
   ]);
 
-  Future<void> changeClient(int idOrder, String newName);
-  Future<void> changeTable(int idOrder, int newTable);
+  Future<void> changeClient(int idPreSales, String clientName);
+  Future<void> changeTable(int idPreSales, int tableId);
 
-  Future<void> updatePeopleCount({
-    required int idPreSales,
-    required int peopleCount,
-  });
   Future<int> getPeopleCount(int idOrder);
+  Future<void> updatePeopleCount({required int id, required int peopleCount});
 
-  Future<void> cancelOrder(int idOrder, bool newCanceledStatus);
-  Future<void> blockOrder(int idOrder, bool newBlockedStatus);
+  Future<void> cancelOrder(int idPreSales, bool canceledStatus);
+  Future<void> blockOrder(int idPreSales, bool blockedStatus);
 
-  Future<void> cancelProduct(int idOrder, int seqItem);
-  Future<void> transferProduct(int idOrder, int seqItem, int targetOrderId);
+  Future<void> cancelProduct(int idPreSales, int seqItem);
+  Future<void> transferProduct(int idPreSales, int seqItem, int targetOrderId);
 }

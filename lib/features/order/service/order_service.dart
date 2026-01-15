@@ -31,7 +31,7 @@ class OrderService {
   }
 
   Future<void> updateOrder(
-    int idOrder, {
+    int id, {
     String? clientName,
     int? tableId,
     bool? isCanceled,
@@ -48,7 +48,7 @@ class OrderService {
     if (data.isEmpty) return;
 
     try {
-      await dio.put('$baseUrl/orders/$idOrder', data: data);
+      await dio.put('$baseUrl/orders/$id', data: data);
     } catch (e) {
       throw Exception('Falha na comunicação com servidor: $e');
     }
@@ -77,8 +77,8 @@ class OrderService {
   }
 
   Future<void> addProduct(
-    int idPreSale, {
-    required int visualId,
+    int id, {
+    required int idOrder,
     required int idProduct,
     required double qtd,
     required double unitPrice,
@@ -87,9 +87,9 @@ class OrderService {
     final baseUrl = settings.apiUrl;
     try {
       await dio.post(
-        '$baseUrl/orders/$idPreSale/products',
+        '$baseUrl/orders/$id/products',
         data: {
-          'idOrder': visualId,
+          'idOrder': idOrder,
           'idProduct': idProduct,
           'quantity': qtd,
           'unitPrice': unitPrice,
@@ -101,11 +101,11 @@ class OrderService {
     }
   }
 
-  Future<void> cancelProduct(int idOrder, int seqItem) async {
+  Future<void> cancelProduct(int id, int seqItem) async {
     final baseUrl = settings.apiUrl;
     try {
       await dio.put(
-        '$baseUrl/orders/$idOrder/products/$seqItem',
+        '$baseUrl/orders/$id/products/$seqItem',
         data: {'isCanceled': true},
       );
     } catch (e) {
@@ -113,15 +113,11 @@ class OrderService {
     }
   }
 
-  Future<void> transferProduct(
-    int idOrder,
-    int seqItem,
-    int targetOrderId,
-  ) async {
+  Future<void> transferProduct(int id, int seqItem, int targetOrderId) async {
     final baseUrl = settings.apiUrl;
     try {
       await dio.post(
-        '$baseUrl/orders/$idOrder/products/$seqItem/transfer',
+        '$baseUrl/orders/$id/products/$seqItem/transfer',
         data: {'targetOrderId': targetOrderId},
       );
     } catch (e) {

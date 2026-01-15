@@ -18,7 +18,7 @@ class CancelProductModal extends StatelessWidget {
   }) : viewModel = viewModel ?? getIt<OrderViewModel>();
 
   Future<void> _save(BuildContext context) async {
-    await viewModel.cancelProductAndCheckOrder(order.id, item.sequence);
+    await viewModel.cancelProduct(order.id, item.sequence);
 
     if (context.mounted && viewModel.errorMessage.isEmpty)
       Navigator.pop(context);

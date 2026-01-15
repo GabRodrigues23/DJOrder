@@ -25,35 +25,35 @@ class FakeOrderRepository implements OrderRepositoryInterface {
   }
 
   @override
-  Future<void> changeClient(int idOrder, String newName) async {
+  Future<void> changeClient(int id, String newName) async {
     newClientName = newName;
   }
 
   @override
-  Future<void> changeTable(int idOrder, int newTable) async {
+  Future<void> changeTable(int id, int newTable) async {
     newTableChanged = newTable;
   }
 
   @override
-  Future<int> getPeopleCount(int idOrder) {
+  Future<int> getPeopleCount(int id) {
     throw UnimplementedError();
   }
 
   @override
   Future<void> updatePeopleCount({
-    required int idPreSales,
+    required int id,
     required int peopleCount,
   }) async {
     newPeopleCount = peopleCount;
   }
 
   @override
-  Future<void> cancelOrder(int idOrder, bool newCanceledStatus) async {
+  Future<void> cancelOrder(int id, bool newCanceledStatus) async {
     wasCanceled = newCanceledStatus;
   }
 
   @override
-  Future<void> blockOrder(int idOrder, bool newBlockedStatus) async {
+  Future<void> blockOrder(int id, bool newBlockedStatus) async {
     wasBlocked = newBlockedStatus;
   }
 

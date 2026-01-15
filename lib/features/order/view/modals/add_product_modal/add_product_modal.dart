@@ -10,14 +10,14 @@ import 'package:djorder/setup/setup_get_it_injector.dart';
 import 'package:flutter/material.dart';
 
 class AddProductModal extends StatefulWidget {
-  final int idPreSale;
-  final int visualId;
+  final int id;
+  final int idOrder;
   final OrderViewModel orderViewModel;
 
   AddProductModal({
     super.key,
-    required this.idPreSale,
-    required this.visualId,
+    required this.id,
+    required this.idOrder,
     OrderViewModel? orderViewModel,
   }) : orderViewModel = orderViewModel ?? getIt<OrderViewModel>();
 
@@ -52,7 +52,7 @@ class _AddProductModalState extends State<AddProductModal> {
       return;
     }
 
-    await _addProductViewModel.confirmAdd(widget.idPreSale, widget.visualId);
+    await _addProductViewModel.confirmAdd(widget.id, widget.idOrder);
     await widget.orderViewModel.loadData();
 
     if (mounted) Navigator.pop(context);

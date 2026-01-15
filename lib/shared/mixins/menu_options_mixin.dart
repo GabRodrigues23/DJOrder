@@ -26,8 +26,8 @@ mixin MenuOptionsMixin {
             context: context,
             barrierDismissible: false,
             builder: (_) => AddProductModal(
-              idPreSale: order.id,
-              visualId: order.idOrder,
+              id: order.id,
+              idOrder: order.idOrder,
               orderViewModel: viewModel,
             ),
           );

@@ -143,9 +143,9 @@ class OrderViewModel extends ChangeNotifier {
     }
   }
 
-  Future<void> changeClient(int idOrder, String newName) async {
+  Future<void> changeClient(int id, String newName) async {
     try {
-      await _repository.changeClient(idOrder, newName);
+      await _repository.changeClient(id, newName);
     } catch (e) {
       errorMessage = e.toString();
       debugPrint('Erro no ViewModel (changeClient): $e');
@@ -153,9 +153,9 @@ class OrderViewModel extends ChangeNotifier {
     }
   }
 
-  Future<void> changeTable(int idOrder, int? newTable) async {
+  Future<void> changeTable(int id, int? newTable) async {
     try {
-      await _repository.changeTable(idOrder, newTable!);
+      await _repository.changeTable(id, newTable!);
     } catch (e) {
       errorMessage = e.toString();
       debugPrint('Erro no ViewModel (changeTable): $e');
@@ -164,10 +164,7 @@ class OrderViewModel extends ChangeNotifier {
   }
 
   Future<void> changePeopleCount(int id, int newPeopleCount) async {
-    await _repository.updatePeopleCount(
-      idPreSales: id,
-      peopleCount: newPeopleCount,
-    );
+    await _repository.updatePeopleCount(id: id, peopleCount: newPeopleCount);
 
     _allOrders = orders.map((order) {
       if (order.id == id) {
@@ -178,9 +175,9 @@ class OrderViewModel extends ChangeNotifier {
     notifyListeners();
   }
 
-  Future<void> cancelOrder(int idOrder, bool newCanceledStatus) async {
+  Future<void> cancelOrder(int id, bool newCanceledStatus) async {
     try {
-      await _repository.cancelOrder(idOrder, newCanceledStatus);
+      await _repository.cancelOrder(id, newCanceledStatus);
     } catch (e) {
       errorMessage = e.toString();
       debugPrint('Erro no ViewModel (cancelOrder): $e');
@@ -188,9 +185,9 @@ class OrderViewModel extends ChangeNotifier {
     }
   }
 
-  Future<void> blockOrder(int idOrder, bool newBlockedStatus) async {
+  Future<void> blockOrder(int id, bool newBlockedStatus) async {
     try {
-      await _repository.blockOrder(idOrder, newBlockedStatus);
+      await _repository.blockOrder(id, newBlockedStatus);
     } catch (e) {
       errorMessage = e.toString();
       debugPrint('Erro no ViewModel (blockOrder): $e');
@@ -223,34 +220,31 @@ class OrderViewModel extends ChangeNotifier {
     }
   }
 
-  Future<void> cancelProductAndCheckOrder(
-    int idOrderInternal,
-    int productSequence,
-  ) async {
+  Future<void> _checkAndCloseIfEmpty(int id) async {
+    final activeOrders = await _repository.loadAll();
+    final updateOrder = activeOrders.firstWhere(
+      (o) => o.id == id,
+      orElse: () => Order.empty(0),
+    );
+
+    if (updateOrder.id != 0) {
+      final hasActiveItems = updateOrder.products.any((p) => p.status != 'S');
+
+      if (!hasActiveItems) {
+        await _repository.cancelOrder(id, true);
+      }
+    }
+  }
+
+  Future<void> cancelProduct(int id, int productSequence) async {
     _isPaused = true;
     isLoading = true;
     errorMessage = '';
     notifyListeners();
 
     try {
-      await _repository.cancelProduct(idOrderInternal, productSequence);
-
-      final activeOrders = await _repository.loadAll();
-
-      final updatedOrder = activeOrders.firstWhere(
-        (o) => o.id == idOrderInternal,
-        orElse: () => Order.empty(0),
-      );
-
-      if (updatedOrder.id != 0) {
-        final hasActiveItems = updatedOrder.products.any(
-          (p) => p.status != 'S',
-        );
-
-        if (!hasActiveItems) {
-          await _repository.cancelOrder(idOrderInternal, true);
-        }
-      }
+      await _repository.cancelProduct(id, productSequence);
+      await _checkAndCloseIfEmpty(id);
       await loadData();
     } catch (e) {
       errorMessage = e.toString().replaceAll('Exception: ', '');
@@ -262,7 +256,7 @@ class OrderViewModel extends ChangeNotifier {
   }
 
   Future<void> transferProduct(
-    int idOrderInternal,
+    int id,
     int productSequence,
     int targetOrderVisualId,
   ) async {
@@ -273,10 +267,11 @@ class OrderViewModel extends ChangeNotifier {
 
     try {
       await _repository.transferProduct(
-        idOrderInternal,
+        id,
         productSequence,
         targetOrderVisualId,
       );
+      await _checkAndCloseIfEmpty(id);
       await loadData();
     } catch (e) {
       errorMessage = e.toString().replaceAll('Exception: ', '');
