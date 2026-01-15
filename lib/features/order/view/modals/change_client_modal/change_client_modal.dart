@@ -38,7 +38,7 @@ class _ChangeClientModalState extends State<ChangeClientModal> {
 
   void _save() async {
     final String newName = _clientNameController.text;
-    await widget.viewModel.changeClient(widget.order.idOrder, newName);
+    await widget.viewModel.changeClient(widget.order.id, newName);
     if (!mounted) return;
 
     if (widget.viewModel.errorMessage.isEmpty) Navigator.pop(context);

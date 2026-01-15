@@ -47,7 +47,7 @@ class _ChangeTableModalState extends State<ChangeTableModal> {
       return;
     }
 
-    await widget.viewModel.changeTable(widget.order.idOrder, newTable);
+    await widget.viewModel.changeTable(widget.order.id, newTable);
 
     if (!mounted) return;
 
