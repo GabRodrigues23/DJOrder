@@ -9,11 +9,11 @@ enum MenuOption {
   changePeopleCount('Alterar n° de Pessoas', Icons.person_add_alt_1),
   printOrder('Imprimir Pedido', Icons.print),
   printAccount('Conferência de Contas', Icons.receipt_long),
-  finalize(
-    'Finalizar Pedido',
-    Icons.check_circle_outline,
-    color: Color(0xFF388E3C),
-  ),
+  // finalize(
+  //   'Finalizar Pedido',
+  //   Icons.check_circle_outline,
+  //   color: Color(0xFF388E3C),
+  // ),
   block('Bloquear Pedido', Icons.lock_outline, color: Color(0xFFF57C00)),
   unblock('Desbloquear Pedido', Icons.lock_open, color: Color(0xFFF57C00)),
   cancel('Cancelar Pedido', Icons.cancel, color: Color(0xFFD32F2F));

@@ -27,7 +27,7 @@ extension MenuOptionsExtension on MenuOption {
       MenuOption.changePeopleCount,
       MenuOption.printOrder,
       MenuOption.printAccount,
-      MenuOption.finalize,
+      // MenuOption.finalize,
       MenuOption.block,
       MenuOption.cancel,
     ];

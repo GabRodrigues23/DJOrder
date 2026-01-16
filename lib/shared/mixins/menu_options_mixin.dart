@@ -85,8 +85,8 @@ mixin MenuOptionsMixin {
         MenuOption.printAccount: () async {
           await viewModel.print(order, PrintType.account);
         },
-        MenuOption.finalize: () =>
-            debugPrint('Finalizar a comanda #${order.idOrder}'),
+        // MenuOption.finalize: () =>
+        //     debugPrint('Finalizar a comanda #${order.idOrder}'),
         MenuOption.block: () async {
           await showDialog(
             context: context,
