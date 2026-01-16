@@ -112,7 +112,7 @@ class OrderDetailsPanel extends StatelessWidget
                       "R\$ ${FormatUtils.formatValue(order!.effectiveSubtotal.toStringAsFixed(2))}",
                     ),
                     _infoRow(
-                      "Serviço:",
+                      "Taxa de Serviço:",
                       "R\$ ${FormatUtils.formatValue(order!.serviceTax.toStringAsFixed(2))}",
                     ),
 

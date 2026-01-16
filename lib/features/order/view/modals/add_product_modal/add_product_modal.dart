@@ -190,6 +190,7 @@ class _SelectedProductHeader extends StatelessWidget {
                 Text(
                   product!.description,
                   style: const TextStyle(
+                    color: Color(0xFF180E6D),
                     fontWeight: FontWeight.bold,
                     fontSize: 18,
                   ),
@@ -214,6 +215,7 @@ class _SelectedProductHeader extends StatelessWidget {
                   style: const TextStyle(
                     fontSize: 24,
                     fontWeight: FontWeight.bold,
+                    color: Color(0xFF180E6D),
                   ),
                 ),
               ),

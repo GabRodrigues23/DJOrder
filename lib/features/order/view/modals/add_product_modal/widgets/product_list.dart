@@ -29,13 +29,17 @@ class ProductList extends StatelessWidget {
           return ListTile(
             title: Text(
               product.description,
-              style: const TextStyle(fontWeight: FontWeight.bold),
+              style: const TextStyle(
+                fontWeight: FontWeight.bold,
+                color: Color(0xFF180E6D),
+              ),
             ),
             subtitle: Text('${product.unit} - Cód: ${product.id}'),
             trailing: Text(
               'R\$ ${product.price.toStringAsFixed(2)}',
               style: const TextStyle(
-                color: Colors.green,
+                color: Color(0xFF180E6D),
+                fontSize: 14,
                 fontWeight: FontWeight.bold,
               ),
             ),
