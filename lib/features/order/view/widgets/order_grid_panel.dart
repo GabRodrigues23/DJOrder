@@ -1,6 +1,7 @@
 import 'package:djorder/features/order/model/order.dart';
 import 'package:djorder/features/order/view/widgets/order_item_widget.dart';
 import 'package:djorder/features/order/viewmodel/order_view_model.dart';
+import 'package:djorder/setup/setup_get_it_injector.dart';
 import 'package:djorder/shared/enums/menu_options_type.dart';
 import 'package:flutter/material.dart';
 
@@ -9,16 +10,17 @@ class OrderGridPanel extends StatelessWidget {
   final Order? activeOrder;
   final void Function(int idOrder) onOrderSelected;
 
-  const OrderGridPanel({
+  OrderGridPanel({
     super.key,
-    required this.viewModel,
+    OrderViewModel? viewModel,
     this.activeOrder,
     required this.onOrderSelected,
-  });
+  }) : viewModel = viewModel ?? getIt<OrderViewModel>();
 
   @override
   Widget build(BuildContext context) {
     if (viewModel.errorMessage.isNotEmpty) {
+      viewModel.stopAutoRefresh();
       return Center(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
